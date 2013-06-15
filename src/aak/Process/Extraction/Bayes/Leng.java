@@ -25,51 +25,50 @@ package aak.Process.Extraction.Bayes;
 import java.util.HashMap;
 import java.util.List;
 
-import aak.Tools.Tools;
-
-/*
- * This feature is used to score each sentence using its position in the text.
- * score(s_i)= 1/i
+/**
+ * @author kariminf
+ * This feature is to score a sentence using its length, with the equation
  * 
+ * score(s_i) 	= 0 					if L_i >= L_min
+ * 				= (L_i - L_min)/ L_min	otherwise
+ * 
+ * L_min = AVG L in C
  */
-public class Pos1 implements Feature {
+public class Leng implements Feature {
 
-	List<List<String>> sentences;
-	HashMap<Integer, List<Integer>> classes;
+	HashMap<Integer, Integer> minLeng = new HashMap<Integer, Integer>();
 	
 	@Override
-	public void train(HashMap<Integer, List<Integer>> classes, List<List<String>> sentences) {
-		this.sentences = sentences;
-		this.classes = classes;
+	public void train(HashMap<Integer, List<Integer>> classes,
+			List<List<String>> sentences) {
+		
+		for (int classID = 0; classID < classes.size(); classID++)
+		{
+			int minCLeng = 0;
+			for (int sentenceID : classes.get(classID))
+				minCLeng += sentences.get(sentenceID).size();
+			
+			minCLeng /= classes.get(classID).size();
+			System.out.println("minCLeng = " + minCLeng);
+			
+			minLeng.put(classID, minCLeng);
+		}
+
 	}
 
-	/**
-	 * Score a sentence using the equation:
-	 * score(s_i in C_j / pos) = cos_max (s_i,s)*score(s); s in C_j
-	 */
 	@Override
 	public Double score(int classID, Object entry) {
-		Double score = 0.0;
-		int simSentPos = 1;
 		
 		@SuppressWarnings("unchecked")
 		List<String> sentence = (List<String>) entry;
 		
-		Double simMax = 0.0;
-		for(int sentID: classes.get(classID))
-		{
-			Double sim = Tools.calcSimilarity(sentence, sentences.get(sentID));
-			if (sim> simMax)
-			{
-				simMax = sim;
-				simSentPos = sentID + 1; //the index starts from 0
-			}
-		}
+		int sentLen = sentence.size();
+		int minSentLen = minLeng.get(classID);
 		
-		//System.out.println("simMax:" + simMax + ", simSentPos:" + simSentPos);
+		if (sentLen < minSentLen)
+			return (double) ((minSentLen - sentLen)/ minSentLen);
 		
-		score = simMax/simSentPos;
-		return score;
+		return 0.0;
 	}
 
 	/**

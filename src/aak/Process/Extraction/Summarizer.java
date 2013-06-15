@@ -28,6 +28,8 @@ import java.util.List;
 
 import aak.Process.Extraction.Bayes.FreqTF;
 import aak.Process.Extraction.Bayes.FreqTFBi;
+import aak.Process.Extraction.Bayes.Leng;
+import aak.Process.Extraction.Bayes.Pos1;
 
 
 public class Summarizer {
@@ -42,6 +44,8 @@ public class Summarizer {
 			
 		classifier.addFeature(new FreqTF());
 		classifier.addFeature(new FreqTFBi());
+		classifier.addFeature(new Pos1());
+		classifier.addFeature(new Leng());
 			
 		classifier.train(classes, sentWords);
 		orderNumSent = classifier.classify(classes, sentWords);
