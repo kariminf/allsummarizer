@@ -4,3 +4,8 @@
 *.jar
 *.war
 *.ear
+
+# Hidden files
+
+.directory
+.fuse_hidden*
