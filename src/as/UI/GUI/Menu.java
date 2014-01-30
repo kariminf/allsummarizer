@@ -20,7 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package aak.UI.GUI;
+package as.UI.GUI;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;

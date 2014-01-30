@@ -20,12 +20,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package aak.UI;
+package as.UI;
 
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
-import aak.UI.GUI.GUI;
+import as.UI.GUI.GUI;
 
 public class AS {
 

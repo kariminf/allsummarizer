@@ -20,13 +20,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package aak.Tools;
+package as.Tools;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
+/**
+ * 
+ * @author kariminf
+ * This class is used for file 
+ *
+ */
 public class File {
 
 	

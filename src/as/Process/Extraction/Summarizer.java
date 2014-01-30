@@ -20,16 +20,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package aak.Process.Extraction;
+package as.Process.Extraction;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import aak.Process.Extraction.Bayes.FreqTF;
-import aak.Process.Extraction.Bayes.FreqTFBi;
-import aak.Process.Extraction.Bayes.Leng;
-import aak.Process.Extraction.Bayes.Pos1;
+import as.Process.Extraction.Bayes.FreqTF;
+import as.Process.Extraction.Bayes.FreqTFBi;
+import as.Process.Extraction.Bayes.Leng;
+import as.Process.Extraction.Bayes.Pos1;
 
 
 public class Summarizer {

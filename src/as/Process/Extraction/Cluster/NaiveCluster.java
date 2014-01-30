@@ -20,13 +20,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package aak.Process.Extraction.Cluster;
+package as.Process.Extraction.Cluster;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import aak.Tools.Tools;
+import as.Tools.Tools;
 
 public class NaiveCluster implements Cluster {
 

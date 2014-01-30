@@ -20,13 +20,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package aak.Process.Extraction.Bayes;
+package as.Process.Extraction.Bayes;
 
 import java.util.HashMap;
 import java.util.List;
 
 /**
  * @author kariminf
+ * 
  * This feature is to score a sentence using its length, with the equation
  * 
  * score(s_i) 	= 0 					if L_i >= L_min
@@ -56,7 +57,11 @@ public class Leng implements Feature {
 
 	}
 
-	@Override
+	/**
+	 * 
+	 * @param classID : the ID of the class
+	 * @param entry: List of String
+	 */
 	public Double score(int classID, Object entry) {
 		
 		@SuppressWarnings("unchecked")

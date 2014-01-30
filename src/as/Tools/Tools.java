@@ -20,24 +20,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package aak.Tools;
+package as.Tools;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import opennlp.tools.postag.POSModel;
-import opennlp.tools.postag.POSTaggerME;
-import opennlp.tools.sentdetect.SentenceDetectorME;
-import opennlp.tools.sentdetect.SentenceModel;
 
 public class Tools {
 	
@@ -117,60 +111,11 @@ public class Tools {
 		return wordsFreq;
 	} 
 	
-	public static List<String> SplitToSentences(String text) {
-		
-		List<String> sentences = new ArrayList<String>();
-		//List<String> returnedSentences = new ArrayList<String>();
-		
-		try {
-			InputStream modelIn = new FileInputStream("en-sent.bin");
-			SentenceModel model = new SentenceModel(modelIn);
-			SentenceDetectorME sentenceDetector = new SentenceDetectorME(model);
-			String[] initSentences = sentenceDetector.sentDetect(text);
-			for(String snt : initSentences){
-				sentences.add(snt);
-			}
-			modelIn.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		
-		return sentences;
-	}
-	
-	
-	public static List<String> TagSentence(String[] sentence) {
-		
-		List<String> tags = new ArrayList<String>();
-		//List<String> returnedSentences = new ArrayList<String>();
-		InputStream modelIn = null;
-		POSModel model=null;
-		try {
-		  modelIn = new FileInputStream("en-pos-maxent.bin");
-		  model = new POSModel(modelIn);
-		  POSTaggerME tagger = new POSTaggerME(model);
-		  String initTags[] = tagger.tag(sentence);
-		  for(String tag : initTags){
-				tags.add(tag);
-			}
-		}
-		catch (IOException e) {
-		  // Model loading failed, handle the error
-		  e.printStackTrace();
-		}
-		finally {
-		  if (modelIn != null) {
-		    try {
-		      modelIn.close();
-		    }
-		    catch (IOException e) {
-		    }
-		  }
-		}
 
-		return tags;
-	}
+		
+
+	
+
 
 /*
 		public static List<String> normalization (List<String> sentences){

@@ -20,30 +20,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package aak.Process.Extraction;
+package as.Process.Extraction;
 
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import aak.Process.Extraction.Bayes.Feature;
+import as.Process.Extraction.Bayes.Feature;
 
 
 /*
  * @author Abdelkrime Aries
- * @use this class is used to classify the doc
+ * @use this class is used to score each sentence in the different topics
  */
 public class BayesClassifier {
 	
 	private List<Feature> features = new ArrayList<Feature>();
 	
-	/*
-	 * ----------------------------------------------------
+	/**
 	 * This function is used to add new features
-	 * ----------------------------------------------------
 	 */
-	
 	public void addFeature(Feature feature){
 		features.add(feature);
 	}
@@ -73,7 +70,7 @@ public class BayesClassifier {
 		return orderedSentences;
 	}
 
-	/**
+	/*
 	 * This function calculate the score of a sentence in a class
 	 * Score(Si,Cj,F1...Fk) = PROD_k Score (Si,Cj,Fk)
 	 * 

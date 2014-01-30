@@ -33,7 +33,7 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
-public class ToolBar extends JPanel{
+public class CtrlBar extends JPanel{
 
 	/**
 	 * 
@@ -42,7 +42,7 @@ public class ToolBar extends JPanel{
 	private JSpinner summaryRate;
 	private JSpinner clusterThreshold;
 
-	public ToolBar(){
+	public CtrlBar(){
 		super();
 		GridBagLayout gbl = new GridBagLayout();
  		gbl.columnWidths = new int[]{265, 267, 340, 0};

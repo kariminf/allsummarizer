@@ -20,7 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package aak.Process.Reduction;
+package as.Process.Reduction;
 
 import java.util.List;
 import java.util.regex.Matcher;

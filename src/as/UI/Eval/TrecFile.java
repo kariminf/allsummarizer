@@ -20,7 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package aak.UI.Eval;
+package as.UI.Eval;
 
 
 import java.io.BufferedReader;
@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import aak.Tools.Tools;
 
 
 public class TrecFile {
@@ -104,7 +103,7 @@ public class TrecFile {
 	    		abs += phrases[i]+ " ";
 	    	
 	    	abs = abs.replaceAll("[\\r\\n]|&&&&&&&&&&&&", " ");
-	    	List<String> spltS = Tools.SplitToSentences(abs);
+	    	List<String> spltS = null ;//= Tools.SplitToSentences(abs);
 	    	
 	    	for(String sent: spltS)
 	    		Abstract += sent + "\n";

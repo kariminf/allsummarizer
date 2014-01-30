@@ -20,16 +20,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package aak.UI;
+package as.UI;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import aak.PreProcess.PreProcessor;
-import aak.Process.Extraction.Summarizer;
-import aak.Process.Extraction.Cluster.Cluster;
-import aak.Process.Extraction.Cluster.NaiveCluster;
+import as.PreProcess.PreProcessor;
+import as.Process.Extraction.Summarizer;
+import as.Process.Extraction.Cluster.Cluster;
+import as.Process.Extraction.Cluster.NaiveCluster;
 
 public class MonoDoc {
 
@@ -46,7 +46,7 @@ public class MonoDoc {
 	
 	public void Summarize(String text){
 		
-		//Pre-Processing
+		// Pre-Processing
 		{
 			PreProcessor preprocess = new PreProcessor();
 			preprocess.preProcess(text);
@@ -54,14 +54,14 @@ public class MonoDoc {
 			sentWords = preprocess.getSentWords();
 		}
 		
-		//Processing: Clustering
+		// Processing: Clustering
 		{
 			Cluster cluster = new NaiveCluster(Threshold);
 			cluster.createClasses(sentWords);
 			classes = cluster.getClasses();
 		}
 		
-		//Processing: Notation & Ordering
+		// Processing: Notation & Ordering
 		{
 			Summarizer summarizer = new Summarizer();
 			summarizer.Summarize(classes, sentWords);

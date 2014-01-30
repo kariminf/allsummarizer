@@ -20,7 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package aak.PostProcess;
+package as.PostProcess;
 
 public class Anaphora {
 

@@ -20,12 +20,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package aak.Process.Extraction.Bayes;
+package as.Process.Extraction.Bayes;
 
 import java.util.HashMap;
 import java.util.List;
 
-import aak.Tools.Tools;
+import as.Tools.Tools;
 
 /*
  * This feature is used to score each sentence using its position in the text.

@@ -20,12 +20,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package aak.PreProcess;
+package as.PreProcess;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ServiceLoader;
 
-import aak.Tools.PorterStemmer;
 
 public class PreProcessor {
 	
@@ -33,29 +38,88 @@ public class PreProcessor {
 	private List<List<String>> SentWords = new ArrayList<List<String>>();
 	
 	public void preProcess(String inTxt){
+		URLClassLoader ucl = null;
+		try {
+			URL[] jars= {new File("preProcess/en.jar").toURI().toURL()};
+			ucl = new URLClassLoader(jars);
+		} catch (MalformedURLException e){
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 
 		
-		inTxt = Normalizer.deleteNewLine(inTxt);
+		Normalizer normalizer = null;
+		//{
+			ServiceLoader<Normalizer> nsl = ServiceLoader.load(Normalizer.class, ucl);
+			Iterator<Normalizer> nit = nsl.iterator();
+			if (nit.hasNext())
+				normalizer = nit.next();
+		//}
+		
+		Segmenter segmenter = null;
+		//{
+			ServiceLoader<Segmenter> ssl = ServiceLoader.load(Segmenter.class, ucl);
+			Iterator<Segmenter> sit = ssl.iterator();
+			if (sit.hasNext())
+				segmenter = sit.next();
+		//}
+
+		inTxt = normalizer.normalize(inTxt);
 		
 		//inTxt = inTxt.toLowerCase();
 		
-		Sentences = Segmenter.SplitToSentences(inTxt);
+		Sentences = segmenter.splitToSentences(inTxt);
+				
 		
 		SentWords = PreProcess(Sentences);
 	}
 	
 	public static List<List<String>> PreProcess (List<String> Sents){
 		
+		URLClassLoader ucl =null;
+		try {
+			URL[] jars= {new File("preProcess/en.jar").toURI().toURL()};
+			ucl = new URLClassLoader(jars);
+		} catch (MalformedURLException e){
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+			
+		Segmenter segmenter = null;
+		{
+			ServiceLoader<Segmenter> sl = ServiceLoader.load(Segmenter.class, ucl);
+			Iterator<Segmenter> it = sl.iterator();
+			if (it.hasNext())
+				segmenter = it.next();
+		}
+		
+		Stemmer stemmer = null;
+		{
+			ServiceLoader<Stemmer> sl = ServiceLoader.load(Stemmer.class, ucl);
+			Iterator<Stemmer> it = sl.iterator();
+			if (it.hasNext())
+				stemmer = it.next();
+		}
+		
+		SWEliminator swEliminator = null;
+		{
+			ServiceLoader<SWEliminator> sl = ServiceLoader.load(SWEliminator.class, ucl);
+			Iterator<SWEliminator> it = sl.iterator();
+			if (it.hasNext())
+				swEliminator = it.next();
+		}
+		
 		List<List<String>> sentWords = new ArrayList<List<String>>();
 		
-		SWEliminator eliminator = new SWEliminator();
-		PorterStemmer ps = new PorterStemmer();
 		
 		for (String sent: Sents){
-			List<String> segSent = Segmenter.segmentWords(sent);
+			List<String> segSent = segmenter.segmentWords(sent);
 			
-			eliminator.delSW(segSent);
+			swEliminator.deleteSW(segSent);
 			
-			segSent = ps.stemListWords(segSent);
+			segSent = stemmer.stemListWords(segSent);
 			
 			sentWords.add(segSent);
 		}
