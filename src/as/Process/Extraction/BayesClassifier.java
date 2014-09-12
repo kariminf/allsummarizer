@@ -24,10 +24,10 @@ package as.Process.Extraction;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import as.Process.Extraction.Bayes.Feature;
+import as.Tools.Data;
 
 
 /*
@@ -38,6 +38,15 @@ public class BayesClassifier {
 	
 	private List<Feature> features = new ArrayList<Feature>();
 	
+	private boolean normalized = false;
+	
+	/**
+	 * This function is used to set the features vector 
+	 */
+	public void setFeatures(List<Feature> features){
+		this.features = features;
+	}
+	
 	/**
 	 * This function is used to add new features
 	 */
@@ -45,24 +54,29 @@ public class BayesClassifier {
 		features.add(feature);
 	}
 	
+	public void normalize(boolean normalized){
+		this.normalized = normalized;
+	}
+	
 	/**
 	 * This function is served to classify our sentences, 
 	 * and order them from the more important to the less one
 	 */
-	public List<Integer> classify(HashMap<Integer, List<Integer>> classes, List<List<String>> sentences) {
-
+	public List<Integer> classify(Data data) {
+		//HashMap<Integer, List<Integer>> classes, List<List<String>> sentences
+		
 		List<Integer> orderedSentences= new ArrayList<Integer>();
 		List<Double> orderedScores= new ArrayList<Double>();
 		
-		for(int i=0; i< sentences.size();i++){
-			Double currentScore = scoreSentence(classes, sentences.get(i));
+		for(int sentID=0; sentID < data.getSentNumber();sentID++){
+			Double currentScore = scoreSentence(data, sentID);
 			
-			System.out.println("Sentence:" + i + "Score:" + currentScore);
+			//System.out.println("Sentence:" + sentID + " - Score:" + currentScore);
 			int j = 0;
 			while (j< orderedScores.size() && currentScore <= orderedScores.get(j))
 				j++;
 
-			orderedSentences.add(j, i);
+			orderedSentences.add(j, sentID);
 			orderedScores.add(j, currentScore);
 			
 		}
@@ -75,12 +89,15 @@ public class BayesClassifier {
 	 * Score(Si,Cj,F1...Fk) = PROD_k Score (Si,Cj,Fk)
 	 * 
 	 */
-	private Double scoreSentInClass (List<String> sentence, int classID){
+	private Double scoreSentInClass (Data data, int sentID, int classID){
 		
 		Double scoreSent = 0.0;
 		
-		for (Feature feature: features)
-			scoreSent += Math.log(feature.score(classID, sentence)+1.0);
+		for (Feature feature: features){
+			String scoreParam = feature.getScoreParam();
+			scoreSent += Math.log(feature.score(classID, data.makeScoreParams(scoreParam, sentID))+1.0);
+		}
+			
 
 		return scoreSent;
 	}
@@ -91,23 +108,31 @@ public class BayesClassifier {
 	 * So: P(Si -> C1^C2^....^Cn / D, features) == P(Si -> C1/D, features) * .......* P(Sn -> C1/D, features)
 	 * with normalization on sentence length+1
 	 */
-	public Double scoreSentence(HashMap<Integer, List<Integer>> classes, List<String> sentence){
+	public Double scoreSentence(Data data, int sentID){
 		
 		Double score = 0.0;
 		
 		
-		for (int i=0; i<classes.size();i++){
-			Double scoreclass= scoreSentInClass(sentence, i);
+		
+		for (int classID = 0; classID < data.getClassesNumber(); classID++){
+			Double scoreclass= scoreSentInClass(data, sentID, classID);
 			score += scoreclass;
 		}
 		
+		if (normalized){
+			int sentLeng = (int) data.makeScoreParam("sentRLeng", sentID);
+			return score - Math.log(sentLeng);
+		}
+			
 		return score;// - Math.log(sentlength);
 	}
 
-	public void train(HashMap<Integer, List<Integer>> classes, List<List<String>> sentences)
+	public void train(Data data)
 	{
-		for (Feature feature: features)
-			feature.train(classes, sentences);
+		for (Feature feature: features){
+			String trainParam = feature.getTrainParam();
+			feature.train(data.makeTrainParams(trainParam));
+		}
 	}
 
 }

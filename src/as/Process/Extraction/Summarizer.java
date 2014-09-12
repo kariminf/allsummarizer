@@ -23,35 +23,32 @@
 package as.Process.Extraction;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
-import as.Process.Extraction.Bayes.FreqTF;
-import as.Process.Extraction.Bayes.FreqTFBi;
-import as.Process.Extraction.Bayes.Leng;
-import as.Process.Extraction.Bayes.Pos1;
+import as.Process.Extraction.Bayes.Feature;
+import as.Tools.Data;
 
 
 public class Summarizer {
 	//public final static TypeClassifier feature
 	
 	private List<Integer> orderNumSent = new ArrayList<Integer>();
+	private List<Feature> features = new ArrayList<Feature>();
 	
-	public void Summarize(HashMap<Integer, List<Integer>> classes, List<List<String>> sentWords) 
-	{
-
-		BayesClassifier classifier = new BayesClassifier();
-			
-		classifier.addFeature(new FreqTF());
-		classifier.addFeature(new FreqTFBi());
-		classifier.addFeature(new Pos1());
-		classifier.addFeature(new Leng());
-			
-		classifier.train(classes, sentWords);
-		orderNumSent = classifier.classify(classes, sentWords);
-
+	public void addFeature(Feature feature){
+		features.add(feature);
 	}
 	
+	public void summarize(Data data) 
+	{
+
+		if (features.size() == 0) System.out.println("No feature is defined");
+		BayesClassifier classifier = new BayesClassifier();
+		classifier.setFeatures(features);
+		
+		//classifier.normalize(true);
+		classifier.train(data);
+		orderNumSent = classifier.classify(data);
+	}
 	
 	
 	public List<Integer> getSentNumber(int nbrSent) {
@@ -59,8 +56,9 @@ public class Summarizer {
 		if (nbrSent < 1)
 			return null;
 
-		return orderNumSent.subList(0, nbrSent-1);
+		return orderNumSent.subList(0, nbrSent);
 	}
+	
 	
 public List<Integer> getSentPercent(int percent) {
 		
@@ -74,6 +72,7 @@ public List<Integer> getSentPercent(int percent) {
 		return orderNumSent.subList(0, nbrSent-1);
 	}
 		
+
 	public List<Integer> getOrdered(){
 
 		return orderNumSent;
