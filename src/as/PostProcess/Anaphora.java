@@ -22,14 +22,16 @@
 
 package as.PostProcess;
 
-public class Anaphora {
 
+public class Anaphora {
+	// TODO Anaphora resolution
+	
 	/**
 	 * @param args
 	 */
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		
 
 	}
 
