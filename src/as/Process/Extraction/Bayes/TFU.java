@@ -25,13 +25,62 @@ package as.Process.Extraction.Bayes;
 import java.util.HashMap;
 import java.util.List;
 
-public class FreqTF implements Feature {
+public class TFU implements Feature {
 
 	private HashMap<Integer, HashMap<String, Integer>> classWordsFreq 
 					= new HashMap<Integer, HashMap<String, Integer>>();
 	
+
 	@Override
-	public void train(HashMap<Integer, List<Integer>> classes, List<List<String>> sentences){
+	public String getTrainParam() {
+		return "classes,sentWords";
+	}
+
+	@Override
+	public void train(List<Object> trainParam) {
+		@SuppressWarnings("unchecked")
+		HashMap<Integer, List<Integer>> classes = 
+				(HashMap<Integer, List<Integer>>) trainParam.get(0);
+		@SuppressWarnings("unchecked")
+		List<List<String>> sentWords = 
+				(List<List<String>>) trainParam.get(1);
+		
+		for (int classID = 0; classID < classes.size(); classID++)
+		{
+			HashMap<String, Integer> classIWordsFreq = new HashMap<String, Integer>();
+			for (int sentID : classes.get(classID))
+				for (String word: sentWords.get(sentID))
+				{
+					int value = (classIWordsFreq.containsKey(word))?classIWordsFreq.get(word)+1:1;
+					classIWordsFreq.put(word, value);
+				}
+			classWordsFreq.put(classID, classIWordsFreq);
+		}
+		
+	}
+
+	@Override
+	public String getScoreParam() {
+		return "sentWords";
+	}
+
+	@Override
+	public Double score(int classID, List<Object> scoreParam) {
+		Double score = 0.0;
+
+		@SuppressWarnings("unchecked")
+		List<String> sentence = (List<String>) scoreParam.get(0);
+		
+		for (String word: sentence)
+			if (classWordsFreq.get(classID).containsKey(word))
+				score += classWordsFreq.get(classID).get(word);
+		
+		return score;
+	}
+	
+	/*
+	public void train(HashMap<Integer, List<Integer>> classes, 
+			List<List<String>> sentences, HashMap<Integer, Integer> sentPos){
 	
 		for (int classID = 0; classID < classes.size(); classID++)
 		{
@@ -47,7 +96,7 @@ public class FreqTF implements Feature {
 
 	}
 
-	@Override
+
 	public Double score(int classID, Object entry) {
 		
 		Double score = 0.0;
@@ -60,7 +109,7 @@ public class FreqTF implements Feature {
 				score += classWordsFreq.get(classID).get(word);
 		
 		return score;
-	}
+	}*/
 
 	/**
 	 * @param args

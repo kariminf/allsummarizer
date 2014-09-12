@@ -25,21 +25,34 @@ package as.Process.Extraction.Bayes;
 import java.util.HashMap;
 import java.util.List;
 
-public class FreqTFBi implements Feature {
+public class TFB implements Feature {
 
 	private HashMap<Integer, HashMap<String, Integer>> classWordsFreq 
 					= new HashMap<Integer, HashMap<String, Integer>>();
+	
 	@Override
-	public void train(HashMap<Integer, List<Integer>> classes, List<List<String>> sentences) {
+	public String getTrainParam() {
+		return "classes,sentWords";
+	}
+	
+	@Override
+	public void train(List<Object> trainParam) {
+		
+		@SuppressWarnings("unchecked")
+		HashMap<Integer, List<Integer>> classes = 
+				(HashMap<Integer, List<Integer>>) trainParam.get(0);
+		@SuppressWarnings("unchecked")
+		List<List<String>> sentWords = 
+				(List<List<String>>) trainParam.get(1);
 		
 		for (int classID = 0; classID < classes.size(); classID++)
 		{
 			
 			HashMap<String, Integer> classIWordsFreq = new HashMap<String, Integer>();
-			for (int sentenceID : classes.get(classID))
+			for (int sentID : classes.get(classID))
 			{
 				String prevWord = ">>";
-				for (String word: sentences.get(sentenceID))
+				for (String word: sentWords.get(sentID))
 				{
 					String biWord = prevWord + "?" + word;
 					int value = (classIWordsFreq.containsKey(biWord))?classIWordsFreq.get(biWord)+1:1;
@@ -54,11 +67,16 @@ public class FreqTFBi implements Feature {
 	}
 
 	@Override
-	public Double score(int classID, Object entry) {
+	public String getScoreParam() {
+		return "sentWords";
+	}
+	
+	@Override
+	public Double score(int classID, List<Object> scoreParam) {
 		Double score = 0.0;
 
 		@SuppressWarnings("unchecked")
-		List<String> sentence = (List<String>) entry;
+		List<String> sentence = (List<String>) scoreParam.get(0);
 		String prevWord = ">>";
 		
 		for (String word: sentence)

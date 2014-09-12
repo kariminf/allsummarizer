@@ -22,11 +22,35 @@
 
 package as.Process.Extraction.Bayes;
 
-import java.util.HashMap;
 import java.util.List;
 
 public interface Feature {
 
-	public void train(HashMap<Integer, List<Integer>> classes, List<List<String>> sentences);
-	public Double score(int classID, Object entry); //score(s, C, f)
+	/**
+	 * Gives us a string which contains the names of parameters separated by a comma
+	 * @return training parameters' names
+	 */
+	public String getTrainParam();
+	
+	/**
+	 * Train the system according to this feature
+	 * @param trainParam a list of objects which are the parameters needed by this feature
+	 * 		  for training.
+	 */
+	public void train(List<Object> trainParam);
+	
+	/**
+	 * Gives us a string which contains the names of parameters separated by a comma
+	 * @return score parameters' names
+	 */
+	public String getScoreParam();
+	
+	/**
+	 * 
+	 * @param classID the ID of the class in which we want to score the sentence
+	 * @param scoreParam a list of Objects which are the parameters needed
+	 *        to score the sentence
+	 * @return the score of the sentence in the class "classID" using this feature
+	 */
+	public Double score(int classID, List<Object> scoreParam); //score(s, C, f)
 }
