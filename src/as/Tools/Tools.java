@@ -40,7 +40,7 @@ public class Tools {
 	 * 
 	 * 
 	 */
-	private static List<String> stopList = readFile(new File("english.stop"));
+	//private static List<String> stopList = readFile(new File("english.stop"));
 	
 	/*
 	 * This function help to calculate words frequencies in a sentence
@@ -54,7 +54,7 @@ public class Tools {
 		HashMap<String, Integer> v1 = getSentWordsFreq (sentence1);
 		HashMap<String, Integer> v2 = getSentWordsFreq (sentence2);
 		
-		System.out.println(cosineSimilarity(v1, v2));
+		//System.out.println(cosineSimilarity(v1, v2));
 		if (cosineSimilarity(v1, v2) >= threshold) //  threshold
 			return true;
 		
@@ -82,6 +82,10 @@ public class Tools {
         for (String word : v1ANDv2) v1Xv2 += v1.get(word) * v2.get(word);
         for (String word : v1.keySet()) v1Xv1 += v1.get(word) * v1.get(word);
         for (String word : v2.keySet()) v2Xv2 += v2.get(word) * v2.get(word);
+        
+        if (v1Xv1 * v2Xv2 ==0)
+        	return 0;
+        
         return v1Xv2 / Math.sqrt(v1Xv1 * v2Xv2);
 	}
 
@@ -101,10 +105,10 @@ public class Tools {
 		
 		for(String sentence: sentences){
 			for (String word : segmentWords(sentence)){
-				if (isNotStopWord(word)){
+				//if (isNotStopWord(word)){
 					int value = (wordsFreq.containsKey(word))?wordsFreq.get(word)+1:1;
 					wordsFreq.put(word, value);
-				}
+				//}
 			}
 		}
 		
@@ -129,15 +133,15 @@ public class Tools {
 	  }
 	 */
 
-	 public static Boolean isNotStopWord(String word) {
+	 /*public static Boolean isNotStopWord(String word) {
 		    
 		  if (!stopList.contains(word) && !word.matches(".*\\W+.*")) //
 		    	  return true;
 		      
 		    return false;
-	  }
+	  }*/
 	
-	private static List<String> readFile(File f) {
+	public static List<String> readFile(File f) {
 	    try {
 	      StringBuilder contents = new StringBuilder();
 
