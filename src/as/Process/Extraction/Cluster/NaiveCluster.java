@@ -26,35 +26,39 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import as.Tools.Tools;
+import as.Tools.Data;
 
-public class NaiveCluster implements Cluster {
+public class NaiveCluster extends Cluster {
 
 	private Double Threshold = - 1.0;
-	private HashMap<Integer, List<Integer>> classes = new  HashMap<Integer, List<Integer>>();
 	
-	public NaiveCluster(Double threshold) {
+	public NaiveCluster(Double threshold, Data data) {
+		super(data);
 		Threshold = threshold;
 	}
 
 	@Override
-	public void createClasses(List<List<String>> sentences) {
+	public void createClasses() {
+		
+		List<List<String>> sentWords = data.getSentWords();
+		
 		if (Threshold<0.0)
-			Threshold = (double) (1/sentences.size());
+			Threshold = (double) (1/sentWords.size());
 
 		HashMap<Integer, List<Integer>> tmpClasses = new  HashMap<Integer, List<Integer>>();
 		
 		//create for each sentence, the class of similar words
-		for(int i=0; i< sentences.size();i++){
+		for(int i=0; i< sentWords.size();i++){
 			List<Integer> classI = new ArrayList<Integer>();
-			for(int j=0; j<sentences.size();j++){
-				System.out.print("cos("+i+","+j+")=");
-				if (Tools.similar(sentences.get(i), sentences.get(j), Threshold)){
+			for(int j=0; j<sentWords.size();j++){
+				//System.out.print("cos("+i+","+j+")=");
+				if (data.getSimilarity(i, j) >= Threshold){
 					classI.add(j);
 				}
 			}
+			
 			tmpClasses.put(i, classI);
-			System.out.println(tmpClasses.get(i).toString());	
+			//System.out.println(tmpClasses.get(i).toString());	
 		}
 		
 		
@@ -64,7 +68,7 @@ public class NaiveCluster implements Cluster {
 			
 			if (tmpClasses.get(i).size() ==0){
 				tmpClasses.remove(i);
-				System.out.print("class(" +i+") IS an ampty class\n");
+				//System.out.print("class(" +i+") IS an ampty class\n");
 				continue;
 			}
 			
@@ -73,7 +77,7 @@ public class NaiveCluster implements Cluster {
 				if (tmpClasses.containsKey(j) && i !=j){
 					if (tmpClasses.get(j).containsAll(tmpClasses.get(i))){
 						tmpClasses.remove(i);
-						System.out.print("class(" +i+") IN class("+j+")\n");	
+						//System.out.print("class(" +i+") IN class("+j+")\n");	
 						break;
 					}
 				}
@@ -83,6 +87,7 @@ public class NaiveCluster implements Cluster {
 		}
 		
 		//re-enumerate the obtained classes
+		HashMap<Integer, List<Integer>> classes = new  HashMap<Integer, List<Integer>>();
 		int j=0;
 		for (int i=0; i<numMaxClass; i++){
 			if (tmpClasses.containsKey(i)){
@@ -90,13 +95,11 @@ public class NaiveCluster implements Cluster {
 				j++;
 			}
 		}
+		
+		data.setClasses(classes);
 
 	}
 
-	@Override
-	public HashMap<Integer, List<Integer>> getClasses() {
-		return classes;
-	}
 
 	/**
 	 * @param args

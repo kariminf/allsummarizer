@@ -22,11 +22,17 @@
 
 package as.Process.Extraction.Cluster;
 
-import java.util.HashMap;
-import java.util.List;
+import as.Tools.Data;
 
-public interface Cluster {
-	public void createClasses(List<List<String>> sentences);
-	public HashMap<Integer, List<Integer>> getClasses();
+public abstract class Cluster {
+	
+	protected Data data;
+	
+	public Cluster(Data data){
+		this.data = data;
+	}
+	
+	public abstract void createClasses();
+	//public HashMap<Integer, List<Integer>> getClasses();
 
 }
