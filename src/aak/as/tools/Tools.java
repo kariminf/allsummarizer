@@ -20,7 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package as.Tools;
+package aak.as.tools;
 
 import java.io.BufferedReader;
 import java.io.File;

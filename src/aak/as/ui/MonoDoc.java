@@ -4,7 +4,7 @@
  * described in this paper:
  * http://dx.doi.org/10.1117/12.2004001
  * 
- * Copyright (C) 2013  Abdelkrime Aries <kariminfo0@gmail.com>
+ * Copyright (C) 2014  Abdelkrime Aries <kariminfo0@gmail.com>
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,22 +20,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package as.UI;
+package aak.as.ui;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import as.PreProcess.PreProcessor;
-import as.Process.Extraction.Summarizer;
-import as.Process.Extraction.Cluster.Cluster;
-import as.Process.Extraction.Cluster.NaiveCluster;
+import aak.as.preProcess.PreProcessor;
+import aak.as.process.extraction.Summarizer;
+import aak.as.process.extraction.bayes.Pos;
+import aak.as.process.extraction.bayes.RLeng;
+import aak.as.process.extraction.bayes.TFB;
+import aak.as.process.extraction.cluster.Cluster;
+import aak.as.process.extraction.cluster.NaiveCluster;
+import aak.as.tools.Data;
 
 public class MonoDoc {
 
 	private List<String> sentences;
-	private HashMap<Integer, List<Integer>> classes;
-	private List<List<String>> sentWords;
 	private List<Integer> orderNumSent = new ArrayList<Integer>();
 	private Double Threshold = -1.0;
 	
@@ -46,26 +47,29 @@ public class MonoDoc {
 	
 	public void Summarize(String text){
 		
+		Data data = new Data();
+		
 		// Pre-Processing
 		{
-			PreProcessor preprocess = new PreProcessor();
+			PreProcessor preprocess = new PreProcessor("en", data);
 			preprocess.preProcess(text);
-			sentences = preprocess.getSentences();
-			sentWords = preprocess.getSentWords();
 		}
 		
 		// Processing: Clustering
 		{
-			Cluster cluster = new NaiveCluster(Threshold);
-			cluster.createClasses(sentWords);
-			classes = cluster.getClasses();
+			Cluster cluster = new NaiveCluster(Threshold, data);
+			cluster.createClasses();
 		}
 		
 		// Processing: Notation & Ordering
 		{
 			Summarizer summarizer = new Summarizer();
-			summarizer.Summarize(classes, sentWords);
+			summarizer.addFeature(new TFB());
+			summarizer.addFeature(new RLeng());
+			summarizer.addFeature(new Pos());
+			summarizer.summarize(data);
 			orderNumSent = summarizer.getOrdered();
+			sentences = data.getSentences();
 		}
 		
 	}

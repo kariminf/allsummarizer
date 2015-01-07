@@ -20,19 +20,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package aak.as.postProcess;
+package aak.as.process.extraction.cluster;
 
+import aak.as.tools.Data;
 
-public class Anaphora {
-	// TODO Anaphora resolution
+public abstract class Cluster {
 	
-	/**
-	 * @param args
-	 */
+	protected Data data;
 	
-	public static void main(String[] args) {
-		
-
+	public Cluster(Data data){
+		this.data = data;
 	}
+	
+	public abstract void createClasses();
+	//public HashMap<Integer, List<Integer>> getClasses();
 
 }

@@ -20,16 +20,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package as.UI;
+package aak.as.ui;
 
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
-import as.UI.GUI.GUI;
+import aak.as.ui.gui.GUI;
 
 public class AS {
 
 	public static void main(String[] args) {
+		//TODO add other options
 		if (args==null || args.length<1)
 			startGUI();
 	}
@@ -48,7 +49,6 @@ public class AS {
 		}
 	
 		new GUI();
-		//GUI.
 	}
 
 }

@@ -4,7 +4,7 @@
  * described in this paper:
  * http://dx.doi.org/10.1117/12.2004001
  * 
- * Copyright (C) 2013  Abdelkrime Aries <kariminfo0@gmail.com>
+ * Copyright (C) 2014  Abdelkrime Aries <kariminfo0@gmail.com>
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package as.Tools;
+package aak.as.tools;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -70,6 +70,30 @@ public class FileManager {
 	      return null;
 	    } 
 	  }
+	
+	public static boolean createFolder(String dirName){
+		
+		File dir = new File(dirName);
+
+		if (dir.exists()){
+			//System.out.println("The directory already exists");
+			return false;
+		}
+
+		try{
+			dir.mkdir();
+		} catch(SecurityException se){
+			//System.out.println("Can't create the directory!!");
+			return false;
+		}        
+		 
+		return true;
+	}
+	
+	
+	public static void main(String[] args) {
+		createFolder("/home/kariminf/Data/ATS/cmplg/peer/stat_th/kkk");
+	}
 	
 	
 }

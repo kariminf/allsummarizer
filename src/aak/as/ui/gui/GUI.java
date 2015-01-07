@@ -20,7 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package as.UI.GUI;
+package aak.as.ui.gui;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -42,7 +42,7 @@ import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
-import as.UI.MonoDoc;
+import aak.as.ui.MonoDoc;
 
 
 public class GUI extends JFrame{
