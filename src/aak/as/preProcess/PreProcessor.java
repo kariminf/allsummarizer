@@ -22,21 +22,22 @@
 
 package aak.as.preProcess;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ServiceLoader;
 
+
+import aak.as.preProcess.def.DefNormalizer;
+import aak.as.preProcess.def.DefSWEliminator;
+import aak.as.preProcess.def.DefSegmenter;
+import aak.as.preProcess.def.DefStemmer;
+import aak.as.preProcess.lang.PreProcessInfo;
 import aak.as.preProcess.lang.Normalizer;
 import aak.as.preProcess.lang.SWEliminator;
 import aak.as.preProcess.lang.Segmenter;
 import aak.as.preProcess.lang.Stemmer;
 import aak.as.tools.Data;
+import aak.as.tools.JarLoader;
 
 
 public class PreProcessor {
@@ -44,8 +45,9 @@ public class PreProcessor {
 	// In multi-documents summarization, we have many texts
 	private List<String> Texts = new ArrayList<String>();
 
-	Data data;
+	private Data data;
 
+	private PreProcessInfo info = null;
 	private Normalizer normalizer = null;
 	private Segmenter segmenter = null;
 	private SWEliminator sweliminator = null;
@@ -57,62 +59,26 @@ public class PreProcessor {
 		this.data = data;
 	}
 
-	private URLClassLoader loadLanguage(File file){
-		URLClassLoader ucl = null;
-		try {
-			URL[] jars = {file.toURI().toURL()};
-			ucl = new URLClassLoader(jars);
-		} catch (MalformedURLException mue){
-			mue.printStackTrace();
-			System.exit(1);
-		}
-
-		return ucl;
-	}
 
 	public void setLanguage(String lang){
+		
+		JarLoader jarLoader = 
+				new JarLoader("preProcess/", "aak/as/preProcess", PreProcessInfo.version);
+		
+		info = jarLoader.getInfoService(lang, PreProcessInfo.class);
 
-		URLClassLoader ucl = null;
-		File plugin = new File("preProcess/" + lang + ".jar");
-
-		if (!plugin.exists()){
-			plugin = new File("preProcess/en.jar");
-			System.out.println("Pre-procssing plugin of [" + lang + "], not found ... trying [en]");
-		}
-
-		ucl = loadLanguage(plugin);	
-
-		{
-			ServiceLoader<Normalizer> sl = ServiceLoader.load(Normalizer.class, ucl);
-			Iterator<Normalizer> it = sl.iterator();
-			//it = sl.iterator();
-			
-			if (it.hasNext())
-				normalizer = it.next();
-		}
-
-
-		{
-			ServiceLoader<Segmenter> sl = ServiceLoader.load(Segmenter.class, ucl);
-			Iterator<Segmenter> it = sl.iterator();
-			if (it.hasNext())
-				segmenter = it.next();
-		}
-
-
-		{
-			ServiceLoader<SWEliminator> sl = ServiceLoader.load(SWEliminator.class, ucl);
-			Iterator<SWEliminator> it = sl.iterator();
-			if (it.hasNext())
-				sweliminator = it.next();
-		}
-
-		{
-			ServiceLoader<Stemmer> sl = ServiceLoader.load(Stemmer.class, ucl);
-			Iterator<Stemmer> it = sl.iterator();
-			if (it.hasNext())
-				stemmer = it.next();
-		}
+		normalizer = jarLoader.getLangService(info, Normalizer.class);
+		if (normalizer == null) normalizer = new DefNormalizer();
+		
+		segmenter = jarLoader.getLangService(info,Segmenter.class);
+		if (segmenter == null) segmenter = new DefSegmenter();
+		
+		sweliminator = jarLoader.getLangService(info, SWEliminator.class);
+		if (sweliminator == null) sweliminator = new DefSWEliminator();
+		
+		stemmer = jarLoader.getLangService(info, Stemmer.class);
+		
+		if (stemmer == null) stemmer = new DefStemmer();
 
 	}
 
@@ -194,5 +160,6 @@ public class PreProcessor {
 
 
 	}
+	
 
 }

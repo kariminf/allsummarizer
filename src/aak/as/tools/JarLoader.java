@@ -78,6 +78,7 @@ public class JarLoader {
 	public <T> T getLangService(Info info, Class<T> cls){
 
 		if (classLoader == null) return null;
+		if (info == null) return null;
 		
 		String packageName = info.getClass().getName();
 		packageName = packageName.substring(0, packageName.lastIndexOf("."));
