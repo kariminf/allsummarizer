@@ -85,7 +85,8 @@ public class PreProcessor {
 		{
 			ServiceLoader<Normalizer> sl = ServiceLoader.load(Normalizer.class, ucl);
 			Iterator<Normalizer> it = sl.iterator();
-			it = sl.iterator();
+			//it = sl.iterator();
+			
 			if (it.hasNext())
 				normalizer = it.next();
 		}
