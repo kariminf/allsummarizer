@@ -182,8 +182,18 @@ public class JarLoader {
 					String extensionName = 
 							attributes.getValue("Extension-Name");
 					if (extensionName == null) return false;
-					System.out.println(jf.getName() + ": extension= "+ extName + ", found="+ extensionName);
+					//System.out.println(jf.getName() + ": extension= "+ extName + ", found="+ extensionName);
 					if (! extensionName.equals(extName)) return false;
+					
+				}
+				
+				{
+					String extensionVersion = 
+							attributes.getValue("Specification-Version");
+					if (extensionVersion == null) return false;
+					//System.out.println(jf.getName() + ": extension= "+ extName + ", found="+ extensionName);
+					if (! extensionVersion.equals(extVersion)) return false;
+
 				}
 
 			} catch (IOException e) {
