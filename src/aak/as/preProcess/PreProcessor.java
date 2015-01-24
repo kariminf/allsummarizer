@@ -68,17 +68,29 @@ public class PreProcessor {
 		info = jarLoader.getInfoService(lang, PreProcessInfo.class);
 
 		normalizer = jarLoader.getLangService(info, Normalizer.class);
-		if (normalizer == null) normalizer = new DefNormalizer();
+		if (normalizer == null){
+			System.out.println(lang + ": No Normalizer, using default");
+			normalizer = new DefNormalizer();
+		}
 		
 		segmenter = jarLoader.getLangService(info,Segmenter.class);
-		if (segmenter == null) segmenter = new DefSegmenter();
+		if (segmenter == null){
+			System.out.println(lang + ": No Segmenter, using default");
+			segmenter = new DefSegmenter();
+		}
 		
 		sweliminator = jarLoader.getLangService(info, SWEliminator.class);
-		if (sweliminator == null) sweliminator = new DefSWEliminator();
+		if (sweliminator == null){
+			System.out.println(lang + ": No SWEliminator, using default");
+			sweliminator = new DefSWEliminator();
+		}
 		
 		stemmer = jarLoader.getLangService(info, Stemmer.class);
 		
-		if (stemmer == null) stemmer = new DefStemmer();
+		if (stemmer == null){
+			System.out.println(lang + ": No Stemmer, using default");
+			stemmer = new DefStemmer();
+		}
 
 	}
 

@@ -68,6 +68,9 @@ public class Pos implements Feature {
 		
 		//System.out.println("posPart=" + posPart);
 		
+		//Reset the classPosFreq, when training this feature another time
+		classPosFreq = new HashMap<Integer, List<Integer>>();
+		
 		for (int classID=0; classID< classes.size(); classID++){
 			
 			List<Integer> posFreq = new ArrayList<Integer>();

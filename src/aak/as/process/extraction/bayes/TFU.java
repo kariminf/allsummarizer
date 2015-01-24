@@ -38,6 +38,7 @@ public class TFU implements Feature {
 
 	@Override
 	public void train(List<Object> trainParam) {
+		
 		@SuppressWarnings("unchecked")
 		HashMap<Integer, List<Integer>> classes = 
 				(HashMap<Integer, List<Integer>>) trainParam.get(0);
@@ -45,6 +46,9 @@ public class TFU implements Feature {
 		List<List<String>> sentWords = 
 				(List<List<String>>) trainParam.get(1);
 		
+		//Reset the classWordsFreq, when training this feature another time
+		classWordsFreq = new HashMap<Integer, HashMap<String, Integer>>();
+				
 		for (int classID = 0; classID < classes.size(); classID++)
 		{
 			HashMap<String, Integer> classIWordsFreq = new HashMap<String, Integer>();

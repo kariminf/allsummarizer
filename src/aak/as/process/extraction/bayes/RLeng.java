@@ -66,6 +66,9 @@ public class RLeng implements Feature {
 	@Override
 	public void train(List<Object> trainParam) {
 		
+		//Reset the classLengFreq, when training this feature another time
+		classLengFreq = new HashMap<Integer, HashMap<Integer, Integer>>();
+		
 		if (catNbr > 0){
 			trainCat(trainParam);
 			return;

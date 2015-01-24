@@ -45,6 +45,9 @@ public class TFB implements Feature {
 		List<List<String>> sentWords = 
 				(List<List<String>>) trainParam.get(1);
 		
+		//Reset the classWordsFreq, when training this feature another time
+		classWordsFreq = new HashMap<Integer, HashMap<String, Integer>>();
+		
 		for (int classID = 0; classID < classes.size(); classID++)
 		{
 			
@@ -89,14 +92,6 @@ public class TFB implements Feature {
 			prevWord = word;
 		}
 		return score;
-	}
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
 	}
 
 }
