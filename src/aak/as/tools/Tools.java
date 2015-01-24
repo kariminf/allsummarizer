@@ -22,11 +22,6 @@
 
 package aak.as.tools;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -89,6 +84,7 @@ public class Tools {
         return v1Xv2 / Math.sqrt(v1Xv1 * v2Xv2);
 	}
 
+	
 	public static HashMap<String, Integer> getSentWordsFreq (List<String> sentence){
 		HashMap<String, Integer> wordsFreq = new HashMap<String, Integer>();
 		
@@ -99,7 +95,7 @@ public class Tools {
 		
 		return wordsFreq;
 	}
-	
+	/*
 	public HashMap<String, Integer> getWordsFreq (List<String> sentences){
 		HashMap<String, Integer> wordsFreq = new HashMap<String, Integer>();
 		
@@ -113,7 +109,7 @@ public class Tools {
 		}
 		
 		return wordsFreq;
-	} 
+	} */
 	
 
 		
@@ -141,7 +137,7 @@ public class Tools {
 		    return false;
 	  }*/
 	
-	public static List<String> readFile(File f) {
+	/*public static List<String> readFile(File f) {
 	    try {
 	      StringBuilder contents = new StringBuilder();
 
@@ -169,5 +165,5 @@ public class Tools {
 	      }
 	    }
 	    return ret;
-	  }
+	  }*/
 }
