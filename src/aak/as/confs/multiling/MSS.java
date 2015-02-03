@@ -13,6 +13,7 @@ import aak.as.process.extraction.bayes.Feature;
 import aak.as.process.extraction.cluster.Cluster;
 import aak.as.process.extraction.cluster.NaiveCluster;
 import aak.as.tools.Data;
+import aak.as.tools.Tools;
 
 
 public class MSS {
@@ -34,10 +35,20 @@ public class MSS {
 	public void preprocess(File file){
 		String text = readFile(file);
 		preprocessor.preProcess(text);
+		clustered = false;
 	}
 	
 	public List<Double> getSimilarity(){
 		return data.getSimList();
+	}
+	
+	public int sentNum (){
+		return data.getSentNumber();
+	}
+	
+	public double getTermDistribution(){
+		List<List<String>> sentWords = data.getSentWords();
+		return Tools.termsDistribution(sentWords);
 	}
 	
 	public void cluster(double threshold){
@@ -56,7 +67,7 @@ public class MSS {
 			features.add(feature);
 	}
 	
-	public String summarize(int summarySize) throws Exception{
+	public String summarize(int summarySize, double simTH) throws Exception{
 		
 		if(features.size() <1 ) throw new Exception("add at least one feature");
 		if (! clustered ) throw new Exception("Use cluster before summarize");
@@ -66,7 +77,9 @@ public class MSS {
 		for (Feature feature: features)
 			summarizer.addFeature(feature);
 		
-		return "";
+		summarizer.summarize(data);
+		
+		return getSummary(data, summarizer.getOrdered(), summarySize, simTH);
 	}
 	
 	/**
@@ -97,5 +110,63 @@ public class MSS {
 
 		return content.toString();
 	}
+	
+	
+	private static String getSummary(Data data, List<Integer> order, int summarySize, double simTH){
+
+		List<String> sentences = data.getSentences();
+		List<List<String>> sentWords = data.getSentWords();
+
+		/*
+		String summary = sentences.get(order.get(0)) + "\n";
+		int index = 1;
+
+		while (index < order.size() && summary.length() < summarySize) {
+			
+			int sentPos = order.get(index);
+			
+			List<String> prevWords = sentWords.get(order.get(index-1));
+			List<String> actWords = sentWords.get(index);
+
+			if (Tools.similar(prevWords, actWords, simTH))
+				summary += sentences.get(sentPos) + "\n";
+			index++;
+		};*/
+		
+		String summary = "";
+		int numChars = 0;
+		int numOrder = 0;
+
+		while(true){
+
+			if (numOrder >=  order.size())
+				break;
+
+			int index = order.get(numOrder);
+
+			if (numOrder > 0){
+				List<String> prevWords = sentWords.get(order.get(numOrder-1));
+				List<String> actWords = sentWords.get(index);
+				if (Tools.similar(prevWords, actWords, simTH)){
+					numOrder ++;
+					if (numOrder < order.size())
+						index = order.get(numOrder);
+				}
+			}
+
+			numChars += sentences.get(index).length();
+
+
+			if (numChars > summarySize)
+				break;
+			
+			summary += sentences.get(index) + "\n";
+
+			numOrder ++;
+		}
+
+		return summary;
+	}
+
 
 }

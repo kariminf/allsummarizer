@@ -139,8 +139,11 @@ public class JarLoader {
 				return null;
 			}
 			
-			if (service.getClass().getName().contains(packageName)) 
+			//System.out.println(service.getClass().getName());
+			
+			if (service.getClass().getName().contains(packageName))
 				return service;
+				
 		}
 
 		return null;

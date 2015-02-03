@@ -7,7 +7,7 @@ import aak.as.tools.Data;
 
 public class PreProcess {
 
-	private static String lang = "he";
+	private static String lang = "zh";
 	
 	private static String getStringLang (String lang){
 		String res="";

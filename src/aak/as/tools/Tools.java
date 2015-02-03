@@ -22,9 +22,11 @@
 
 package aak.as.tools;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 
 
@@ -94,6 +96,50 @@ public class Tools {
 		}
 		
 		return wordsFreq;
+	}
+	
+	
+	public static double termsDistribution(List<List<String>> sentWords){
+
+		if (sentWords == null || sentWords.size() < 1)
+			return 0.0;
+		
+		int sentTermsSum = 0;
+		Set<String> docTerms = new HashSet<String>();
+		for (List<String> words: sentWords){
+			Set<String> sentTerms = new HashSet<String>();
+			sentTerms.addAll(words);
+			sentTermsSum += sentTerms.size();
+			docTerms.addAll(sentTerms);
+		}
+		
+		return ((double) sentTermsSum/docTerms.size());
+		
+	}
+	
+	public static void main(String[] args){
+		
+		List<List<String>> doc = new ArrayList<List<String>>();
+		
+		List<String> sent1 = new  ArrayList<String>();
+		sent1.add("A");sent1.add("A");sent1.add("B");sent1.add("C");
+		
+		List<String> sent2 = new  ArrayList<String>();
+		sent2.add("A");sent2.add("D");sent2.add("E");
+		
+		List<String> sent3 = new  ArrayList<String>();
+		sent3.add("E");sent3.add("F");
+		
+		doc.add(sent1);doc.add(sent2);doc.add(sent3);
+		
+		System.out.println("sim(1,2) = " + calcSimilarity(sent1, sent2));
+		System.out.println("sim(1,3) = " + calcSimilarity(sent1, sent3));
+		System.out.println("sim(2,3) = " + calcSimilarity(sent3, sent2));
+
+		System.out.println("term distribution = " + termsDistribution(doc));
+		
+		
+		
 	}
 	
 }
