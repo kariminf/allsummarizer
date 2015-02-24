@@ -5,12 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import aak.as.process.extraction.bayes.Feature;
-import aak.as.process.extraction.bayes.PLeng;
-import aak.as.process.extraction.bayes.Pos;
-import aak.as.process.extraction.bayes.RLeng;
-import aak.as.process.extraction.bayes.TFB;
-import aak.as.process.extraction.bayes.TFU;
 import aak.as.tools.Calculus;
 import aak.as.tools.FileManager;
 
@@ -24,7 +18,7 @@ public class MssROUGE {
 			"/home/kariminf/Data/ATS/multilingMss2015Training/summary/";
 
 	private static final String [] langs = 
-		{"hu"};
+		{"ru"};
 
 	private static String [] features = {
 		"TFU",

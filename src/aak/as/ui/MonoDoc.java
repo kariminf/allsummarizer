@@ -51,7 +51,7 @@ public class MonoDoc {
 		
 		// Pre-Processing
 		{
-			PreProcessor preprocess = new PreProcessor("ar", data);
+			PreProcessor preprocess = new PreProcessor("fr", data);
 			preprocess.preProcess(text);
 		}
 		

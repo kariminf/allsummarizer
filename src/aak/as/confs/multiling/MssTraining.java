@@ -26,7 +26,7 @@ public class MssTraining {
 			"/home/kariminf/Data/ATS/multilingMss2015Training/training2015/";
 
 	private static final String [] langs = 
-		{"hu"};
+		{"th"};
 
 	private static Feature [] features = {
 		new TFU(),
@@ -106,12 +106,21 @@ public class MssTraining {
 
 				String fileName = file.getName();
 				if (! fileName.endsWith("_body.txt")) continue;
-
+				
 				int summarySize = sizes.get(fileName);
+				
+				//verify if the file have been already processed
+				fileName = fileName.substring(0, fileName.length()-9) + "/";
+				if (new File(outFolder + lang + "/" + fileName).exists()){
+					System.out.println(fileName  + " already processsed");
+					continue;
+				}
+					
+				
 
 				String newfolderName = outFolder + lang + "/";
 				FileManager.createFolder(newfolderName);
-				newfolderName += fileName.substring(0, fileName.length()-9) + "/";
+				newfolderName += fileName;
 				FileManager.createFolder(newfolderName);
 
 				
