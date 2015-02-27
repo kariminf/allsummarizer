@@ -8,7 +8,7 @@ public class DefSWEliminator implements SWEliminator {
 
 	@Override
 	public void deleteSW(List<String> wordsList) {
-
+		//Nothing
 	}
 
 }

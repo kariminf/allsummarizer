@@ -11,8 +11,9 @@ public class DefSegmenter implements Segmenter {
 	public List<String> splitToSentences(String text) {
 
 		List<String> sentences = new ArrayList<String>();
-
-		for(String sentence:  text.split("[\\.؟\\!?。][\\s$]")) 
+		
+		text = text.replaceAll("(\\.؟\\!?。)[\\s$]", "#&#");
+		for(String sentence:  text.split("#&#")) 
 			if(sentence.trim().length() > 0) 
 				sentences.add(sentence.trim());
 
@@ -23,7 +24,7 @@ public class DefSegmenter implements Segmenter {
 	public List<String> segmentWords(String text) {
 
 		List<String> words = new ArrayList<String>();
-	    for(String word:  text.split("[\\.,;:\"\']?\\s+|\\.$")) {
+	    for(String word:  text.split("[\\.,;؛،、:\"\']?\\s+|\\.$")) {
 	      if(word.length() > 0) {
 	    	  words.add(word.toLowerCase().trim());
 	      }
