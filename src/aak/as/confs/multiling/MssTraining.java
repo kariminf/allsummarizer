@@ -26,7 +26,8 @@ public class MssTraining {
 			"/home/kariminf/Data/ATS/multilingMss2015Training/training2015/";
 
 	private static final String [] langs = 
-		{"th"};
+		{"ka", "ko", "pl", "sk"};
+	//"af", "eo", "hr", "ms", "sh", "sl", "sr", "vi"
 
 	private static Feature [] features = {
 		new TFU(),
@@ -39,17 +40,17 @@ public class MssTraining {
 	//add static thresholds let say 31 from 0.00 to 0.30
 	private static String[] th_name = 
 		{"mean", "median", "variance", "Hmode", "Lmode", 
-		"s_Dn", "D_sn", "D_s",
+		"s_Dn", "D_sn", "D_s"/*,
 		"00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
 		"10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
-		"20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"
+		"20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"*/
 		};
 	private static double[] th_value = 
 		{.0, .0, .0, .0, .0, 
-		.0, .0, .0,
+		.0, .0, .0/*,
 		.00, .01, .02, .03, .04, .05, .06, .07, .08, .09,
 		.10, .11, .12, .13, .14, .15, .16, .17, .18, .19,
-		.20, .21, .22, .23, .24, .25, .26, .27, .28, .29, .30
+		.20, .21, .22, .23, .24, .25, .26, .27, .28, .29, .30*/
 		};
 
 
@@ -165,12 +166,29 @@ public class MssTraining {
 
 					System.out.println("threshold = " + th_value[th]);
 					
+					String newfolderName2 = newfolderName + th_name[th] + "/";
+					FileManager.createFolder(newfolderName2);
+					
+					if (th==4 && th_value[4] == th_value[3]){
+						try {
+							FileManager.saveFile(newfolderName2 + "info", "same as hmode");
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						System.out.println("lmode same as hmode");
+						
+						CstartTime.add(CstartTime.get(3));
+						CendTime.add(CendTime.get(3));
+						
+						thPstartTime.put(th, thPstartTime.get(3));
+						thPendTime.put(th, thPendTime.get(3));
+						
+						continue;
+					}
+					
 					CstartTime.add(System.currentTimeMillis());
 					mss.cluster(th_value[th]);
 					CendTime.add(System.currentTimeMillis());
-					
-					String newfolderName2 = newfolderName + th_name[th] + "/";
-					FileManager.createFolder(newfolderName2);
 					
 					List<Long> PstartTime = new ArrayList<Long>();
 					List<Long> PendTime = new ArrayList<Long>();
@@ -212,7 +230,7 @@ public class MssTraining {
 
 				String stats = "Thresholds statistics,\n";
 				stats = "method,value\n";
-				for (int i=0; i< 9; i++)
+				for (int i=0; i< 8; i++)
 					stats += th_name[i] + "," + th_value[i] + "\n";
 
 				stats += "\n\nTime statistics,\n\n";

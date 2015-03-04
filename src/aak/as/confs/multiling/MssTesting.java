@@ -23,14 +23,20 @@ public class MssTesting {
 			"/home/kariminf/Data/ATS/multilingMss2015Testing/";
 
 	private static final String outFolder =
-			"/home/kariminf/Data/ATS/multilingMss2015Testing/summaries/";
+			"/home/kariminf/Data/ATS/multilingMss2015Testing/AllSummarizer/";
 	
 	private static final String parFile =
 			"/home/kariminf/Data/ATS/multilingMss2015Testing/parameters.info";
 
 	private static final String [] langs = 
-		{"pt"};
-
+		{
+		//"af", "ar", "bg", "ca", "cs", "de", "el", "en", "eo", 
+		//"es", "eu", "fa", "fi", "fr", "he", "hr", "hu", "id", 
+		"it"//, 
+		//"ja", "ms", "nl", "no", "pt", "ro", "ru", "sh", 
+		//"sl", "sr", "sv", "th", "tr", "vi", "zh"
+		//"ka", "ko", "pl", "sk"
+		};
 	
 	private static double getThreshold(String thName, MSS mss){
 		
@@ -162,6 +168,7 @@ public class MssTesting {
 			}
 			
 			MSS mss = new MSS(lang);
+			mss.noBrackets();
 			HashMap<String, Integer> sizes = readSizes(lang);
 			List<String> param = parameters.get(lang);
 			
@@ -184,7 +191,7 @@ public class MssTesting {
 				System.out.print(lang + count + ": ");
 				
 				//verify if the file have been already processed
-				fileName = fileName.substring(0, fileName.length()-9) + "_summary.txt";
+				fileName = fileName.substring(0, fileName.length()-9) + ".txt";
 				if (new File(outFolder + lang + "/" + fileName).exists()){
 					System.out.println(fileName  + " already processsed");
 					continue; 

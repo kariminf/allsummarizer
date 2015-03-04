@@ -58,6 +58,7 @@ public class MMS {
 		Cluster cluster = new NaiveCluster(threshold, data);
 		cluster.createClasses();
 		clustered = true;
+		//System.out.println("#sent=" + data.getSentNumber());
 	}
 	
 
@@ -172,6 +173,9 @@ public class MMS {
 
 			numOrder ++;
 		}
+		
+		if(summary.length() < 1)
+			summary = sentences.get(order.get(0)).substring(0, summarySize);
 
 		return summary;
 	}

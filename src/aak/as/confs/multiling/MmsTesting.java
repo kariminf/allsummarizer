@@ -31,7 +31,7 @@ public class MmsTesting {
 			"/home/kariminf/Data/ATS/multilingMms2015Testing/parameters.info";
 
 	private static final String [][] langs = 
-		{{"czech","cs"}, {"french","fr"}, {"greek","el"}, {"hebrew","he"}, {"romanian","ro"}, {"spanish","es"}};
+		{{"hindi","hi"}};
 
 	
 	private static double getThreshold(String thName, MMS mms){

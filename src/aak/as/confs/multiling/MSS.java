@@ -13,6 +13,7 @@ import aak.as.process.extraction.bayes.Feature;
 import aak.as.process.extraction.cluster.Cluster;
 import aak.as.process.extraction.cluster.NaiveCluster;
 import aak.as.tools.Data;
+import aak.as.tools.FileManager;
 import aak.as.tools.Tools;
 
 
@@ -25,11 +26,24 @@ public class MSS {
 	private boolean clustered = false;
 	private PreProcessor preprocessor;
 	
+	private boolean nobrackets = false;
+	
 	public MSS (String lang){
 		this.lang = (lang.length()==2)?lang:"en";
 		clustered = false;
 		data = new Data();
 		preprocessor = new PreProcessor(this.lang, this.data);
+	}
+	
+	/**
+	 * This function is used when we use the test dataset 2015
+	 * In training dataset there are brackets to tell that a sentence is a title and 
+	 * not part of the text body.
+	 * In test dataset, there is no brackets, so the only think to detect them is 
+	 * to verify the end of sentence and the length
+	 */
+	public void noBrackets(){
+		nobrackets = true;
 	}
 
 	public void preprocess(File file){
@@ -90,15 +104,18 @@ public class MSS {
 	}
 
 
-	private String readFile(File file){
+	public String readFile(File file){
 		StringBuffer content = new StringBuffer();
 
 		try {
 			BufferedReader in = new BufferedReader(new FileReader(file));
 			String line;
 			while ( (line = in.readLine()) != null) {
-				if (line.startsWith("["))
+				if (line.startsWith("[") || line.length() < 1)
 					continue;
+				if(nobrackets && line.length() < 50)
+					if (! line.matches(".*[\\.\\!\\?؟。]$"))
+						continue;
 				content.append(line + " ");
 			}
 			in.close();
@@ -170,6 +187,24 @@ public class MSS {
 			
 
 		return summary;
+	}
+	
+	
+	public static void main(String[] args) {
+		
+		MSS mss = new MSS("en");
+		mss.noBrackets();
+		File file = 
+				new File("/home/kariminf/Data/ATS/multilingMss2015Testing/body/text/en/0f8047e125d506e389b7f2d2f2d7f289_body.txt");
+		String fstr = mss.readFile(file);
+		
+		try {
+
+			FileManager.saveFile("/home/kariminf/kkkkkk", fstr);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 
