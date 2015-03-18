@@ -25,13 +25,24 @@ public class MmsTesting {
 			"/home/kariminf/Data/ATS/multilingMms2015Testing/body/";
 
 	private static final String outFolder =
-			"/home/kariminf/Data/ATS/multilingMms2015Testing/summaries/";
+			"/home/kariminf/Data/ATS/multilingMms2015Testing/AllSummarizer_MMS/";
 	
 	private static final String parFile =
 			"/home/kariminf/Data/ATS/multilingMms2015Testing/parameters.info";
 
 	private static final String [][] langs = 
-		{{"hindi","hi"}};
+		{
+		{"arabic","ar"},
+		{"chinese","zh"},
+		{"czech","cs"},
+		{"english","en"},
+		{"french","fr"},
+		{"greek","el"},
+		{"hebrew","he"},
+		{"hindi","hi"},
+		{"romanian","ro"},
+		{"spanish","es"}
+		};
 
 	
 	private static double getThreshold(String thName, MMS mms){

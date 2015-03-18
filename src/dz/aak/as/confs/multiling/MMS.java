@@ -89,9 +89,16 @@ public class MMS {
 	/**
 	 * Clear the used features if there is any
 	 */
-	public void clear(){
+	public void clear(){		preprocessor.clearText();
 		features.clear();
 		preprocessor.clearText();
+	}
+	
+	/**
+	 * Clear the used features if there is any
+	 */
+	public void clearFeatures(){
+		features.clear();
 	}
 	
 	public List<Double> getSimilarity(){
