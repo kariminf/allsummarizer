@@ -1,13 +1,31 @@
-package aak.testing;
+/*
+ * This file is part of AllSummarizer project
+ * 
+ * Copyright 2015 Abdelkrime Aries <kariminfo0@gmail.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package dz.aak.testing;
 
 import java.util.List;
 
-import aak.as.preProcess.PreProcessor;
-import aak.as.tools.Data;
+import dz.aak.as.preProcess.PreProcessor;
+import dz.aak.as.tools.Data;
 
 public class PreProcess {
 
-	private static String lang = "zh";
+	private static String lang = "ar";
 	
 	private static String getStringLang (String lang){
 		String res="";
