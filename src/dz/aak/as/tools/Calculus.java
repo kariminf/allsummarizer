@@ -273,7 +273,7 @@ public class Calculus {
 	 * Recursive method used to search different combinations of a set 
 	 * of elements starting from an element with a maximum number of combinations.
 	 *  
-	 * This method is used by {@link Calculus#getCombinations(int, int)}.
+	 * This method is used by {@link Calculus_T#getCombinations(int, int)}.
 	 * 
 	 * @param size the size of the elements set
 	 * @param start starting point
@@ -305,39 +305,6 @@ public class Calculus {
 		}
 
 		return combTList;
-	}
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-
-		/*
-		 * int i = Calculus.combination(10,3); System.out.println(i);
-		 * 
-		 * System.out.println(Calculus.getCombinations(5, 5));
-		 */
-
-		List<Double> k = new ArrayList<Double>();
-		k.add(1.0);
-		k.add(2.0);
-		k.add(2.0);
-		k.add(3.0);
-		k.add(4.0);
-		k.add(5.0);
-		k.add(6.0);
-		k.add(6.0);
-
-		System.out.println("mean: " + Calculus.mean(k));
-		System.out.println("variance: " + Calculus.variance(k));
-		// System.out.println("deviation: " + Math.sqrt(Calculus.variance(k)));
-		System.out.println("median: " + Calculus.median(k));
-		System.out.println("higher mode: " + Calculus.modeHigh(k));
-		System.out.println("lower mode: " + Calculus.modeLow(k));
-		System.out.println("skewness: " + Calculus.skewness(k));
-
-		System.out.println(Calculus.delMultiple(k, 2.0));
-
 	}
 
 }
