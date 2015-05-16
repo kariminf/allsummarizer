@@ -22,13 +22,24 @@ package dz.aak.as.process.extraction;
 import java.util.ArrayList;
 import java.util.List;
 
+import dz.aak.as.preProcess.PreProcessor;
 import dz.aak.as.process.extraction.bayes.Feature;
 import dz.aak.as.tools.Data;
 
 
-/*
+/**
+ * This class is used to score each sentence in a text.
+ * 
+ * Given a list of sentences, a list of features and a list of topics, this class
+ * is used to: 
+ * <ul>
+ * <li>Add scoring features.</li>
+ * <li>Calculate the probability that a sentence belongs to or represents a topic.</li>
+ * <li>Calculate the probability that a sentence represents all the topics.</li>
+ * </ul>
+ * 
  * @author Abdelkrime Aries
- * @use this class is used to score each sentence in the different topics
+ *
  */
 public class BayesClassifier {
 	
@@ -37,39 +48,57 @@ public class BayesClassifier {
 	private boolean normalized = false;
 	
 	/**
-	 * This function is used to set the features vector 
+	 * Sets the list of features to be used to score a sentence
+	 * 
+	 * @param features list of features (See {@link Feature})
 	 */
 	public void setFeatures(List<Feature> features){
-		this.features = features;
+		for (Feature feature: features)
+			this.features.add(feature);
 	}
 	
+	
 	/**
-	 * This function is used to add new features
+	 * Add a new feature to the list 
+	 * @param feature the feature to be add
 	 */
 	public void addFeature(Feature feature){
 		features.add(feature);
 	}
 	
+	
+	/**
+	 * Sets whether normalizing the score or not. 
+	 * Normalizing is to divide the score by the length of the sentence
+	 * 
+	 * @param normalized Normalize the score or not
+	 */
 	public void normalize(boolean normalized){
 		this.normalized = normalized;
 	}
 	
+	
 	/**
-	 * This function is served to classify our sentences, 
-	 * and order them from the more important to the less one
+	 * Scores the sentences and reorder them from the more important to the less one.
+	 * 
+	 * In order to use this method, the data container must contain preprocessed text. 
+	 * To do this, we must call the preprocessor first (See {@link PreProcessor}).
+	 * 
+	 * @param data the data container
+	 * @return a list of sentences' indexes ordered by importance
 	 */
 	public List<Integer> classify(Data data) {
 		//HashMap<Integer, List<Integer>> classes, List<List<String>> sentences
 		
-		List<Integer> orderedSentences= new ArrayList<Integer>();
-		List<Double> orderedScores= new ArrayList<Double>();
+		List<Integer> orderedSentences = new ArrayList<Integer>();
+		List<Double> orderedScores = new ArrayList<Double>();
 		
-		for(int sentID=0; sentID < data.getSentNumber();sentID++){
+		for(int sentID = 0; sentID < data.getSentNumber(); sentID++){
 			Double currentScore = scoreSentence(data, sentID);
 			
 			//System.out.println("Sentence:" + sentID + " - Score:" + currentScore);
 			int j = 0;
-			while (j< orderedScores.size() && currentScore <= orderedScores.get(j))
+			while (j < orderedScores.size() && currentScore <= orderedScores.get(j))
 				j++;
 
 			orderedSentences.add(j, sentID);
@@ -80,10 +109,22 @@ public class BayesClassifier {
 		return orderedSentences;
 	}
 
-	/*
-	 * This function calculate the score of a sentence in a class
-	 * Score(Si,Cj,F1...Fk) = PROD_k Score (Si,Cj,Fk)
+	
+	/**
+	 * Calculates the score of a sentence in a class of topics
 	 * 
+	 * The score of a sentence s<sub>i</sub> in a class of topics c<sub>j</sub> 
+	 * having a set of features F is the production of scores 
+	 * of s<sub>i</sub> in c<sub>j</sub> knowing each feature.
+	 * <p><code>
+	 * P(s<sub>i</sub> &#8712; c<sub>j</sub> | F) = 
+	 * &#8719;<sub>k</sub> P(s<sub>i</sub> &#8712; c<sub>j</sub> | f<sub>k</sub>)
+	 * </code></p>
+	 * 
+	 * @param data the data container
+	 * @param sentID sentence index (ID)
+	 * @param classID index (ID) of the class (topic).
+	 * @return the score of a sentence in a class with a set of features.
 	 */
 	private Double scoreSentInClass (Data data, int sentID, int classID){
 		
@@ -91,38 +132,56 @@ public class BayesClassifier {
 		
 		for (Feature feature: features){
 			String scoreParam = feature.getScoreParam();
-			scoreSent += Math.log(feature.score(classID, data.makeScoreParams(scoreParam, sentID))+1.0);
+			//Using log will protect from overflow
+			scoreSent += Math.log(
+					feature.score(classID, data.makeScoreParams(scoreParam, sentID)) + 1.0
+					);
 		}
-			
-
+		
 		return scoreSent;
 	}
 	
 
+	
 	/**
-	 * This function calculate the apartness of a sentences to all classes
-	 * So: P(Si -> C1^C2^....^Cn / D, features) == P(Si -> C1/D, features) * .......* P(Sn -> C1/D, features)
-	 * with normalization on sentence length+1
+	 * Scores a sentence
+	 * 
+	 * The score is the probability that a sentence s<sub>i</sub> represents 
+	 * all the topics c<sub>j</sub> ∈ C knowing a set of features F.
+	 * <p><code>
+	 * P(s<sub>i</sub> &#8712; &#8898;<sub>j</sub> c<sub>j</sub> | F) = 
+	 * &#8719;<sub>j</sub> P(s<sub>i</sub> &#8712; c<sub>j</sub> | F)
+	 * </code></p>
+	 * 
+	 * @param data the data container
+	 * @param sentID The index (ID) of the sentence to be scored
+	 * @return the score of the sentence
 	 */
 	public Double scoreSentence(Data data, int sentID){
 		
 		Double score = 0.0;
 		
-		
-		
+		//Multiplication is addition in log space
 		for (int classID = 0; classID < data.getClassesNumber(); classID++){
-			Double scoreclass= scoreSentInClass(data, sentID, classID);
+			Double scoreclass = scoreSentInClass(data, sentID, classID);
 			score += scoreclass;
 		}
 		
+		//If the normalization of the score is activated
 		if (normalized){
 			int sentLeng = (int) data.makeScoreParam("sentRLeng", sentID);
 			return score - Math.log(sentLeng);
 		}
 			
-		return score;// - Math.log(sentlength);
+		return score;
 	}
 
+	
+	/**
+	 * Trains Bayes classifier on the data, using a set of features
+	 * 
+	 * @param data data container
+	 */
 	public void train(Data data)
 	{
 		for (Feature feature: features){

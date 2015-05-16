@@ -23,6 +23,15 @@ import java.util.List;
 
 import dz.aak.as.preProcess.lang.Segmenter;
 
+/**
+ * Default Segmenter; it uses a simple segmentation method; 
+ * based on end-sentence punctuation for sentence detection,
+ * and space for word tokenization.
+ * This class is used as a fallback when we can't find a certain language's segmenter.
+ * 
+ * @author Abdelkrime Aries
+ *
+ */
 public class DefSegmenter implements Segmenter {
 
 	@Override

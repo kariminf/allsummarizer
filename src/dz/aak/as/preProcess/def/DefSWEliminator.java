@@ -22,6 +22,15 @@ import java.util.List;
 
 import dz.aak.as.preProcess.lang.SWEliminator;
 
+/**
+ * Default Stop-words eliminator; it does nothing. 
+ * 
+ * This class is used as a fallback when we can't 
+ * find a certain language's stop-words eliminator.
+ * 
+ * @author Abdelkrime Aries
+ *
+ */
 public class DefSWEliminator implements SWEliminator {
 
 	@Override

@@ -20,33 +20,49 @@ package dz.aak.as.process.extraction.bayes;
 
 import java.util.List;
 
+/**
+ * The feature to be used to score a sentence in the text.
+ * 
+ * @author Abdelkrime Aries
+ *
+ */
 public interface Feature {
 
 	/**
-	 * Gives us a string which contains the names of parameters separated by a comma
+	 * Gets the names of parameters separated by a comma.
+	 * 
 	 * @return training parameters' names
 	 */
 	public String getTrainParam();
 	
+	
 	/**
-	 * Train the system according to this feature
+	 * Trains the classifier using to this feature
+	 * 
 	 * @param trainParam a list of objects which are the parameters needed by this feature
 	 * 		  for training.
 	 */
 	public void train(List<Object> trainParam);
 	
+	
 	/**
-	 * Gives us a string which contains the names of parameters separated by a comma
+	 * Gets the names of parameters separated by a comma
+	 * 
 	 * @return score parameters' names
 	 */
 	public String getScoreParam();
 	
+	
 	/**
+	 * Scores a sentence according to a topic. 
 	 * 
-	 * @param classID the ID of the class in which we want to score the sentence
+	 * The sentence is scored using the score parameters, for example, the term frequency.
+	 * 
+	 * @param classID the ID of the class (topic) wich is used to score the sentence
 	 * @param scoreParam a list of Objects which are the parameters needed
 	 *        to score the sentence
 	 * @return the score of the sentence in the class "classID" using this feature
 	 */
-	public Double score(int classID, List<Object> scoreParam); //score(s, C, f)
+	public Double score(int classID, List<Object> scoreParam);
+	
 }

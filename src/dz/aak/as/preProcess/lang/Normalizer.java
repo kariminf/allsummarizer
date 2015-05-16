@@ -20,24 +20,48 @@ package dz.aak.as.preProcess.lang;
 
 import java.util.HashMap;
 
+/**
+ * This interface is used for text Normalization
+ * 
+ * To normalize a text is to replace or delete some characters, 
+ * For example, in Arabic we delete diacritics (Tashkiil),
+ * in French we replace diacritics (énervé --> enerve)
+ *  
+ * @author Abdelkrime Aries
+ *
+ */
 public interface Normalizer {
+	
+	
 	/**
-	 * 
-	 * @param text
-	 * @return
+	 *  Normalizes a text. 
+	 *  
+	 *  Here, all types of normalization are used for a given language.
+	 *  
+	 * @param text the text to be normalized
+	 * @return a normalized text
 	 */
 	public String normalize (String text);
+	
+	
 	/**
+	 * Normalizes a text, given a parameter
 	 * 
-	 * @param text
-	 * @param param the function we want to apply on the text \n
-	 * For example: 
-	 * @return
+	 * Sometimes there are many types of normalization, and using this method
+	 * one can choose which normalization function to use 
+	 * 
+	 * @param text the text to be normalized
+	 * @param param the function we want to apply on the text
+	 * @return a normalized text
 	 */
 	public String normalize (String text, String param);
+	
+	
 	/**
+	 * Gives the type (function) of normalization with its description.
 	 * 
 	 * @return name of each parameter with its description
 	 */
 	public HashMap <String, String> getParameters();
+	
 }

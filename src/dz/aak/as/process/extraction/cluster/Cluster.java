@@ -18,17 +18,35 @@
 
 package dz.aak.as.process.extraction.cluster;
 
+import dz.aak.as.preProcess.PreProcessor;
 import dz.aak.as.tools.Data;
 
+/**
+ * This class is used for sentences' clustering. 
+ * 
+ * Given a set of sentences, we want to cluster identical ones into the same group.
+ * 
+ * @author Abdelkrime Aries
+ *
+ */
 public abstract class Cluster {
 	
 	protected Data data;
 	
+	/**
+	 * Constructor of the class. We have to afford preprocessed data 
+	 * (See {@link PreProcessor}).
+	 * 
+	 * @param data data container
+	 */
 	public Cluster(Data data){
 		this.data = data;
 	}
 	
+	
+	/**
+	 * Creates the different groups of topics, and put the result into the data container
+	 */
 	public abstract void createClasses();
-	//public HashMap<Integer, List<Integer>> getClasses();
 
 }

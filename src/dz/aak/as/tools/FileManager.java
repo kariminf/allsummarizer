@@ -27,69 +27,83 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 
 /**
+ * This class is used to manage files
  * 
- * @author kariminf
- * This class is used for file 
- *
+ * @author Abdelkrime Aries
+ * 
  */
 public class FileManager {
 
-	
-	public static boolean saveFile(String filePath, String content) throws IOException{
+	/**
+	 * Saves a string into a specific file path.
+	 * 
+	 * @param filePath file's path
+	 * @param content the content to be saved
+	 * @throws IOException when writing the file
+	 */
+	public static void saveFile(String filePath, String content)
+			throws IOException {
 		Writer out = new OutputStreamWriter(new FileOutputStream(filePath), "UTF-8");
-	    try {
-	      out.write(content);
-	    }
-	    finally {
-	      out.close();
-	    }
-	    
-	    return true;
-	}
-	
-	public static String readFile (File f) {
-	    try {
-	      String contents = "";
-
-	      BufferedReader input = new BufferedReader(new FileReader(f));
-	      
-	      for(String line = input.readLine(); line != null; line = input.readLine()) {
-	    	  contents += " " + line + System.lineSeparator();
-	      }
-	      input.close();
-
-	      return contents;
-	      
-	    } catch(IOException e) {
-	      e.printStackTrace();
-	      System.exit(1);
-	      return null;
-	    } 
-	  }
-	
-	public static boolean createFolder(String dirName){
 		
+		try {
+			out.write(content);
+		} finally {
+			out.close();
+		}
+	}
+
+	
+	/**
+	 * Reads a textual file and returns its content.
+	 * 
+	 * @param f the textual file to be read.
+	 * @return the content of the file
+	 */
+	public static String readFile(File f) {
+		try {
+			String contents = "";
+
+			BufferedReader input = new BufferedReader(new FileReader(f));
+
+			for (String line = input.readLine(); line != null; line = input
+					.readLine()) {
+				contents += " " + line + System.lineSeparator();
+			}
+			input.close();
+
+			return contents;
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+			return null;
+		}
+	}
+
+	
+	/**
+	 * Creates a folder
+	 * 
+	 * @param dirName the folder path
+	 * @return true if created, false otherwise
+	 */
+	public static boolean createFolder(String dirName) {
+
 		File dir = new File(dirName);
 
-		if (dir.exists()){
-			//System.out.println("The directory already exists");
+		if (dir.exists()) {
+			// System.out.println("The directory already exists");
 			return false;
 		}
 
-		try{
+		try {
 			dir.mkdir();
-		} catch(SecurityException se){
-			//System.out.println("Can't create the directory!!");
+		} catch (SecurityException se) {
+			// System.out.println("Can't create the directory!!");
 			return false;
-		}        
-		 
+		}
+
 		return true;
 	}
-	
-	
-	public static void main(String[] args) {
-		createFolder("/home/kariminf/Data/ATS/cmplg/peer/stat_th/kkk");
-	}
-	
-	
+
 }

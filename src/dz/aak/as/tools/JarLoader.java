@@ -31,10 +31,9 @@ import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
-
-
 /**
- * A class for loading AllSummerizer plugin Jars
+ * A class for loading jar files
+ * 
  * @author Abdelkrime Aries
  */
 public class JarLoader {
@@ -44,84 +43,96 @@ public class JarLoader {
 	private String extVersion;
 
 	/**
-	 * Create a new JarLoader
+	 * Creates a new JarLoader
+	 * 
 	 * @param location the location where we can find the Jar Files (must end with "/")
 	 * @param extensionName to compare it with "Extension-Name" in 
-	 * META-INF/MANIFEST.MF File of the Jar
-	 * @param extensionVersion to compare it with "Specification-Version" in
-	 * META-INF/MANIFEST.MF File of the Jar
+	 * META-INF/MANIFEST.MF file of the Jar
+	 * @param extensionVersion  to compare it with "Specification-Version" in
+	 *            META-INF/MANIFEST.MF file of the Jar
 	 */
-	public JarLoader(String location, String extensionName, String extensionVersion) {
-		
+	public JarLoader(String location, String extensionName, String extensionVersion){
+
 		extName = extensionName;
 		extVersion = extensionVersion;
-		
-		//extName and extVersion must be affected before loading the Jar files
+
+		// extName and extVersion must be affected before loading the Jar files
 		classLoader = loadJars(location);
-		
+
 	}
-
 	
-	/**
-	 * Get an instance of the class that implements @Info in the Jar, 
-	 * given a language
-	 * @param lang the language code (ISO 639-1); eg. "ar", "cs", "en", "ja"
-	 * @param infoClass the class that extends @Info; eg. @PreProcessInfo
-	 * @return an instance of @PreProcessInfo specific for the language needed
-	 */
-	public <T extends Info> T getInfoService(String lang, Class<T> infoClass){
 
-		if (classLoader == null) return null;
-		
+	/**
+	 * Gets an instance of the class that implements {@link Info} in the Jar,
+	 * given a language
+	 * 
+	 * @param lang the language code (ISO 639-1); eg. "ar", "cs", "en", "ja"
+	 * @param infoClass the class that extends {@link Info}; 
+	 * eg. {@link PreProcessInfo}
+	 * @return an instance of "infoClass" specific for the language needed
+	 */
+	public <T extends Info> T getInfoService(String lang, Class<T> infoClass) {
+
+		if (classLoader == null)
+			return null;
+
 		ServiceLoader<T> sl = ServiceLoader.load(infoClass, classLoader);
+		
 		Iterator<T> it = sl.iterator();
 		T info = null;
 		it = sl.iterator();
-		while (it.hasNext()){
+		
+		while (it.hasNext()) {
 			info = it.next();
-			if (lang.equals(info.getISO639_1())) return info;
+			if (lang.equals(info.getISO639_1()))
+				return info;
 		}
 
 		return null;
 
 	}
-	
 
 	/**
-	 * Get an instance of the class that implements a service (or a class cls)
+	 * Gets an instance of the class that implements a service (or a class cls)
+	 * 
 	 * @param info the info file where we want to get the service
 	 * @param cls the class representing the service we looking for
 	 * @return an instance of the class that implements a service cls
 	 */
-	public <T> T getLangService(Info info, Class<T> cls){
+	public <T> T getLangService(Info info, Class<T> cls) {
 
-		if (classLoader == null) return null;
-		if (info == null) return null;
-		
+		if (classLoader == null)
+			return null;
+		if (info == null)
+			return null;
+
 		String packageName = info.getClass().getName();
 		packageName = packageName.substring(0, packageName.lastIndexOf("."));
-			
+
 		{
-			String className = packageName + "." + info.getPrefix() + cls.getSimpleName();
-		
+			String className = packageName + "." + info.getPrefix()
+					+ cls.getSimpleName();
+
 			T service = getServiceByName(className, cls);
-			
-			if (service != null) return service;
+
+			if (service != null)
+				return service;
 		}
-		
-		
+
 		return FindService(packageName, cls);
 
 	}
-	
+
 	
 	/**
+	 * Gets an instance of the class that implements a service (or a class cls) 
+	 * by its name
 	 * 
-	 * @param className
-	 * @param cls
-	 * @return
+	 * @param className the class name
+	 * @param cls the class which we are looking for its service
+	 * @return an instance of the class cls
 	 */
-	private <T> T getServiceByName (String className, Class<T> cls){
+	private <T> T getServiceByName(String className, Class<T> cls) {
 
 		try {
 
@@ -140,44 +151,60 @@ public class JarLoader {
 		}
 
 	}
-	
 
-	private <T> T FindService(String packageName, Class<T> cls){
-		
+	
+	/**
+	 * Searches for an instance of the class that implements a service (or a class cls).
+	 * This is used when we fail to get the instance using the name
+	 * 
+	 * @param packageName the name of the jar file
+	 * @param cls the class which we are looking for its service
+	 * @return an instance of the class cls
+	 */
+	private <T> T FindService(String packageName, Class<T> cls) {
+
 		ServiceLoader<T> sl = ServiceLoader.load(cls, classLoader);
 		Iterator<T> it = sl.iterator();
-		
+
 		it = sl.iterator();
-		while (it.hasNext()){
+		while (it.hasNext()) {
 			T service;
-			try{
+			try {
 				service = it.next();
-			} catch (ServiceConfigurationError e){
+			} catch (ServiceConfigurationError e) {
 				System.out.println("ServiceConfigurationError: " + cls.getName());
 				return null;
 			}
-			
-			//System.out.println(service.getClass().getName());
-			
+
+			// System.out.println(service.getClass().getName());
+
 			if (service.getClass().getName().contains(packageName))
 				return service;
-				
+
 		}
 
 		return null;
 
 	}
 
-	private URLClassLoader loadJars(String location){
+	
+	/**
+	 * Loads all jar files that have the wanted extension's name and version.
+	 * 
+	 * @param location the folder where we search for jars
+	 * @return a class loader
+	 */
+	private URLClassLoader loadJars(String location) {
 
 		File preprocessFolder = new File(location);
 
-		File [] jarFiles  = preprocessFolder.listFiles(new JarFileFilter());
+		File[] jarFiles = preprocessFolder.listFiles(new JarFileFilter());
 
-		if (jarFiles.length <1) return null;
+		if (jarFiles.length < 1)
+			return null;
 
-		URL [] jarURLs = new URL[jarFiles.length];
-		for(int i=0; i< jarFiles.length; i++)
+		URL[] jarURLs = new URL[jarFiles.length];
+		for (int i = 0; i < jarFiles.length; i++)
 			try {
 				jarURLs[i] = jarFiles[i].toURI().toURL();
 			} catch (MalformedURLException e) {
@@ -190,30 +217,44 @@ public class JarLoader {
 		return ucl;
 	}
 
+	
+	/**
+	 * This class is used to filter the jars that implements the wanted extension.
+	 * 
+	 * @author Abdelkrime Aries
+	 *
+	 */
 	private class JarFileFilter implements FilenameFilter {
-		
+
 		@Override
 		public boolean accept(File dir, String name) {
-			if (! name.toLowerCase().endsWith(".jar")) return false;
+			if (!name.toLowerCase().endsWith(".jar"))
+				return false;
 			try {
 				JarFile jf = new JarFile(dir.getPath() + "/" + name);
 				Manifest manifest = jf.getManifest();
 				Attributes attributes = manifest.getMainAttributes();
 				{
-					String extensionName = 
-							attributes.getValue("Extension-Name");
-					if (extensionName == null) return false;
-					//System.out.println(jf.getName() + ": extension= "+ extName + ", found="+ extensionName);
-					if (! extensionName.equals(extName)) return false;
-					
+					String extensionName = attributes
+							.getValue("Extension-Name");
+					if (extensionName == null)
+						return false;
+					// System.out.println(jf.getName() + ": extension= "+
+					// extName + ", found="+ extensionName);
+					if (!extensionName.equals(extName))
+						return false;
+
 				}
-				
+
 				{
-					String extensionVersion = 
-							attributes.getValue("Specification-Version");
-					if (extensionVersion == null) return false;
-					//System.out.println(jf.getName() + ": extension= "+ extName + ", found="+ extensionName);
-					if (! extensionVersion.equals(extVersion)) return false;
+					String extensionVersion = attributes
+							.getValue("Specification-Version");
+					if (extensionVersion == null)
+						return false;
+					// System.out.println(jf.getName() + ": extension= "+
+					// extName + ", found="+ extensionName);
+					if (!extensionVersion.equals(extVersion))
+						return false;
 
 				}
 

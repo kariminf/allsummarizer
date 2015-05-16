@@ -20,17 +20,30 @@ package dz.aak.as.preProcess.lang;
 
 import java.util.List;
 
+/**
+ * Sentence segmentation and word tokenization for a given language.
+ * 
+ * @author Abdelkrime Aries
+ *
+ */
 public interface Segmenter {
+	
+	
 	/**
+	 * Segments a text in a given language to many sentences.
 	 * 
-	 * @param text
-	 * @return
+	 * @param text input text
+	 * @return a list of sentences
 	 */
 	public List<String> splitToSentences(String text);
+	
+	
 	/**
+	 * Tokenizes a text: split it to many words.
 	 * 
-	 * @param text
-	 * @return
+	 * @param text input text (a sentence usually)
+	 * @return a list of words
 	 */
 	public List<String> segmentWords(String text);
+	
 }

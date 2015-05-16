@@ -26,17 +26,22 @@ import java.util.List;
  * This feature is used to score each sentence using its position in the text.
  * p-avg = 
  */
-public class Pos implements Feature {
 
-	/*
-	List<List<String>> sentences;
-	HashMap<Integer, List<Integer>> classes;
-	HashMap<Integer, Integer> sentPos;*/
+/**
+ * Pos: position of the sentence in the source text(s).
+ * 
+ * This feature scores a sentence using it's position in the text. 
+ * It divides the positions' space to 10 categories.
+ * 
+ * @author Abdelkrime Aries
+ *
+ */
+public class Pos implements Feature {
 	
 	private float posPart;
 	
-	private HashMap<Integer, List<Integer>> classPosFreq 
-	= new HashMap<Integer, List<Integer>>();
+	private HashMap<Integer, List<Integer>> classPosFreq = 
+			new HashMap<Integer, List<Integer>>();
 
 	@Override
 	public String getTrainParam() {
@@ -49,65 +54,65 @@ public class Pos implements Feature {
 		@SuppressWarnings("unchecked")
 		HashMap<Integer, List<Integer>> classes = 
 				(HashMap<Integer, List<Integer>>) trainParam.get(0);
+		
 		@SuppressWarnings("unchecked")
 		HashMap<Integer, Integer> sentPos = 
 				(HashMap<Integer, Integer>) trainParam.get(1);
+		
 		int maxpos = 0;
 		
+		//Begin: search for max pos
 		for (int sentID : sentPos.keySet()){
 			if (maxpos < sentPos.get(sentID))
 				maxpos = sentPos.get(sentID);
-			
 		}
+		//End: search for max pos
 				
-		posPart = (float) maxpos/ 10 ; 
-		
-		//System.out.println("posPart=" + posPart);
+		posPart = (float) maxpos / 10; 
 		
 		//Reset the classPosFreq, when training this feature another time
 		classPosFreq = new HashMap<Integer, List<Integer>>();
 		
-		for (int classID=0; classID< classes.size(); classID++){
+		for (int classID = 0; classID < classes.size(); classID++){
 			
 			List<Integer> posFreq = new ArrayList<Integer>();
 			
-			for (int lengCat = 0; lengCat < 10; lengCat++)
+			//creation length categories
+			for (int lengCat = 0; lengCat < 10; lengCat++){
 				posFreq.add(0);
+			}
 			
+			//Begin: Search for position categories in a class (topic)
 			for (int sentID: classes.get(classID)){
 				int pos = sentPos.get(sentID);
 				
-				for (int posCat = 0; posCat < 10; posCat++)
-					if (pos <= posPart *(posCat +1)){
-						posFreq.set(posCat, (posFreq.get(posCat)+1));
+				for (int posCat = 0; posCat < 10; posCat++){
+					if (pos <= posPart * (posCat + 1)){
+						posFreq.set(posCat, (posFreq.get(posCat) + 1));
 						break;
 					}
+				}
 			}
+			//End: Search for position categories in a class (topic)
 			
 			classPosFreq.put(classID, posFreq);
 		}
-			/*
-		this.sentences = sentences;
-		this.classes = classes;
-		this.sentPos = sentPos;*/
 	}
 
+	
 	@Override
 	public String getScoreParam() {
 		return "sentPos";
 	}
 	
-	/**
-	 * Score a sentence using the equation:
-	 * score(s_i in C_j / pos) = cos_max (s_i,s)*score(s); s in C_j
-	 */
+	
 	@Override
 	public Double score(int classID, List<Object> scoreParam) {
 		
 		int sentPos = (int) scoreParam.get(0);
 		
 		for (int posCat = 0; posCat < 10; posCat++)
-			if (sentPos <= posPart *(posCat +1))
+			if (sentPos <= posPart *(posCat + 1))
 				return (double) classPosFreq.get(classID).get(posCat);
 		
 		return 0.0;

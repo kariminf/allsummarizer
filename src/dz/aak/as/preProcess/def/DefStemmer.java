@@ -22,6 +22,13 @@ import java.util.List;
 
 import dz.aak.as.preProcess.lang.Stemmer;
 
+/**
+ * Default Stemmer; it returns the same list as input. 
+ * This class is used as a fallback when we can't find a certain language's stemmer.
+ * 
+ * @author Abdelkrime Aries
+ *
+ */
 public class DefStemmer implements Stemmer {
 
 	@Override

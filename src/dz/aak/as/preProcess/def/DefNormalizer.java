@@ -22,6 +22,13 @@ import java.util.HashMap;
 
 import dz.aak.as.preProcess.lang.Normalizer;
 
+/**
+ * Default Normalizer; it returns the same text as input. 
+ * This class is used as a fallback when we can't find a certain language's normalizer.
+ * 
+ * @author Abdelkrime Aries
+ *
+ */
 public class DefNormalizer implements Normalizer {
 
 	@Override

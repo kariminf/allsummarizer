@@ -20,6 +20,12 @@ package dz.aak.as.preProcess.lang;
 
 import dz.aak.as.tools.Info;
 
+/**
+ * Contains the informations about the preprocessed language
+ * 
+ * @author Abdelkrime Aries
+ *
+ */
 public interface PreProcessInfo extends Info {
 	
 	static final String version = "0.6";

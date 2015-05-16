@@ -18,14 +18,44 @@
 
 package dz.aak.as.tools;
 
+/**
+ * Info interface to be used with language-based plugins.
+ * 
+ * @author Abdelkrime Aries
+ *
+ */
 public interface Info {
 	
+	/**
+	 * Returns the ISO 639-1 language code, for example: "ar", "en", "fr", etc.
+	 * 
+	 * @return the ISO 639-1 language code
+	 */
 	public String getISO639_1();
 	
+	
+	/**
+	 * Returns the English name of the language, for example "Arabic".
+	 * 
+	 * @return English name of the language
+	 */
 	public String getLangEnglishName();
 	
+	
+	/**
+	 * Returns the original name of the language, for example: "العربية".
+	 * @return language's name with the original alphabet
+	 */
 	public String getLangName();
 	
+	
+	/**
+	 * The prefix used in different processing classes the language. 
+	 * For example: in preprocessing English texts, we get "En", where our classes are:
+	 * EnNormalizer, EnStemmer, etc.
+	 * 
+	 * @return the prefix of classes
+	 */
 	public String getPrefix();
 
 }

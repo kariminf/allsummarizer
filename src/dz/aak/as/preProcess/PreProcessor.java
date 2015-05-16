@@ -35,14 +35,30 @@ import dz.aak.as.preProcess.lang.Stemmer;
 import dz.aak.as.tools.Data;
 import dz.aak.as.tools.JarLoader;
 
-
+/**
+ * Preprocess task
+ * 
+ * <p>Given a text in a certain language, this class is used to look for adequate 
+ * methods to preprocess it.</p>
+ * <p>PreProcessing consists of normalization (See {@link Normalizer}), sentences 
+ * and word segmentation (See {@link Segmenter}), stemming (See {@link Stemmer})
+ *  and stop words removing (See {@link SWEliminator}).
+ * 
+ * @author Abdelkrime Aries
+ *
+ */
 public class PreProcessor {
 
-	// In multi-documents summarization, we have many texts
-	private List<String> Texts = new ArrayList<String>();
+	//The location of the preprocessing plugins
+	private final String location = "preProcess/";
+	
+	// In multi-document summarization, we have many texts
+	private List<String> texts = new ArrayList<String>();
 
+	//Data container
 	private Data data;
 
+	//Different preprocessing tasks
 	private PreProcessInfo info = null;
 	private Normalizer normalizer = null;
 	private Segmenter segmenter = null;
@@ -50,19 +66,34 @@ public class PreProcessor {
 	private Stemmer stemmer = null;
 
 
+	/**
+	 * Creates a PreProcessor for a specific language
+	 * 
+	 * @param lang the language in ISO 639-1 code, eg. "en", "fr", "ar", etc.
+	 * @param data The data container
+	 */
 	public PreProcessor(String lang, Data data){
 		setLanguage(lang);
 		this.data = data;
 	}
 
 
+	/**
+	 * Changes or sets the language of the preprocessor
+	 * 
+	 * @param lang the language in ISO 639-1 code, eg. "en", "fr", "ar", etc.
+	 */
 	public void setLanguage(String lang){
 		
+		//Search for all preprocessing plugins 
 		JarLoader jarLoader = 
-				new JarLoader("preProcess/", "aak/as/preProcess", PreProcessInfo.version);
+				new JarLoader(location, "aak/as/preProcess", PreProcessInfo.version);
 		
+		//get the info class for the preprocessed language
 		info = jarLoader.getInfoService(lang, PreProcessInfo.class);
 
+		//Try to get the preprocessing tasks' classes, otherwise use the default
+		
 		normalizer = jarLoader.getLangService(info, Normalizer.class);
 		if (normalizer == null){
 			System.out.println(lang + ": No Normalizer, using default");
@@ -90,26 +121,38 @@ public class PreProcessor {
 
 	}
 
+	/**
+	 * Clears the texts in multi-document preprocessing
+	 */
 	public void clearText(){
-		Texts.clear();
+		texts.clear();
 	}
 
+	/**
+	 * Adds a text to the texts to be preprocessed
+	 * 
+	 * @param text the text to add
+	 */
 	public void addText(String text){
-		Texts.add(text);	
+		texts.add(text);	
 	}
 
+	/**
+	 * Preprocess all the entered texts using the method 
+	 * {@link PreProcessor#addText(String)}
+	 */
 	public void preProcess(){
 
 		List<String> sentences = new ArrayList<String>();
 		HashMap<Integer, Integer> sentPos = new HashMap<Integer, Integer>();
 
 		int sentMergePos = 0;
-		for (String text: Texts){
+		for (String text: texts){
 			text = normalizer.normalize(text);
 			List<String> sentInText = segmenter.splitToSentences(text);
 			int textPos = - 1 - sentMergePos;
 			sentPos.put(textPos, sentInText.size());
-			for (int i=1; i<= sentInText.size(); i++){
+			for (int i = 1; i <= sentInText.size(); i++){
 				sentPos.put(sentMergePos, i);
 				sentMergePos++;
 			}
@@ -119,7 +162,6 @@ public class PreProcessor {
 
 		List<List<String>> sentWords = PreProcess(sentences);
 
-		//System.out.println("====>" + sentPos.size());
 		data.setSentPos(sentPos);
 		data.setSentences(sentences);
 		data.setSentWords(sentWords);
@@ -127,10 +169,17 @@ public class PreProcessor {
 	}
 
 
+	/**
+	 * Preprocess a list of sentences; here the sentence segmentation task is not used
+	 * 
+	 * @param Sents list of sentences
+	 * @return list of sentences where each sentence is a list of preprocessed words
+	 */
 	public List<List<String>> PreProcess (List<String> Sents){
 
 		List<List<String>> sentWords = new ArrayList<List<String>>();
-		List<Integer> nbrWords = new ArrayList<Integer>(); //number of words in the sentences including stop-words
+		//number of words in the sentences including stop-words
+		List<Integer> nbrWords = new ArrayList<Integer>(); 
 
 		for (String sent: Sents){
 			List<String> segSent = segmenter.segmentWords(sent);
@@ -150,6 +199,13 @@ public class PreProcessor {
 	}
 
 
+	/**
+	 * Preprocess a given text
+	 * 
+	 * @param inTxt text to be preprocessed; the result can be found in the 
+	 * {@link Data} object given in the constructor 
+	 * (See {@link PreProcessor#PreProcessor(String, Data)}
+	 */
 	public void preProcess(String inTxt){
 
 		inTxt = normalizer.normalize(inTxt);
@@ -159,8 +215,8 @@ public class PreProcessor {
 		List<List<String>> sentWords = PreProcess(sentences);
 
 		sentPos.put(-1, sentences.size());
-		for (int i=0; i< sentences.size(); i++)
-			sentPos.put(i, i+1);
+		for (int i = 0; i < sentences.size(); i++)
+			sentPos.put(i, i + 1);
 
 		data.setSentences(sentences);
 		data.setSentPos(sentPos);
@@ -169,5 +225,4 @@ public class PreProcessor {
 
 	}
 	
-
 }

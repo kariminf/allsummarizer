@@ -20,9 +20,19 @@ package dz.aak.as.process.reduction;
 
 import java.util.List;
 
+/**
+ * This interface is used for sentence compression. 
+ * 
+ * Sentence compression is the process of deleting unwanted information in a sentence. 
+ * It is used to make a sentence shorter.
+ * 
+ * @author Abdelkrime Aries
+ *
+ */
 public interface Compresser {
 
 	public List<String> compressChoices(String inStr);
+	
 	public String compress(String inStr);
 	
 }

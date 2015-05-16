@@ -22,18 +22,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @class Pleng: processed length (after stop-words' elimination)
+ * Pleng: sentence's processed length (after stop-words' elimination).
+ * 
+ * This feature is used to score a sentence using its length after stop-words' elimination
+ * 
  * @author Abdelkrime Aries
- * @use This feature is to score a sentence using its length after stop-words' elimination
  * 
  */
-
 public class PLeng extends RLeng {
 	
+	/**
+	 * Taking each length as a category (observation).
+	 */
 	public PLeng() {
 		super();
 	}
 	
+	
+	/**
+	 * Dividing the length's space to a number of categories (observations).
+	 * 
+	 * @param catNbr number of classification categories
+	 */
 	public PLeng(int catNbr) {
 		super(catNbr);
 	}
@@ -66,11 +76,6 @@ public class PLeng extends RLeng {
 	@Override
 	public String getScoreParam() {
 		return "sentLeng";
-	}
-
-	
-	public static void main(String[] args) {
-		
 	}
 
 }

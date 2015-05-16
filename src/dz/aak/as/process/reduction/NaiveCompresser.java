@@ -22,55 +22,62 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * This is a very simple compressor. 
+ * It deletes clauses ",which ...,", ",who ...," and "_..._".
+ * 
+ * @author Abdelkrime Aries
+ *
+ */
 public class NaiveCompresser implements Compresser{
-	
+
 	private final Pattern del1 = Pattern.compile("(.*), which [^,]*,(.*)");
 	private final Pattern del2 = Pattern.compile("([^,]*), who [^,]*,(.*)");
 	private final Pattern del3 = Pattern.compile("([^_]*)_[^_]*_(.*)");
-	
+
 	private Matcher m;
-	
+
 	public List<String> compressChoices(String inStr) {
-		
+
 		return null;
 	}
-	
+
 	public String compress(String inStr) {
-		
+
 		String outStr = inStr;
 		boolean matched = false;
-		
+
 		m = del1.matcher(outStr);
 		if (m.find()) {
 			outStr =  m.group(1) + m.group(2);
 			matched=true;
-        }
-		
+		}
+
 		m = del2.matcher(outStr);
 		if (m.find()) {
 			outStr =  m.group(1) + m.group(2);
 			matched=true;
-        }
-		
+		}
+
 		m = del3.matcher(outStr);
 		if (m.find()) {
 			outStr =  m.group(1) + m.group(2);
 			matched=true;
-        }
-		
+		}
+
 		if (matched){
 			//replace all spaces more than one, with only one space
-		outStr = outStr.replaceAll(" +", " ");
-		
-		return outStr;
+			outStr = outStr.replaceAll(" +", " ");
+
+			return outStr;
 		}
-		
+
 		return null;
 	}
-	
+
 	public static void main(String args[]){
 		NaiveCompresser n = new NaiveCompresser();
-		
+
 		String out = n.compress("I am going to the park _ near home _ to peak flowers.");
 		System.out.println(out);
 	}

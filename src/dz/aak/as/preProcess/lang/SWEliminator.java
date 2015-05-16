@@ -20,11 +20,21 @@ package dz.aak.as.preProcess.lang;
 
 import java.util.List;
 
+/**
+ * Stop word eliminator. 
+ * 
+ * Stop words are the words having high redundancy in the text with no meaning, 
+ * such as "to be", "the", etc.
+ * 
+ * @author Abdelkrime Aries
+ *
+ */
 public interface SWEliminator {
 	
 	/**
+	 * Deletes stop words from a list of words
 	 * 
-	 * @param wordsList
+	 * @param wordsList the list of words which have to be filtered
 	 */
 	public void deleteSW (List<String> wordsList);
 	

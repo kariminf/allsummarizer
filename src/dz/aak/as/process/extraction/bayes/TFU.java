@@ -21,102 +21,77 @@ package dz.aak.as.process.extraction.bayes;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * TFU: term frequency (Unigrams).
+ * 
+ * This feature is used to score a sentence using the frequencies of 
+ * terms in a text.
+ * 
+ * @author Abdelkrime Aries
+ * 
+ */
 public class TFU implements Feature {
 
-	private HashMap<Integer, HashMap<String, Integer>> classWordsFreq 
-					= new HashMap<Integer, HashMap<String, Integer>>();
-	
+	private HashMap<Integer, HashMap<String, Integer>> classWordsFreq = 
+			new HashMap<Integer, HashMap<String, Integer>>();
 
+	
 	@Override
 	public String getTrainParam() {
 		return "classes,sentWords";
 	}
 
+	
 	@Override
 	public void train(List<Object> trainParam) {
-		
+
 		@SuppressWarnings("unchecked")
 		HashMap<Integer, List<Integer>> classes = 
 				(HashMap<Integer, List<Integer>>) trainParam.get(0);
-		@SuppressWarnings("unchecked")
-		List<List<String>> sentWords = 
-				(List<List<String>>) trainParam.get(1);
 		
-		//Reset the classWordsFreq, when training this feature another time
+		@SuppressWarnings("unchecked")
+		List<List<String>> sentWords = (List<List<String>>) trainParam.get(1);
+
+		// Reset the classWordsFreq, when training this feature another time
 		classWordsFreq = new HashMap<Integer, HashMap<String, Integer>>();
-				
-		for (int classID = 0; classID < classes.size(); classID++)
-		{
+
+		//Begin: calculate unigrams' frequencies in each class of topics
+		for (int classID = 0; classID < classes.size(); classID++) {
+			
 			HashMap<String, Integer> classIWordsFreq = new HashMap<String, Integer>();
+			
 			for (int sentID : classes.get(classID))
-				for (String word: sentWords.get(sentID))
-				{
-					int value = (classIWordsFreq.containsKey(word))?classIWordsFreq.get(word)+1:1;
+				for (String word : sentWords.get(sentID)) {
+					int value = (classIWordsFreq.containsKey(word)) ? classIWordsFreq
+							.get(word) + 1 : 1;
 					classIWordsFreq.put(word, value);
 				}
+			
 			classWordsFreq.put(classID, classIWordsFreq);
 		}
-		
+		//End: calculate unigrams' frequencies in each class of topics
 	}
 
+	
 	@Override
 	public String getScoreParam() {
 		return "sentWords";
 	}
+	
 
 	@Override
 	public Double score(int classID, List<Object> scoreParam) {
+		
 		Double score = 0.0;
 
 		@SuppressWarnings("unchecked")
 		List<String> sentence = (List<String>) scoreParam.get(0);
-		
-		for (String word: sentence)
+
+		for (String word : sentence)
 			if (classWordsFreq.get(classID).containsKey(word))
 				score += classWordsFreq.get(classID).get(word);
-		
+
 		return score;
-	}
-	
-	/*
-	public void train(HashMap<Integer, List<Integer>> classes, 
-			List<List<String>> sentences, HashMap<Integer, Integer> sentPos){
-	
-		for (int classID = 0; classID < classes.size(); classID++)
-		{
-			HashMap<String, Integer> classIWordsFreq = new HashMap<String, Integer>();
-			for (int sentenceID : classes.get(classID))
-				for (String word: sentences.get(sentenceID))
-				{
-					int value = (classIWordsFreq.containsKey(word))?classIWordsFreq.get(word)+1:1;
-					classIWordsFreq.put(word, value);
-				}
-			classWordsFreq.put(classID, classIWordsFreq);
-		}
-
-	}
-
-
-	public Double score(int classID, Object entry) {
-		
-		Double score = 0.0;
-
-		@SuppressWarnings("unchecked")
-		List<String> sentence = (List<String>) entry;
-		
-		for (String word: sentence)
-			if (classWordsFreq.get(classID).containsKey(word))
-				score += classWordsFreq.get(classID).get(word);
-		
-		return score;
-	}*/
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

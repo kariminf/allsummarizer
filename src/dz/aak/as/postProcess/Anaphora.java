@@ -19,16 +19,14 @@
 package dz.aak.as.postProcess;
 
 
+/**
+ * Anaphora resolution for automatic text summarization 
+ * 
+ * @author Abdelkrime Aries
+ *
+ */
 public class Anaphora {
 	// TODO Anaphora resolution
 	
-	/**
-	 * @param args
-	 */
-	
-	public static void main(String[] args) {
-		
-
-	}
 
 }

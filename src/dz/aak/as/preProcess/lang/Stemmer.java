@@ -20,12 +20,20 @@ package dz.aak.as.preProcess.lang;
 
 import java.util.List;
 
+/**
+ * Word steming: delete the prefixes, infixes and suffixes.
+ * 
+ * @author Abdelkrime aries
+ *
+ */
 public interface Stemmer {
 
 	/**
+	 * Stems a list of words
 	 * 
-	 * @param listWords
-	 * @return
+	 * @param listWords a list of input words
+	 * @return a list of stemmed words
 	 */
 	public List<String> stemListWords(List<String> listWords);
+	
 }
