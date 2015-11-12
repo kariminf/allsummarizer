@@ -99,9 +99,11 @@ public class FileManager {
 		try {
 			dir.mkdir();
 		} catch (SecurityException se) {
-			// System.out.println("Can't create the directory!!");
+			System.out.println("Can't create the directory!!");
 			return false;
 		}
+		
+		System.out.println("folder" + dirName + "created");
 
 		return true;
 	}

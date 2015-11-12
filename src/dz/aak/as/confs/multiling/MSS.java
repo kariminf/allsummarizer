@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import dz.aak.as.preProcess.PreProcessor;
@@ -81,6 +82,23 @@ public class MSS {
 	public double getTermDistribution(){
 		List<List<String>> sentWords = data.getSentWords();
 		return Tools.termsDistribution(sentWords);
+	}
+	
+	public List<Integer> getTermsStats(){
+		List<List<String>> sentWords = data.getSentWords();
+		return Tools.termsStats(sentWords);
+	}
+	
+	public int getMaxFrequency(){
+		List<List<String>> sentWords = data.getSentWords();
+		HashMap<String, Integer> termsFreqs = Tools.getDocWordsFreq(sentWords);
+		
+		int maxFreq = 0;
+
+		for (int freq : termsFreqs.values()){
+			maxFreq = Math.max(maxFreq, freq);
+		}
+		return maxFreq;
 	}
 	
 	public void cluster(double threshold){

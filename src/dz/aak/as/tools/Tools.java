@@ -110,6 +110,60 @@ public class Tools {
 		return wordsFreq;
 	}
 	
+	/**
+	 * calculates the words' frequencies in the document
+	 * 
+	 * @param list of words in each sentence of the documennt
+	 * @return each word and its frequency
+	 */
+	public static HashMap<String, Integer> getDocWordsFreq(List<List<String>> sentences){
+		
+		ArrayList<String> allTerms = new ArrayList<String>();
+		
+		for (List<String> sentence : sentences){
+			allTerms.addAll(sentence);
+		}
+		
+		return getSentWordsFreq(allTerms);
+	}
+	
+	/**
+	 * Gives some statistics about the different  terms in a text.
+	 * 
+	 * @param sentWords list of sentence where a sentence is a list of words
+	 * @return a list of integers: 
+	 * <ul>
+	 * <li>the first element (index 0) is the number of different terms 
+	 * in the document </li>
+	 * <li>the second element is the sum of numbers of different terms in each sentence</li>
+	 * <li>the third element is the frequency of the most repeated term</li>
+	 * </ul>
+	 */
+	public static List<Integer> termsStats(List<List<String>> sentWords){
+
+		List<Integer> stats = new ArrayList<Integer>();
+		
+		if (sentWords == null || sentWords.size() < 1){
+			stats.add(0);
+			stats.add(0);
+			return stats;
+		}
+		
+		int sentTermsSum = 0;
+
+		Set<String> docTerms = new HashSet<String>();
+		
+		for (List<String> words: sentWords){
+			Set<String> sentTerms = new HashSet<String>();
+			sentTerms.addAll(words);
+			sentTermsSum += sentTerms.size();
+			docTerms.addAll(sentTerms);
+		}
+		
+		stats.add(docTerms.size());
+		stats.add(sentTermsSum);
+		return stats;
+	}
 	
 	/**
 	 * Calculates the terms distribution in a text.
@@ -133,17 +187,12 @@ public class Tools {
 		if (sentWords == null || sentWords.size() < 1)
 			return 0.0;
 		
-		int sentTermsSum = 0;
-		Set<String> docTerms = new HashSet<String>();
+		List<Integer> stats = termsStats(sentWords);
 		
-		for (List<String> words: sentWords){
-			Set<String> sentTerms = new HashSet<String>();
-			sentTerms.addAll(words);
-			sentTermsSum += sentTerms.size();
-			docTerms.addAll(sentTerms);
-		}
+		int sentTermsSum = stats.get(1);
+		int docTerms = stats.get(0);
 		
-		return ((double) sentTermsSum/docTerms.size());
+		return ((double) sentTermsSum/docTerms);
 	}
 	
 	

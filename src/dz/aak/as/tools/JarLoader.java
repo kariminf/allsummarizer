@@ -73,14 +73,15 @@ public class JarLoader {
 	 */
 	public <T extends Info> T getInfoService(String lang, Class<T> infoClass) {
 
-		if (classLoader == null)
+		if (classLoader == null){
+			//System.out.println("No class loader");
 			return null;
+		}		
 
 		ServiceLoader<T> sl = ServiceLoader.load(infoClass, classLoader);
 		
 		Iterator<T> it = sl.iterator();
 		T info = null;
-		it = sl.iterator();
 		
 		while (it.hasNext()) {
 			info = it.next();
@@ -204,7 +205,9 @@ public class JarLoader {
 			return null;
 
 		URL[] jarURLs = new URL[jarFiles.length];
+		
 		for (int i = 0; i < jarFiles.length; i++)
+			
 			try {
 				jarURLs[i] = jarFiles[i].toURI().toURL();
 			} catch (MalformedURLException e) {

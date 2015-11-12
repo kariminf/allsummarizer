@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -38,13 +39,13 @@ import dz.aak.as.tools.FileManager;
 public class MssTraining {
 
 	private static final String mssFolder = 
-			"/home/kariminf/Data/ATS/multilingMss2015Training/";
+			"/home/kariminf/Data/ATS/Mss15Train/";
 
 	private static final String outFolder =
-			"/home/kariminf/Data/ATS/multilingMss2015Training/training2015/";
+			"/home/kariminf/Data/ATS/Mss15Train/tests/training2015_2/";
 
 	private static final String [] langs = 
-		{"ka", "ko", "pl", "sk"};
+		{"af"};
 	//"af", "eo", "hr", "ms", "sh", "sl", "sr", "vi"
 
 	private static Feature [] features = {
@@ -57,15 +58,15 @@ public class MssTraining {
 
 	//add static thresholds let say 31 from 0.00 to 0.30
 	private static String[] th_name = 
-		{"mean", "median", "variance", "Hmode", "Lmode", 
-		"s_Dn", "D_sn", "D_s"/*,
+		{"ES1", "ES2", "ES3", "dev"/*"mean", "median", "variance", "Hmode", "Lmode", 
+		"s_Dn", "D_sn", "D_s",
 		"00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
 		"10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
 		"20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"*/
 		};
 	private static double[] th_value = 
-		{.0, .0, .0, .0, .0, 
-		.0, .0, .0/*,
+		{.0, .0, .0, .0/*, .0, 
+		.0, .0, .0,
 		.00, .01, .02, .03, .04, .05, .06, .07, .08, .09,
 		.10, .11, .12, .13, .14, .15, .16, .17, .18, .19,
 		.20, .21, .22, .23, .24, .25, .26, .27, .28, .29, .30*/
@@ -122,6 +123,9 @@ public class MssTraining {
 
 			File[] files = folder.listFiles();
 			for (File file: files){
+				
+				double min = 0.0;
+				double max = 0.0;
 
 				String fileName = file.getName();
 				if (! fileName.endsWith("_body.txt")) continue;
@@ -157,6 +161,26 @@ public class MssTraining {
 
 					List<Double> sim = Calculus.delMultiple(mss.getSimilarity(), 0.0);
 
+					double mean = Calculus.mean(sim);
+					double dev = Math.sqrt(Calculus.variance(sim));
+					double dist = mss.getTermDistribution();
+					int sentNum = mss.sentNum();
+					
+					
+					Collections.sort(sim);
+					
+					min = sim.get(0);
+					max = sim.get(sim.size()-1);
+					
+					double es1 = (mean - min)/3;
+					double es2 = (max - mean)/3;
+					double es3 = (es1+es2)/2;
+					
+					th_value[0] = es1;
+					th_value[1] = es2;
+					th_value[2] = es3;
+					th_value[3] = dev;
+					/*
 					th_value[0] = Calculus.mean(sim);
 					th_value[1] = Calculus.median(sim);
 					th_value[2] = Calculus.variance(sim);
@@ -167,7 +191,9 @@ public class MssTraining {
 					int sentNum = mss.sentNum();
 					th_value[5] = dist/sentNum;
 					th_value[6] = 1/(dist * sentNum);
-					th_value[7] = 1/dist;
+					th_value[7] = 1/dist;*/
+					
+					
 
 				}
 				
@@ -185,9 +211,10 @@ public class MssTraining {
 					System.out.println("threshold = " + th_value[th]);
 					
 					String newfolderName2 = newfolderName + th_name[th] + "/";
+					System.out.println(newfolderName2);
 					FileManager.createFolder(newfolderName2);
 					
-					if (th==4 && th_value[4] == th_value[3]){
+					/*if (th==4 && th_value[4] == th_value[3]){
 						try {
 							FileManager.saveFile(newfolderName2 + "info", "same as hmode");
 						} catch (IOException e) {
@@ -202,7 +229,7 @@ public class MssTraining {
 						thPendTime.put(th, thPendTime.get(3));
 						
 						continue;
-					}
+					}*/
 					
 					CstartTime.add(System.currentTimeMillis());
 					mss.cluster(th_value[th]);
@@ -248,9 +275,12 @@ public class MssTraining {
 
 				String stats = "Thresholds statistics,\n";
 				stats = "method,value\n";
-				for (int i=0; i< 8; i++)
+				stats += "min," + min + "\n";
+				stats += "max," + max + "\n";
+				
+				for (int i=0; i< 4; i++)
 					stats += th_name[i] + "," + th_value[i] + "\n";
-
+/*
 				stats += "\n\nTime statistics,\n\n";
 				
 				stats += "Preprocessing\n";
@@ -276,11 +306,11 @@ public class MssTraining {
 					List<Long> PendTime = thPendTime.get(th);
 					for(int j=0; j<PendTime.size();j++)
 						stats += PendTime.get(j).toString() + ",";
-				}
+				}*/
 				
 				try {
 
-					FileManager.saveFile(newfolderName + "stats.csv", stats);
+					FileManager.saveFile(newfolderName + "stats2.csv", stats);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
