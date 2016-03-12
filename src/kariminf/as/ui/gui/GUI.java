@@ -122,6 +122,7 @@ public class GUI extends JFrame{
 		gbc_b31.gridy = 2;
 		getContentPane().add(lsscrl, gbc_b31);
 		
+		txt2.setLineWrap(true);
 		JScrollPane txt2scrl = new JScrollPane(txt2);
 		GridBagConstraints gbc_b41 = new GridBagConstraints();
 		gbc_b41.fill = GridBagConstraints.BOTH;
@@ -167,10 +168,18 @@ public class GUI extends JFrame{
 		String summary = sum.getSummaryPercent(panel.getSummaryRate());
 		
 		List<String> ordered = sum.getOrdered();
+		List<Double> orderedScores = sum.getOrderedScores();
 		
 		ls.clear();
-		for (String sent : ordered)
-			ls.addElement(sent);
+		
+		for (int i=0; i< ordered.size(); i++){
+			String res="";
+			if (i < orderedScores.size())
+				 res = orderedScores.get(i) + ": ";
+			res += ordered.get(i);
+			
+			ls.addElement(res);
+		}	
 		
 		txt2.setText(summary);
 	}

@@ -35,6 +35,7 @@ public class MonoDoc {
 
 	private List<String> sentences;
 	private List<Integer> orderNumSent = new ArrayList<Integer>();
+	private List<Double> orderedScores = new ArrayList<Double>();
 	private Double Threshold = -1.0;
 	
 	
@@ -67,6 +68,8 @@ public class MonoDoc {
 			summarizer.summarize(data);
 			orderNumSent = summarizer.getOrdered();
 			sentences = data.getSentences();
+			for (int order: orderNumSent)
+				orderedScores.add(summarizer.getScore(order));
 		}
 		
 	}
@@ -95,6 +98,11 @@ public class MonoDoc {
 			ordered.add(sentences.get(order));
 		
 		return ordered;
+	}
+	
+	public List<Double> getOrderedScores(){
+		//encapsulation breach (we gave the address of the arrayList
+		return orderedScores;
 	}
 	
 	/*

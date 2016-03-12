@@ -35,6 +35,7 @@ public class Summarizer {
 
 	private List<Integer> orderNumSent = new ArrayList<Integer>();
 	private List<Feature> features = new ArrayList<Feature>();
+	private BayesClassifier classifier = new BayesClassifier();
 
 	/**
 	 * Adds a feature to the classifier 
@@ -55,7 +56,7 @@ public class Summarizer {
 	{
 
 		if (features.size() == 0) System.out.println("No feature is defined");
-		BayesClassifier classifier = new BayesClassifier();
+		
 		classifier.setFeatures(features);
 
 		//classifier.normalize(true);
@@ -106,6 +107,11 @@ public class Summarizer {
 	public List<Integer> getOrdered(){
 
 		return orderNumSent;
+	}
+	
+	
+	public Double getScore(int sentID){
+		return classifier.getScore(sentID);
 	}
 
 }

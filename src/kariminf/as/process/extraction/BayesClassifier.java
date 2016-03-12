@@ -20,6 +20,7 @@ package kariminf.as.process.extraction;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import kariminf.as.preProcess.PreProcessor;
@@ -45,6 +46,7 @@ import kariminf.as.tools.Data;
 public class BayesClassifier {
 	
 	private List<Feature> features = new ArrayList<Feature>();
+	private HashMap<Integer,Double> scores = new HashMap<Integer,Double>();
 	
 	private boolean normalized = false;
 	
@@ -173,7 +175,9 @@ public class BayesClassifier {
 			int sentLeng = (int) data.makeScoreParam("sentRLeng", sentID);
 			return score - Math.log(sentLeng);
 		}
-			
+		
+		scores.put(sentID, score);
+		
 		return score;
 	}
 
@@ -189,6 +193,12 @@ public class BayesClassifier {
 			String trainParam = feature.getTrainParam();
 			feature.train(data.makeTrainParams(trainParam));
 		}
+	}
+	
+	public Double getScore(int sentID){
+		if (! scores.containsKey(sentID)) return -1.0;
+		
+		return scores.get(sentID);
 	}
 
 }

@@ -88,7 +88,7 @@ public class PreProcessor {
 		
 		//Search for all preprocessing plugins 
 		JarLoader jarLoader = 
-				new JarLoader(location, "dz/aak/as/preProcess", PreProcessInfo.version);
+				new JarLoader(location, "kariminf/as/preProcess", PreProcessInfo.version);
 		
 		//get the info class for the preprocessed language
 		info = jarLoader.getInfoService(lang, PreProcessInfo.class);

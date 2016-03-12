@@ -28,6 +28,6 @@ import kariminf.as.tools.Info;
  */
 public interface PreProcessInfo extends Info {
 	
-	static final String version = "0.6";
+	static final String version = "0.7";
 
 }
