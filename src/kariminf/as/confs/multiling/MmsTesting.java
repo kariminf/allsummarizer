@@ -33,9 +33,9 @@ import kariminf.as.process.extraction.bayes.Pos;
 import kariminf.as.process.extraction.bayes.RLeng;
 import kariminf.as.process.extraction.bayes.TFB;
 import kariminf.as.process.extraction.bayes.TFU;
-import kariminf.as.tools.Calculus;
+import kariminf.ktoolja.math.Calculus;
 import kariminf.as.tools.Data;
-import kariminf.as.tools.FileManager;
+import kariminf.ktoolja.file.FileManager;
 
 
 public class MmsTesting {

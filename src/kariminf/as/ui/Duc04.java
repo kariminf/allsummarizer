@@ -34,9 +34,9 @@ import kariminf.as.process.extraction.bayes.TFB;
 import kariminf.as.process.extraction.bayes.TFU;
 import kariminf.as.process.extraction.cluster.Cluster;
 import kariminf.as.process.extraction.cluster.NaiveCluster;
-import kariminf.as.tools.Calculus;
+import kariminf.ktoolja.math.Calculus;
 import kariminf.as.tools.Data;
-import kariminf.as.tools.FileManager;
+import kariminf.ktoolja.file.FileManager;
 import kariminf.as.tools.Tools;
 
 

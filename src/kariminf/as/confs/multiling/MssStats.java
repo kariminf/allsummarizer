@@ -22,7 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import kariminf.as.tools.FileManager;
+import kariminf.ktoolja.file.FileManager;
 
 
 public class MssStats {

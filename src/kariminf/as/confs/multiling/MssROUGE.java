@@ -23,8 +23,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import kariminf.as.tools.Calculus;
-import kariminf.as.tools.FileManager;
+import kariminf.ktoolja.math.Calculus;
+import kariminf.ktoolja.file.FileManager;
 
 
 public class MssROUGE {

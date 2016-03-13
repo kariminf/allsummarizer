@@ -32,7 +32,7 @@ import kariminf.as.process.extraction.bayes.Feature;
 import kariminf.as.process.extraction.cluster.Cluster;
 import kariminf.as.process.extraction.cluster.NaiveCluster;
 import kariminf.as.tools.Data;
-import kariminf.as.tools.FileManager;
+import kariminf.ktoolja.file.FileManager;
 import kariminf.as.tools.Tools;
 
 
