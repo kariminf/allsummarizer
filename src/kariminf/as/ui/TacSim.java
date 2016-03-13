@@ -25,9 +25,9 @@ import java.io.IOException;
 import java.util.List;
 
 import kariminf.as.preProcess.PreProcessor;
-import kariminf.as.tools.Calculus;
+import kariminf.ktoolja.math.Calculus;
 import kariminf.as.tools.Data;
-import kariminf.as.tools.FileManager;
+import kariminf.ktoolja.file.FileManager;
 
 
 public class TacSim {
