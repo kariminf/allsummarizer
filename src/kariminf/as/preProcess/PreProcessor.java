@@ -22,17 +22,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import kariminf.as.preProcess.def.DefNormalizer;
-import kariminf.as.preProcess.def.DefSWEliminator;
-import kariminf.as.preProcess.def.DefSegmenter;
-import kariminf.as.preProcess.def.DefStemmer;
-import kariminf.as.preProcess.lang.Normalizer;
-import kariminf.as.preProcess.lang.PreProcessInfo;
-import kariminf.as.preProcess.lang.SWEliminator;
-import kariminf.as.preProcess.lang.Segmenter;
-import kariminf.as.preProcess.lang.Stemmer;
+import kariminf.langpi.basic.def.DefNormalizer;
+import kariminf.langpi.basic.def.DefSWEliminator;
+import kariminf.langpi.basic.def.DefSegmenter;
+import kariminf.langpi.basic.def.DefStemmer;
+import kariminf.langpi.basic.Normalizer;
+import kariminf.langpi.basic.PreProcessInfo;
+import kariminf.langpi.basic.SWEliminator;
+import kariminf.langpi.basic.Segmenter;
+import kariminf.langpi.basic.Stemmer;
 import kariminf.as.tools.Data;
-import kariminf.as.tools.JarLoader;
+import kariminf.ktoolja.plugins.JarLoader;
 
 
 
