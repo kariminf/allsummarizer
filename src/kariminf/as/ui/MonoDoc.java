@@ -23,9 +23,11 @@ import java.util.List;
 
 import kariminf.as.preProcess.PreProcessor;
 import kariminf.as.process.extraction.Summarizer;
+import kariminf.as.process.extraction.bayes.PLeng;
 import kariminf.as.process.extraction.bayes.Pos;
 import kariminf.as.process.extraction.bayes.RLeng;
 import kariminf.as.process.extraction.bayes.TFB;
+import kariminf.as.process.extraction.bayes.TFU;
 import kariminf.as.process.extraction.cluster.Cluster;
 import kariminf.as.process.extraction.cluster.NaiveCluster;
 import kariminf.as.tools.Data;
@@ -49,7 +51,7 @@ public class MonoDoc {
 		
 		// Pre-Processing
 		{
-			PreProcessor preprocess = new PreProcessor("fr", data);
+			PreProcessor preprocess = new PreProcessor("ar", data);
 			preprocess.preProcess(text);
 		}
 		
@@ -62,9 +64,11 @@ public class MonoDoc {
 		// Processing: Notation & Ordering
 		{
 			Summarizer summarizer = new Summarizer();
+			//summarizer.addFeature(new TFU());
 			summarizer.addFeature(new TFB());
-			summarizer.addFeature(new RLeng());
-			summarizer.addFeature(new Pos());
+			//summarizer.addFeature(new RLeng());
+			summarizer.addFeature(new PLeng());
+			//summarizer.addFeature(new Pos());
 			summarizer.summarize(data);
 			orderNumSent = summarizer.getOrdered();
 			sentences = data.getSentences();

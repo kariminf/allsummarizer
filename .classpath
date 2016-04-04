@@ -5,5 +5,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/KToolJa"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/LangPi"/>
+	<classpathentry kind="lib" path="/usr/share/tomcat7/lib/servlet-api.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

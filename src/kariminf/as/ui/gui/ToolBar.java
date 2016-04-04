@@ -74,7 +74,7 @@ public class ToolBar extends JPanel{
  		 
  		//----------------- Line = 1 -----------------
  		// Column = 0
- 		clusterThreshold = new JSpinner(new SpinnerNumberModel(50, 0, 100, 5));
+ 		clusterThreshold = new JSpinner(new SpinnerNumberModel(50, 0, 100, 1));
  		GridBagConstraints gbc_spinner = new GridBagConstraints();
  		gbc_spinner.insets = new Insets(0, 0, 0, 5);
  		gbc_spinner.gridx = 0;

@@ -27,7 +27,7 @@ import kariminf.langpi.basic.def.DefSWEliminator;
 import kariminf.langpi.basic.def.DefSegmenter;
 import kariminf.langpi.basic.def.DefStemmer;
 import kariminf.langpi.basic.Normalizer;
-import kariminf.langpi.basic.PreProcessInfo;
+import kariminf.langpi.basic.BasicInfo;
 import kariminf.langpi.basic.SWEliminator;
 import kariminf.langpi.basic.Segmenter;
 import kariminf.langpi.basic.Stemmer;
@@ -51,7 +51,7 @@ import kariminf.ktoolja.plugins.JarLoader;
 public class PreProcessor {
 
 	//The location of the preprocessing plugins
-	private final String location = "preProcess/";
+	private String location = "preProcess/";
 	
 	// In multi-document summarization, we have many texts
 	private List<String> texts = new ArrayList<String>();
@@ -60,7 +60,7 @@ public class PreProcessor {
 	private Data data;
 
 	//Different preprocessing tasks
-	private PreProcessInfo info = null;
+	private BasicInfo info = null;
 	private Normalizer normalizer = null;
 	private Segmenter segmenter = null;
 	private SWEliminator sweliminator = null;
@@ -76,6 +76,13 @@ public class PreProcessor {
 	public PreProcessor(String lang, Data data){
 		setLanguage(lang);
 		this.data = data;
+		
+	}
+	
+	public PreProcessor(String lang, Data data, String location){
+		this.location = location;
+		setLanguage(lang);
+		this.data = data;
 	}
 
 
@@ -88,32 +95,32 @@ public class PreProcessor {
 		
 		//Search for all preprocessing plugins 
 		JarLoader jarLoader = 
-				new JarLoader(location, "kariminf/as/preProcess", PreProcessInfo.version);
+				new JarLoader(location, "kariminf/langpi/basic", BasicInfo.version);
 		
 		//get the info class for the preprocessed language
-		info = jarLoader.getInfoService(lang, PreProcessInfo.class);
+		info = jarLoader.getInfoService(lang, BasicInfo.class);
 
 		//Try to get the preprocessing tasks' classes, otherwise use the default
 		
-		normalizer = jarLoader.getLangService(info, Normalizer.class);
+		normalizer = jarLoader.getClassService(info, Normalizer.class);
 		if (normalizer == null){
 			System.out.println(lang + ": No Normalizer, using default");
 			normalizer = new DefNormalizer();
 		}
 		
-		segmenter = jarLoader.getLangService(info,Segmenter.class);
+		segmenter = jarLoader.getClassService(info,Segmenter.class);
 		if (segmenter == null){
 			System.out.println(lang + ": No Segmenter, using default");
 			segmenter = new DefSegmenter();
 		}
 		
-		sweliminator = jarLoader.getLangService(info, SWEliminator.class);
+		sweliminator = jarLoader.getClassService(info, SWEliminator.class);
 		if (sweliminator == null){
 			System.out.println(lang + ": No SWEliminator, using default");
 			sweliminator = new DefSWEliminator();
 		}
 		
-		stemmer = jarLoader.getLangService(info, Stemmer.class);
+		stemmer = jarLoader.getClassService(info, Stemmer.class);
 		
 		if (stemmer == null){
 			System.out.println(lang + ": No Stemmer, using default");

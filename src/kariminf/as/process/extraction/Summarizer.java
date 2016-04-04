@@ -113,5 +113,9 @@ public class Summarizer {
 	public Double getScore(int sentID){
 		return classifier.getScore(sentID);
 	}
+	
+	public int getNbrFeatures(){
+		return features.size();
+	}
 
 }
