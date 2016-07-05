@@ -1,6 +1,5 @@
 [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg?maxAge=2592000?style=plastic)]()
-[![Twitter Follow](https://img.shields.io/twitter/follow/shields_io.svg?style=social&label=Follow&maxAge=2592000?style=plastic)](https://twitter.com/kariminf)
-[![GitHub stars](https://img.shields.io/github/stars/badges/shields.svg?style=social&label=Star&maxAge=2592000?style=plastic)](https://github.com/kariminf/AllSummarizer)
+[![Hex.pm](https://img.shields.io/badge/Version-2.0.0-blue.svg?style=plastic)]()
 
 AllSummarizer
 =============
