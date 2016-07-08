@@ -13,18 +13,21 @@ You can find more about the method in the paper:
 ------------ | -------------
 Authors: | Abdelkrime Aries (A), Houda Oufaida (A) and Omar Nouali (B)
 Affiliation: | A: Ecole Nationale Supérieue d'Informatique (ESI),  Algeria; <br> B: Ctr. de recherche sur l'Information Scientifique et Technique (CERIST), Algeria
-Affiliation: | A: Ecole Nationale Supérieue d'Informatique (ESI),  Algeria; 
-Publication: | Document Recognition and Retrieval XX. Proceedings of the SPIE, Volume 8658, article id. 865811, 9 pp. (2013).
+Booktitle: | Document Recognition and Retrieval XX. Proceedings of the SPIE, Volume 8658.
+Date: | February 4, 2013
+Address: | Burlingame, California, USA
 Publisher: | SPIE
 Link: | http://dx.doi.org/10.1117/12.2004001
 
-Also, the participation of the system at multiLing 2015 workshop:
+Also, the participation of the system at [MultiLing 2015](http://multiling.iit.demokritos.gr/pages/revision/200) workshop:
 
- | Using clustering and a modified classification algorithm for automatic text summarization
+ | AllSummarizer system at MultiLing 2015: Multilingual single and multi-document summarization
 ------------ | -------------
-Authors: | Abdelkrime Aries (A), Djamel Eddine Zegour and Khaled Walid Hidouci
+Authors: | Abdelkrime Aries, Djamel Eddine Zegour and Khaled Walid Hidouci
 Affiliation: | Ecole Nationale Supérieue d'Informatique (ESI),  Algeria
-Publication: | Proceedings of the SIGDIAL 2015 Conference, pages 237–244, Prague, Czech Republic, 2-4 September 2015. 2015 
+Booktitle: | Proceedings of the SIGDIAL 2015 Conference, pages 237–244, , . 2015 
+Date: | September 2-4, 2015
+Address: | Prague, Czech Republic
 Publisher: | Association for Computational Linguistics
 Link: | http://www.aclweb.org/anthology/W15-4634
 
