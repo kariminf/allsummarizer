@@ -1,3 +1,4 @@
+[![Hex.pm](https://img.shields.io/badge/Project-AllSummarizer-blue.svg?style=plastic)](https://github.com/kariminf/AllSummarizer)
 [![Hex.pm](https://img.shields.io/badge/License-Apache_2-blue.svg?style=plastic)](https://github.com/kariminf/AllSummarizer/blob/master/LICENSE)
 [![Hex.pm](https://img.shields.io/badge/Version-2.0.0-blue.svg?style=plastic)](https://github.com/kariminf/AllSummarizer/releases)
 
