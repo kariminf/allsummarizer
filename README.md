@@ -1,6 +1,6 @@
-[![Hex.pm](https://img.shields.io/badge/Project-AllSummarizer-blue.svg?style=plastic)](https://github.com/kariminf/AllSummarizer)
-[![Hex.pm](https://img.shields.io/badge/License-Apache_2-blue.svg?style=plastic)](https://github.com/kariminf/AllSummarizer/blob/master/LICENSE)
-[![Hex.pm](https://img.shields.io/badge/Version-2.0.0-blue.svg?style=plastic)](https://github.com/kariminf/AllSummarizer/releases)
+[![Hex.pm](https://img.shields.io/badge/Project-AllSummarizer-red.svg?style=plastic)](https://github.com/kariminf/AllSummarizer)
+[![Hex.pm](https://img.shields.io/badge/License-Apache_2-red.svg?style=plastic)](https://github.com/kariminf/AllSummarizer/blob/master/LICENSE)
+[![Hex.pm](https://img.shields.io/badge/Version-2.1.0-red.svg?style=plastic)](https://github.com/kariminf/AllSummarizer/releases)
 
 AllSummarizer
 =============
@@ -35,8 +35,14 @@ Link: | http://www.aclweb.org/anthology/W15-4634
 # How it works?
 TODO: add a brief description since there is a link to the paper
 
-# How to compile?
-TODO: add a detailed description about the assemblance with the plugins (LangPi project)
+# Dependencies:
+This project is dependent to other projects:
+* [KToolJa](https://github.com/kariminf/KToolJa): for file management and plugins
+* [LangPi](https://github.com/kariminf/LangPi): for text preprocessing; which depends on other libraries
+
+Preprocessing plugins are in the folder: "preProcess".
+For Hebrew and Tai preprocessing tools, check [LangPi releases](https://github.com/kariminf/LangPi/releases/tag/v1.0.0).
+Those two plugins are not Apache2 licensed.
 
 # Command line usage
 To execute from command line:
