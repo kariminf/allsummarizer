@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Class-Path: . 
+ lib/KToolJa.jar 
+ lib/LangPi-basic.jar 
+Main-Class: kariminf.as.ui.AS 

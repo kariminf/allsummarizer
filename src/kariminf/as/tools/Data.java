@@ -57,6 +57,15 @@ public class Data {
 		scoreType.put("sentRLeng", 4);// Integer
 
 	}
+	
+	public void clear(){
+		sentences = new ArrayList<String>();
+		sentWords = null;
+		classes = null;
+		sentPos = null;
+		sentSim = null;
+		nbrWords = null;
+	}
 
 	/**
 	 * Sets the sentences of the container
