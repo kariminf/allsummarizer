@@ -43,13 +43,13 @@ To execute from command line:
 * Jar file: java -jar <jar_name> options
 * Class: java kariminf.as.ui.MonoDoc options
 
-## input/output options:
+### input/output options:
 
 * -i <input_file>: it must be a file or a folder if it is multidocument or variant inputs
 * -o <output_file>: it must be a file or a folder if it is multidocument or there is multiple output lengths, feature combinations or thresholds
 * -v: variant inputs; a folder that contains files or folders to be summarized.
 
-## summary options:
+### summary options:
 
 sumary unit:
 * -b: we use Bytes to specify the summary size.
@@ -62,7 +62,7 @@ sumary length:
 * -r <ratio>: ratio from 1 to 100% defines the percentage of units to be extracted.
 you can specify more than one length, by separating the lengths with semicolons
 
-## summarizer options:
+### summarizer options:
 
 * -f <features>: the features used to score the sentences.
 the features are separated by commas; for example: tfu,pos
@@ -72,9 +72,9 @@ for multiple thresholds, we use semicolons; for example: 5;50
 
 To get help, use -h
 
-# Examples of command line
+## Examples of command line
 Suppose we have a folder for inputs called "exp":
-'''
+```
 exp
 ├── multi
 │   ├── M001
@@ -88,15 +88,15 @@ exp
 └── single
     ├── doc1.txt
     └── doc2.txt
-'''
+```
 
-## single document examples:
+### single document examples:
 the command:
-'''
+```
 -i "exp/single" -o "exp/output" -l en -t "5-15:5" -n "100;200" -c -f "tfu,pos;tfb,rleng" -v
-'''
+```
 gives these files:
-'''
+```
 doc1.txt_0.05_Pos-TFU_100c.txt    doc1.txt_0.1_Pos-TFU_100c.txt     doc2.txt_0.15_Pos-TFU_100c.txt
 doc1.txt_0.05_Pos-TFU_200c.txt    doc1.txt_0.1_Pos-TFU_200c.txt     doc2.txt_0.15_Pos-TFU_200c.txt
 doc1.txt_0.05_RLeng-TFB_100c.txt  doc1.txt_0.1_RLeng-TFB_100c.txt   doc2.txt_0.15_RLeng-TFB_100c.txt
@@ -105,27 +105,27 @@ doc1.txt_0.15_Pos-TFU_100c.txt    doc2.txt_0.05_Pos-TFU_100c.txt    doc2.txt_0.1
 doc1.txt_0.15_Pos-TFU_200c.txt    doc2.txt_0.05_Pos-TFU_200c.txt    doc2.txt_0.1_Pos-TFU_200c.txt
 doc1.txt_0.15_RLeng-TFB_100c.txt  doc2.txt_0.05_RLeng-TFB_100c.txt  doc2.txt_0.1_RLeng-TFB_100c.txt
 doc1.txt_0.15_RLeng-TFB_200c.txt  doc2.txt_0.05_RLeng-TFB_200c.txt  doc2.txt_0.1_RLeng-TFB_200c.txt
-'''
+```
 
 the command:
-'''
+```
 -i "exp/single/doc1.txt" -o "exp/output" -l en -t 5 -r "5;10" -c -f "tfu,pos"
-'''
+```
 gives these files:
-'''
+```
 doc1.txt_0.05_Pos-TFU_10%c.txt  doc1.txt_0.05_Pos-TFU_5%c.txt
-'''
+```
 
-## multi-document examples:
+### multi-document examples:
 the command:
-'''
+```
 -i "exp/multi" -o "exp/output" -l en -t 5 -r "5;10" -c -f "tfu,pos" -v -m
-'''
+```
 gives these files:
-'''
+```
 M001_0.05_Pos-TFU_10%c.txt  M001_0.05_Pos-TFU_5%c.txt  
 M002_0.05_Pos-TFU_10%c.txt  M002_0.05_Pos-TFU_5%c.txt
-'''
+```
 
 # License
 The code is released under Apache 2.0 license.
