@@ -9,3 +9,4 @@
 
 .directory
 .fuse_hidden*
+/bin/
