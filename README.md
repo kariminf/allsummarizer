@@ -1,41 +1,55 @@
-[![Hex.pm](https://img.shields.io/badge/Project-AllSummarizer-red.svg?style=plastic)](https://github.com/kariminf/AllSummarizer)
-[![Hex.pm](https://img.shields.io/badge/License-Apache_2-red.svg?style=plastic)](https://github.com/kariminf/AllSummarizer/blob/master/LICENSE)
-[![Hex.pm](https://img.shields.io/badge/Version-2.1.0-red.svg?style=plastic)](https://github.com/kariminf/AllSummarizer/releases)
+# AllSummarizer
 
-AllSummarizer
-=============
-A research project implimentation for automatic text summarization.
-AllSummarizer is considered as an extractive method;
-Each sentence is scored based on some creteria, reorder the most scored ones then extract the first relevant ones.
+[![Project](https://img.shields.io/badge/Project-AllSummarizer-4B0082.svg)](https://github.com/kariminf/AllSummarizer)
+[![Type](https://img.shields.io/badge/Type-Research-4B0082.svg)](https://github.com/kariminf/AllSummarizer)
+[![Version](https://img.shields.io/badge/Version-2.2.0-4B0082.svg)](https://github.com/kariminf/AllSummarizer/releases)
+[![License](https://img.shields.io/badge/License-Apache_2-4B0082.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+<!---
+[![Travis](https://img.shields.io/travis/kariminf/AllSummarizer.svg)](https://travis-ci.org/kariminf/AllSummarizer)
+[![codecov](https://img.shields.io/codecov/c/github/kariminf/AllSummarizer.svg)](https://codecov.io/gh/kariminf/AllSummarizer)
+[![jitpack](https://jitpack.io/v/kariminf/AllSummarizer.svg)](https://jitpack.io/#kariminf/AllSummarizer)
+ -->
+
+A research project implementation for automatic text summarization.
+AllSummarizer uses an extractive method to generate the summary ;
+Each sentence is scored based on some criteria, reordered, then if it scores among the first ones it will be included in the summary.
 
 You can find more about the method in the paper:
-
- | Using clustering and a modified classification algorithm for automatic text summarization
------------- | -------------
-Authors: | Abdelkrime Aries (A), Houda Oufaida (A) and Omar Nouali (B)
-Affiliation: | A: Ecole Nationale Supérieue d'Informatique (ESI),  Algeria; <br> B: Ctr. de recherche sur l'Information Scientifique et Technique (CERIST), Algeria
-Booktitle: | Document Recognition and Retrieval XX. Proceedings of the SPIE, Volume 8658.
-Date: | February 4, 2013
-Address: | Burlingame, California, USA
-Publisher: | SPIE
-Link: | http://dx.doi.org/10.1117/12.2004001
+```TeX
+@inproceedings {13-aries-al,
+	author = {Aries, Abdelkrime and Oufaida, Houda and Nouali, Omar},
+	title = {Using clustering and a modified classification algorithm for automatic text summarization},
+	series = {Proc. SPIE},
+	volume = {8658},
+	number = {},
+	pages = {865811-865811-9},
+	year = {2013},
+	doi = {10.1117/12.2004001},
+	URL = { http://dx.doi.org/10.1117/12.2004001}
+}
+```
 
 Also, the participation of the system at [MultiLing 2015](http://multiling.iit.demokritos.gr/pages/revision/200) workshop:
 
- | AllSummarizer system at MultiLing 2015: Multilingual single and multi-document summarization
------------- | -------------
-Authors: | Abdelkrime Aries, Djamel Eddine Zegour and Khaled Walid Hidouci
-Affiliation: | Ecole Nationale Supérieue d'Informatique (ESI),  Algeria
-Booktitle: | Proceedings of the SIGDIAL 2015 Conference, pages 237–244, , . 2015
-Date: | September 2-4, 2015
-Address: | Prague, Czech Republic
-Publisher: | Association for Computational Linguistics
-Link: | http://www.aclweb.org/anthology/W15-4634
+```TeX
+@Inbook{15-aries-al,
+  author = {Aries, Abdelkrime
+            and Zegour, Eddine Djamel
+            and Hidouci, Walid Khaled},
+  chapter = {AllSummarizer system at MultiLing 2015: Multilingual single and multi-document summarization},
+  title = {Proceedings of the 16th Annual Meeting of the Special Interest Group on Discourse and Dialogue},
+  year = {2015},
+  publisher = {Association for Computational Linguistics},
+  pages = {237--244},
+  location = {Prague, Czech Republic},
+  url = {http://aclweb.org/anthology/W15-4634}
+}
+```
 
-# How it works?
+## How it works?
 TODO: add a brief description since there is a link to the paper
 
-# Dependencies:
+## Dependencies:
 This project is dependent to other projects:
 * [KToolJa](https://github.com/kariminf/KToolJa): for file management and plugins
 * [LangPi](https://github.com/kariminf/LangPi): for text preprocessing; which depends on other libraries
@@ -44,7 +58,7 @@ Preprocessing plugins are in the folder: "preProcess".
 For Hebrew and Tai preprocessing tools, check [LangPi releases](https://github.com/kariminf/LangPi/releases/tag/v1.0.0).
 Those two plugins are not Apache2 licensed.
 
-# Command line usage
+## Command line usage
 To execute from command line:
 * Jar file: java -jar <jar_name> options
 * Class: java kariminf.as.ui.MonoDoc options
@@ -133,6 +147,18 @@ M001_0.05_Pos-TFU_10%c.txt  M001_0.05_Pos-TFU_5%c.txt
 M002_0.05_Pos-TFU_10%c.txt  M002_0.05_Pos-TFU_5%c.txt
 ```
 
-# License
-The code is released under Apache 2.0 license.
-For more details about this license, check [LICENSE](./LICENSE) file
+## License
+
+Copyright (C) 2012-2017 Abdelkrime Aries
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+[http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0)
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.

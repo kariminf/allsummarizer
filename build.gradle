@@ -1,0 +1,96 @@
+/*
+ * Gradle build specifications for
+ * Faris
+ * 
+ * Copyright 2017 Abdelkrime Aries <kariminfo0@gmail.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Java plugin to add support for Java
+apply plugin: 'java'
+apply plugin: 'jacoco'
+//For jitPack to build
+apply plugin: 'maven'
+
+// Gradle java plugin
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+// Release version
+version = '1.1.1'
+
+ext.current_Date = getDate()
+
+def getDate() {
+    def date = new Date()
+    def formattedDate = date.format('yyyyMMddHHmm')
+    return formattedDate
+}
+
+
+// Jar creation
+jar {
+    manifest {
+        attributes "Created-By": System.getProperty('java.version') + ' (' + System.getProperty('java.vendor') + ')',
+                   "Main-Class": "kariminf.as.ui.AS",
+                   "Specification-Title"    : "AllSummarizer",
+                   "Specification-Version"  : version,
+                   "Specification-Vendor"   : "Kariminf",
+                   "Implementation-Title"   : "kariminf.as",
+                   "Implementation-Version" : version + "-build" + current_Date ,
+                   "Implementation-Vendor"  : "Kariminf",
+                   "Built-With": "gradle-${project.getGradle().getGradleVersion()}, groovy-${GroovySystem.getVersion()}",
+                   "Build-Time": current_Date,
+                   "Built-By": project.hasProperty('BF_USER') ? project.getProperty('BF_USER') : System.getProperty('user.name'),
+                   "Built-On": "${InetAddress.localHost.hostName}/${InetAddress.localHost.hostAddress}"
+    }
+}
+
+
+ 
+repositories {
+    jcenter()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    // The production code uses the SLF4J logging API at compile time
+    compile 'org.slf4j:slf4j-api:1.7.21'
+    
+    //compile project(':KToolJa')
+    compile 'com.github.kariminf:KToolJa:1.1.0'
+    //compile project(':LangPi')
+    compile 'com.github.kariminf:LangPi:1.1.1'
+
+    testCompile 'junit:junit:4.12'
+    
+    compileOnly 'javax.servlet:servlet-api:2.5'
+}
+
+javadoc {    
+    source = sourceSets.main.allJava
+    options.memberLevel = JavadocMemberLevel.PRIVATE
+    classpath = configurations.compile
+    destinationDir = file("docs")
+    failOnError false
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled false
+    }
+}
+
+check.dependsOn jacocoTestReport
