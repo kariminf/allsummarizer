@@ -402,7 +402,7 @@ public class AS {
 		PreProcessor preprocessor = new PreProcessor(language, data);
 		
 		//The output is always a folder
-		FileManager.createFolder(outputDocURL);
+		FileManager.createFolder(new File(outputDocURL));
 		
 		int testCount = -1;
 		System.out.println("outputs:");

@@ -143,9 +143,9 @@ public class MssTraining {
 				
 
 				String newfolderName = outFolder + lang + "/";
-				FileManager.createFolder(newfolderName);
+				FileManager.createFolder(new File(newfolderName));
 				newfolderName += fileName;
-				FileManager.createFolder(newfolderName);
+				FileManager.createFolder(new File(newfolderName));
 
 				
 				//start counting
@@ -213,7 +213,7 @@ public class MssTraining {
 					
 					String newfolderName2 = newfolderName + th_name[th] + "/";
 					System.out.println(newfolderName2);
-					FileManager.createFolder(newfolderName2);
+					FileManager.createFolder(new File(newfolderName2));
 					
 					/*if (th==4 && th_value[4] == th_value[3]){
 						try {

@@ -107,7 +107,7 @@ public class Duc04 {
 						}
 						combStr = combStr.substring(0, combStr.length()-1);
 						
-						FileManager.createFolder(peerfolder + combStr);
+						FileManager.createFolder(new File(peerfolder + combStr));
 						
 						
 						//System.out.println("features: " + combStr);
@@ -144,7 +144,7 @@ public class Duc04 {
 							summary = summary.substring(0, 666);
 						
 						combStr += "/" + topicname ;
-						FileManager.createFolder(peerfolder + combStr);
+						FileManager.createFolder(new File(peerfolder + combStr));
 						combStr += "/" + th_name[th] + ".asz";
 						try {
 							FileManager.saveFile(peerfolder + combStr, summary);

@@ -99,7 +99,7 @@ public class Cmplg {
 
 			String combStr = peerfolder + filename + "/";
 
-			FileManager.createFolder(combStr);
+			FileManager.createFolder(new File(combStr));
 
 			String info = "";
 			for(int th = 0; th < 6; th++){
@@ -127,7 +127,7 @@ public class Cmplg {
 					combStr += featused;
 
 					{
-						FileManager.createFolder(combStr);
+						FileManager.createFolder(new File(combStr));
 						//System.out.println("features: " + featused);
 						summarizer.summarize(data);
 						String summary = getSummary(data, summarizer.getOrdered());

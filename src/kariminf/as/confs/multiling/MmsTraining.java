@@ -130,14 +130,14 @@ public class MmsTraining {
 			System.out.println("topics #:" + topics.size());
 			
 			String newfolderName = outFolder + lang[0] + "/";
-				FileManager.createFolder(newfolderName);
+				FileManager.createFolder(new File(newfolderName));
 			
 			for(String topic: topics.keySet()){
 				
 				mms.clear();
 				newfolderName = outFolder + lang[0] + "/";
 				newfolderName += topic + "/";
-				FileManager.createFolder(newfolderName);
+				FileManager.createFolder(new File(newfolderName));
 				
 				System.out.println(lang[0] + ", topic" + topic);
 				
@@ -171,7 +171,7 @@ public class MmsTraining {
 					System.out.println("threshold = " + th_value[th]);
 					
 					String newfolderName2 = newfolderName + th_name[th] + "/";
-					FileManager.createFolder(newfolderName2);
+					FileManager.createFolder(new File(newfolderName2));
 					
 					System.out.println("====> th= " + th);
 					mms.cluster(th_value[th]);

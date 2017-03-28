@@ -216,7 +216,7 @@ public class MssTesting {
 					continue; 
 				}
 				
-				FileManager.createFolder(outFolder + lang + "/");
+				FileManager.createFolder(new File(outFolder + lang + "/"));
 				
 
 				mss.preprocess(file);
