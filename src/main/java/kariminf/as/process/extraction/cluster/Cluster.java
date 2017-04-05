@@ -18,7 +18,7 @@
 
 package kariminf.as.process.extraction.cluster;
 
-import kariminf.as.preProcess.PreProcessor;
+import kariminf.as.preProcess.DynamicPreProcessor;
 import kariminf.as.tools.Data;
 
 /**
@@ -35,7 +35,7 @@ public abstract class Cluster {
 	
 	/**
 	 * Constructor of the class. We have to afford preprocessed data 
-	 * (See {@link PreProcessor}).
+	 * (See {@link DynamicPreProcessor}).
 	 * 
 	 * @param data data container
 	 */

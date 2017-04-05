@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import kariminf.as.preProcess.PreProcessor;
+import kariminf.as.preProcess.DynamicPreProcessor;
 import kariminf.as.process.extraction.Summarizer;
 import kariminf.as.process.extraction.bayes.*;
 import kariminf.as.process.extraction.cluster.Cluster;
@@ -69,7 +69,7 @@ public class Cmplg {
 
 			Data data = new Data();
 			{
-				PreProcessor preprocess = new PreProcessor("en", data);
+				DynamicPreProcessor preprocess = new DynamicPreProcessor("en", data);
 				String text = FileManager.readFile(file);
 				preprocess.preProcess(text);
 			}

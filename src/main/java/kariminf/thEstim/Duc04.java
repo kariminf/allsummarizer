@@ -24,7 +24,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 
-import kariminf.as.preProcess.PreProcessor;
+import kariminf.as.preProcess.DynamicPreProcessor;
 import kariminf.as.process.extraction.Summarizer;
 import kariminf.as.process.extraction.bayes.*;
 import kariminf.as.process.extraction.cluster.*;
@@ -59,7 +59,7 @@ public class Duc04 {
 			
 			Data data = new Data();
 			{
-				PreProcessor preprocess = new PreProcessor("en", data);
+				DynamicPreProcessor preprocess = new DynamicPreProcessor("en", data);
 				File [] files  = topic.listFiles();
 				for (File file: files){
 					String text = openFile(file.getAbsolutePath());

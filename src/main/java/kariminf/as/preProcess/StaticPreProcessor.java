@@ -74,7 +74,7 @@ import kariminf.ktoolja.plugins.JarLoader;
  * @author Abdelkrime Aries
  *
  */
-public class StaticPreProcessor {
+public class StaticPreProcessor extends PreProcessor {
 	
 	// In multi-document summarization, we have many texts
 	private List<String> texts = new ArrayList<String>();
@@ -97,8 +97,8 @@ public class StaticPreProcessor {
 	 * @param data The data container
 	 */
 	public StaticPreProcessor(String lang, Data data){
+		super(lang, data);
 		setLanguage(lang);
-		this.data = data;
 		
 	}
 

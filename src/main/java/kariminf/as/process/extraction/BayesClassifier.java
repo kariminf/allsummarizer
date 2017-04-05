@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import kariminf.as.preProcess.PreProcessor;
+import kariminf.as.preProcess.DynamicPreProcessor;
 import kariminf.as.process.extraction.bayes.Feature;
 import kariminf.as.tools.Data;
 
@@ -85,7 +85,7 @@ public class BayesClassifier {
 	 * Scores the sentences and reorder them from the more important to the less one.
 	 * 
 	 * In order to use this method, the data container must contain preprocessed text. 
-	 * To do this, we must call the preprocessor first (See {@link PreProcessor}).
+	 * To do this, we must call the preprocessor first (See {@link DynamicPreProcessor}).
 	 * 
 	 * @param data the data container
 	 * @return a list of sentences' indexes ordered by importance

@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import kariminf.as.preProcess.PreProcessor;
+import kariminf.as.preProcess.DynamicPreProcessor;
 import kariminf.as.process.extraction.Summarizer;
 import kariminf.as.process.extraction.bayes.Feature;
 import kariminf.as.process.extraction.cluster.Cluster;
@@ -44,7 +44,7 @@ public class MSS {
 	
 	private Data data;
 	private boolean clustered = false;
-	private PreProcessor preprocessor;
+	private DynamicPreProcessor preprocessor;
 	
 	private boolean nobrackets = false;
 	
@@ -52,7 +52,7 @@ public class MSS {
 		this.lang = (lang.length()==2)?lang:"en";
 		clustered = false;
 		data = new Data();
-		preprocessor = new PreProcessor(this.lang, this.data);
+		preprocessor = new DynamicPreProcessor(this.lang, this.data);
 	}
 	
 	/**

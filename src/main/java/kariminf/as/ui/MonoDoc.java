@@ -21,7 +21,7 @@ package kariminf.as.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import kariminf.as.preProcess.PreProcessor;
+import kariminf.as.preProcess.DynamicPreProcessor;
 import kariminf.as.process.extraction.Summarizer;
 import kariminf.as.process.extraction.bayes.PLeng;
 import kariminf.as.process.extraction.bayes.Pos;
@@ -51,7 +51,7 @@ public class MonoDoc {
 		
 		// Pre-Processing
 		{
-			PreProcessor preprocess = new PreProcessor("en", data);
+			DynamicPreProcessor preprocess = new DynamicPreProcessor("en", data);
 			preprocess.preProcess(text);
 		}
 		

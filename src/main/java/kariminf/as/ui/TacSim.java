@@ -24,7 +24,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 
-import kariminf.as.preProcess.PreProcessor;
+import kariminf.as.preProcess.DynamicPreProcessor;
 import kariminf.ktoolja.math.Calculus;
 import kariminf.as.tools.Data;
 import kariminf.ktoolja.file.FileManager;
@@ -88,7 +88,7 @@ public class TacSim {
 			result += lang + "\n";
 
 			Data data = new Data();
-			PreProcessor pre = new PreProcessor(accro, data);
+			DynamicPreProcessor pre = new DynamicPreProcessor(accro, data);
 
 			result += ",,,with 0,,,,,,,, no 0\n";
 			result += "topic,#sent,,mean,median1,median2,Hmode,Lmode,var,skewness,,";

@@ -24,7 +24,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 
-import kariminf.as.preProcess.PreProcessor;
+import kariminf.as.preProcess.DynamicPreProcessor;
 import kariminf.as.process.extraction.Summarizer;
 import kariminf.as.process.extraction.bayes.Pos;
 import kariminf.as.process.extraction.bayes.RLeng;
@@ -148,7 +148,7 @@ public class Tac02 {
 		String accro = language[count][1];
 		
 		Data data= new Data();
-		PreProcessor pre = new PreProcessor(accro, data);
+		DynamicPreProcessor pre = new DynamicPreProcessor(accro, data);
 		
 		for (int i =0; i< 10; i++){ //10 topics
 			

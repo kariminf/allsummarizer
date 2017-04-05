@@ -32,7 +32,7 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import kariminf.as.confs.multiling.MMS;
-import kariminf.as.preProcess.PreProcessor;
+import kariminf.as.preProcess.DynamicPreProcessor;
 import kariminf.as.process.extraction.Summarizer;
 import kariminf.as.process.extraction.bayes.Feature;
 import kariminf.as.process.extraction.bayes.PLeng;
@@ -399,7 +399,7 @@ public class AS {
 		ArrayList<ArrayList<Feature>> featuresSets = getFeatures();
 		
 		Data data = new Data();
-		PreProcessor preprocessor = new PreProcessor(language, data);
+		DynamicPreProcessor preprocessor = new DynamicPreProcessor(language, data);
 		
 		//The output is always a folder
 		FileManager.createFolder(new File(outputDocURL));

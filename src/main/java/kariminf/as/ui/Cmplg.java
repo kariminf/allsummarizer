@@ -22,7 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import kariminf.as.preProcess.PreProcessor;
+import kariminf.as.preProcess.DynamicPreProcessor;
 import kariminf.as.process.extraction.bayes.Feature;
 import kariminf.as.process.extraction.bayes.PLeng;
 import kariminf.as.process.extraction.bayes.Pos;
@@ -57,7 +57,7 @@ public class Cmplg {
 
 			Data data = new Data();
 			{
-				PreProcessor preprocess = new PreProcessor("en", data);
+				DynamicPreProcessor preprocess = new DynamicPreProcessor("en", data);
 				String text = FileManager.readFile(file);
 				preprocess.preProcess(text);
 			}
