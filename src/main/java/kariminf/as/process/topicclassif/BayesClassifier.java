@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package kariminf.as.process.extraction;
+package kariminf.as.process.topicclassif;
 
 
 import java.util.ArrayList;
@@ -24,7 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import kariminf.as.preProcess.DynamicPreProcessor;
-import kariminf.as.process.extraction.bayes.Feature;
+import kariminf.as.process.ScoreHandler;
+import kariminf.as.process.topicclassif.bayes.Feature;
 import kariminf.as.tools.Data;
 
 
@@ -43,7 +44,7 @@ import kariminf.as.tools.Data;
  * @author Abdelkrime Aries
  *
  */
-public class BayesClassifier {
+public class BayesClassifier implements ScoreHandler{
 	
 	private List<Feature> features = new ArrayList<Feature>();
 	private HashMap<Integer,Double> scores = new HashMap<Integer,Double>();
@@ -90,7 +91,7 @@ public class BayesClassifier {
 	 * @param data the data container
 	 * @return a list of sentences' indexes ordered by importance
 	 */
-	public List<Integer> classify(Data data) {
+	public List<Integer> reorderUnits(Data data) {
 		//HashMap<Integer, List<Integer>> classes, List<List<String>> sentences
 		
 		List<Integer> orderedSentences = new ArrayList<Integer>();
@@ -195,10 +196,10 @@ public class BayesClassifier {
 		}
 	}
 	
-	public Double getScore(int sentID){
-		if (! scores.containsKey(sentID)) return -1.0;
+	public Double getScore(int unitID){
+		if (! scores.containsKey(unitID)) return -1.0;
 		
-		return scores.get(sentID);
+		return scores.get(unitID);
 	}
 
 }

@@ -25,9 +25,10 @@ import java.io.IOException;
 import java.util.List;
 
 import kariminf.as.preProcess.DynamicPreProcessor;
-import kariminf.as.process.extraction.Summarizer;
-import kariminf.as.process.extraction.bayes.*;
-import kariminf.as.process.extraction.cluster.*;
+import kariminf.as.process.Scorer;
+import kariminf.as.process.topicclassif.BayesClassifier;
+import kariminf.as.process.topicclassif.bayes.*;
+import kariminf.as.process.topicclassif.cluster.*;
 import kariminf.as.tools.*;
 import kariminf.ktoolja.file.FileManager;
 import kariminf.ktoolja.math.Calculus;
@@ -99,10 +100,11 @@ public class Duc04 {
 							Calculus.getCombinations(features.length, combNbr);
 					
 					for (List<Integer> oneComb : comb){
-						Summarizer summarizer = new Summarizer();
+						BayesClassifier bc = new BayesClassifier();
+						Scorer summarizer = new Scorer(bc);
 						String combStr = "";
 						for (int index: oneComb){
-							summarizer.addFeature(features[index]);
+							bc.addFeature(features[index]);
 							combStr += features[index].getClass().getSimpleName() + "-";
 						}
 						combStr = combStr.substring(0, combStr.length()-1);

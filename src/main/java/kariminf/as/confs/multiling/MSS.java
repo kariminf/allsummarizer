@@ -27,10 +27,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import kariminf.as.preProcess.DynamicPreProcessor;
-import kariminf.as.process.extraction.Summarizer;
-import kariminf.as.process.extraction.bayes.Feature;
-import kariminf.as.process.extraction.cluster.Cluster;
-import kariminf.as.process.extraction.cluster.NaiveCluster;
+import kariminf.as.process.Scorer;
+import kariminf.as.process.topicclassif.BayesClassifier;
+import kariminf.as.process.topicclassif.bayes.Feature;
+import kariminf.as.process.topicclassif.cluster.Cluster;
+import kariminf.as.process.topicclassif.cluster.NaiveCluster;
 import kariminf.as.tools.Data;
 import kariminf.ktoolja.file.FileManager;
 import kariminf.as.tools.Tools;
@@ -123,10 +124,11 @@ public class MSS {
 		if(features.size() <1 ) throw new Exception("add at least one feature");
 		if (! clustered ) throw new Exception("Use cluster before summarize");
 		
-		Summarizer summarizer = new Summarizer();
+		BayesClassifier bc = new BayesClassifier();
+		Scorer summarizer = new Scorer(bc);
 		
 		for (Feature feature: features)
-			summarizer.addFeature(feature);
+			bc.addFeature(feature);
 		
 		summarizer.summarize(data);
 		

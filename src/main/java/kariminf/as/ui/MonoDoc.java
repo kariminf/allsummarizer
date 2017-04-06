@@ -22,14 +22,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kariminf.as.preProcess.DynamicPreProcessor;
-import kariminf.as.process.extraction.Summarizer;
-import kariminf.as.process.extraction.bayes.PLeng;
-import kariminf.as.process.extraction.bayes.Pos;
-import kariminf.as.process.extraction.bayes.RLeng;
-import kariminf.as.process.extraction.bayes.TFB;
-import kariminf.as.process.extraction.bayes.TFU;
-import kariminf.as.process.extraction.cluster.Cluster;
-import kariminf.as.process.extraction.cluster.NaiveCluster;
+import kariminf.as.process.Scorer;
+import kariminf.as.process.topicclassif.BayesClassifier;
+import kariminf.as.process.topicclassif.bayes.PLeng;
+import kariminf.as.process.topicclassif.bayes.Pos;
+import kariminf.as.process.topicclassif.bayes.RLeng;
+import kariminf.as.process.topicclassif.bayes.TFB;
+import kariminf.as.process.topicclassif.bayes.TFU;
+import kariminf.as.process.topicclassif.cluster.Cluster;
+import kariminf.as.process.topicclassif.cluster.NaiveCluster;
 import kariminf.as.tools.Data;
 
 
@@ -63,12 +64,14 @@ public class MonoDoc {
 		
 		// Processing: Notation & Ordering
 		{
-			Summarizer summarizer = new Summarizer();
-			//summarizer.addFeature(new TFU());
-			summarizer.addFeature(new TFB());
-			//summarizer.addFeature(new RLeng());
-			summarizer.addFeature(new PLeng());
-			//summarizer.addFeature(new Pos());
+			BayesClassifier bc = new BayesClassifier();
+			//bc.addFeature(new TFU());
+			bc.addFeature(new TFB());
+			//bc.addFeature(new RLeng());
+			bc.addFeature(new PLeng());
+			//bc.addFeature(new Pos());
+			
+			Scorer summarizer = new Scorer(bc);
 			summarizer.summarize(data);
 			orderNumSent = summarizer.getOrdered();
 			sentences = data.getSentences();

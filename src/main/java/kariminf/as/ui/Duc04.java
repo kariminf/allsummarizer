@@ -25,15 +25,16 @@ import java.io.IOException;
 import java.util.List;
 
 import kariminf.as.preProcess.DynamicPreProcessor;
-import kariminf.as.process.extraction.Summarizer;
-import kariminf.as.process.extraction.bayes.Feature;
-import kariminf.as.process.extraction.bayes.PLeng;
-import kariminf.as.process.extraction.bayes.Pos;
-import kariminf.as.process.extraction.bayes.RLeng;
-import kariminf.as.process.extraction.bayes.TFB;
-import kariminf.as.process.extraction.bayes.TFU;
-import kariminf.as.process.extraction.cluster.Cluster;
-import kariminf.as.process.extraction.cluster.NaiveCluster;
+import kariminf.as.process.Scorer;
+import kariminf.as.process.topicclassif.BayesClassifier;
+import kariminf.as.process.topicclassif.bayes.Feature;
+import kariminf.as.process.topicclassif.bayes.PLeng;
+import kariminf.as.process.topicclassif.bayes.Pos;
+import kariminf.as.process.topicclassif.bayes.RLeng;
+import kariminf.as.process.topicclassif.bayes.TFB;
+import kariminf.as.process.topicclassif.bayes.TFU;
+import kariminf.as.process.topicclassif.cluster.Cluster;
+import kariminf.as.process.topicclassif.cluster.NaiveCluster;
 import kariminf.ktoolja.math.Calculus;
 import kariminf.as.tools.Data;
 import kariminf.ktoolja.file.FileManager;
@@ -111,12 +112,13 @@ public class Duc04 {
 							Calculus.getCombinations(features.length, combNbr);
 					
 					for (List<Integer> oneComb : comb){
-						Summarizer summarizer = new Summarizer();
+						BayesClassifier bc = new BayesClassifier();
 						String combStr = "";
 						for (int index: oneComb){
-							summarizer.addFeature(features[index]);
+							bc.addFeature(features[index]);
 							combStr += features[index].getClass().getSimpleName() + "-";
 						}
+						Scorer summarizer = new Scorer(bc);
 						combStr = combStr.substring(0, combStr.length()-1);
 						
 						FileManager.createFolder(new File(peerfolder + combStr));

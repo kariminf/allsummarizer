@@ -33,15 +33,16 @@ import javax.swing.UIManager.LookAndFeelInfo;
 
 import kariminf.as.confs.multiling.MMS;
 import kariminf.as.preProcess.DynamicPreProcessor;
-import kariminf.as.process.extraction.Summarizer;
-import kariminf.as.process.extraction.bayes.Feature;
-import kariminf.as.process.extraction.bayes.PLeng;
-import kariminf.as.process.extraction.bayes.Pos;
-import kariminf.as.process.extraction.bayes.RLeng;
-import kariminf.as.process.extraction.bayes.TFB;
-import kariminf.as.process.extraction.bayes.TFU;
-import kariminf.as.process.extraction.cluster.Cluster;
-import kariminf.as.process.extraction.cluster.NaiveCluster;
+import kariminf.as.process.Scorer;
+import kariminf.as.process.topicclassif.BayesClassifier;
+import kariminf.as.process.topicclassif.bayes.Feature;
+import kariminf.as.process.topicclassif.bayes.PLeng;
+import kariminf.as.process.topicclassif.bayes.Pos;
+import kariminf.as.process.topicclassif.bayes.RLeng;
+import kariminf.as.process.topicclassif.bayes.TFB;
+import kariminf.as.process.topicclassif.bayes.TFU;
+import kariminf.as.process.topicclassif.cluster.Cluster;
+import kariminf.as.process.topicclassif.cluster.NaiveCluster;
 import kariminf.as.tools.Data;
 import kariminf.as.tools.Tools;
 import kariminf.as.ui.gui.GUI;
@@ -463,13 +464,16 @@ public class AS {
 				//Loop over feature combinations
 				for(ArrayList<Feature> fs: featuresSets){
 					
-					Summarizer summarizer = new Summarizer();
+					BayesClassifier bc = new BayesClassifier();
 					//add the feature combination
 					String featused = "";
 					for (Feature f: fs){
-						summarizer.addFeature(f);
+						bc.addFeature(f);
 						featused += f.getClass().getSimpleName() + "-";
 					}
+					
+					Scorer summarizer = new Scorer(bc);
+					
 					featused = featused.substring(0, featused.length()-1);
 						
 					

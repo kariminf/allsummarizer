@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package kariminf.as.process.extraction.cluster;
+package kariminf.as.process.topicclassif.cluster;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -23,12 +23,12 @@ import java.io.IOException;
 import java.util.List;
 
 import kariminf.as.preProcess.DynamicPreProcessor;
-import kariminf.as.process.extraction.bayes.Feature;
-import kariminf.as.process.extraction.bayes.PLeng;
-import kariminf.as.process.extraction.bayes.Pos;
-import kariminf.as.process.extraction.bayes.RLeng;
-import kariminf.as.process.extraction.bayes.TFB;
-import kariminf.as.process.extraction.bayes.TFU;
+import kariminf.as.process.topicclassif.bayes.Feature;
+import kariminf.as.process.topicclassif.bayes.PLeng;
+import kariminf.as.process.topicclassif.bayes.Pos;
+import kariminf.as.process.topicclassif.bayes.RLeng;
+import kariminf.as.process.topicclassif.bayes.TFB;
+import kariminf.as.process.topicclassif.bayes.TFU;
 import kariminf.ktoolja.math.Calculus;
 import kariminf.as.tools.Data;
 import kariminf.ktoolja.file.FileManager;

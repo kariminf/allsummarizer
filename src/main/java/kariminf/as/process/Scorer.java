@@ -16,12 +16,13 @@
  * limitations under the License.
  */
 
-package kariminf.as.process.extraction;
+package kariminf.as.process;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import kariminf.as.process.extraction.bayes.Feature;
+import kariminf.as.process.topicclassif.BayesClassifier;
+import kariminf.as.process.topicclassif.bayes.Feature;
 import kariminf.as.tools.Data;
 
 
@@ -31,19 +32,15 @@ import kariminf.as.tools.Data;
  * @author Abdelkrime Aries
  *
  */
-public class Summarizer {
+public class Scorer {
 
 	private List<Integer> orderNumSent = new ArrayList<Integer>();
-	private List<Feature> features = new ArrayList<Feature>();
-	private BayesClassifier classifier = new BayesClassifier();
-
-	/**
-	 * Adds a feature to the classifier 
-	 * 
-	 * @param feature the feature used for scoring (See {@link Feature})
-	 */
-	public void addFeature(Feature feature){
-		features.add(feature);
+	//private List<Feature> features = new ArrayList<Feature>();
+	private ScoreHandler scoreHandler;
+	
+	
+	public Scorer(ScoreHandler scoreHandler){
+		this.scoreHandler = scoreHandler;
 	}
 
 
@@ -54,14 +51,7 @@ public class Summarizer {
 	 */
 	public void summarize(Data data) 
 	{
-
-		if (features.size() == 0) System.out.println("No feature is defined");
-		
-		classifier.setFeatures(features);
-
-		//classifier.normalize(true);
-		classifier.train(data);
-		orderNumSent = classifier.classify(data);
+		orderNumSent = scoreHandler.reorderUnits(data);
 	}
 
 
@@ -111,11 +101,11 @@ public class Summarizer {
 	
 	
 	public Double getScore(int sentID){
-		return classifier.getScore(sentID);
+		return scoreHandler.getScore(sentID);
 	}
 	
-	public int getNbrFeatures(){
+	/*public int getNbrFeatures(){
 		return features.size();
-	}
+	}*/
 
 }

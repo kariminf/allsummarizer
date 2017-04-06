@@ -11,14 +11,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import kariminf.as.preProcess.StaticPreProcessor;
-import kariminf.as.process.extraction.Summarizer;
-import kariminf.as.process.extraction.bayes.PLeng;
-import kariminf.as.process.extraction.bayes.Pos;
-import kariminf.as.process.extraction.bayes.RLeng;
-import kariminf.as.process.extraction.bayes.TFB;
-import kariminf.as.process.extraction.bayes.TFU;
-import kariminf.as.process.extraction.cluster.Cluster;
-import kariminf.as.process.extraction.cluster.NaiveCluster;
+import kariminf.as.process.Scorer;
+import kariminf.as.process.topicclassif.BayesClassifier;
+import kariminf.as.process.topicclassif.bayes.PLeng;
+import kariminf.as.process.topicclassif.bayes.Pos;
+import kariminf.as.process.topicclassif.bayes.RLeng;
+import kariminf.as.process.topicclassif.bayes.TFB;
+import kariminf.as.process.topicclassif.bayes.TFU;
+import kariminf.as.process.topicclassif.cluster.Cluster;
+import kariminf.as.process.topicclassif.cluster.NaiveCluster;
 import kariminf.as.tools.Data;
 
 public class RequestSummarizer extends HttpServlet {
@@ -138,8 +139,9 @@ public class RequestSummarizer extends HttpServlet {
 		
 		// Processing: Notation & Ordering
 		{
-			Summarizer summarizer = new Summarizer();
-			addfeatures(summarizer, featNames);
+			BayesClassifier bc = new BayesClassifier();
+			Scorer summarizer = new Scorer(bc);
+			addfeatures(bc, featNames);
 			/*
 			if (data != null)
 				throw new IOException("features: " + summarizer.getNbrFeatures());
@@ -160,23 +162,23 @@ public class RequestSummarizer extends HttpServlet {
 		
 	}
 	
-	public void addfeatures(Summarizer s, String featNames){
+	public void addfeatures(BayesClassifier bc, String featNames){
 		featNames = featNames.toLowerCase();
 		
 		if (featNames.contains("pleng"))
-			s.addFeature(new PLeng());
+			bc.addFeature(new PLeng());
 		
 		if (featNames.contains("pos"))
-			s.addFeature(new Pos());
+			bc.addFeature(new Pos());
 		
 		if (featNames.contains("rleng"))
-			s.addFeature(new RLeng());
+			bc.addFeature(new RLeng());
 		
 		if (featNames.contains("tfb"))
-			s.addFeature(new TFB());
+			bc.addFeature(new TFB());
 		
 		if (featNames.contains("tfu"))
-			s.addFeature(new TFU());
+			bc.addFeature(new TFU());
 	}
 	
 	public String getSummaryNum(int nbrSent){

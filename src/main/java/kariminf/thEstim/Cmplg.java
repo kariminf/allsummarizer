@@ -24,10 +24,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kariminf.as.preProcess.DynamicPreProcessor;
-import kariminf.as.process.extraction.Summarizer;
-import kariminf.as.process.extraction.bayes.*;
-import kariminf.as.process.extraction.cluster.Cluster;
-import kariminf.as.process.extraction.cluster.NaiveCluster;
+import kariminf.as.process.Scorer;
+import kariminf.as.process.topicclassif.BayesClassifier;
+import kariminf.as.process.topicclassif.bayes.*;
+import kariminf.as.process.topicclassif.cluster.Cluster;
+import kariminf.as.process.topicclassif.cluster.NaiveCluster;
 import kariminf.as.tools.*;
 import kariminf.ktoolja.file.FileManager;
 import kariminf.ktoolja.math.Calculus;
@@ -113,14 +114,16 @@ public class Cmplg {
 				info += th_name[th] + ": " + th_value[th] + "\n";
 
 				for (List<Integer> oneComb : comb){
-					Summarizer summarizer = new Summarizer();
-
+					
 					combStr = peerfolder + filename + "/";
+					BayesClassifier bc = new BayesClassifier();
 					String featused = "";
 					for (int index: oneComb){
-						summarizer.addFeature(features[index]);
+						bc.addFeature(features[index]);
 						featused += features[index].getClass().getSimpleName() + "-";
 					}
+					
+					Scorer summarizer = new Scorer(bc);
 
 					featused = featused.substring(0, featused.length()-1) + "/";
 

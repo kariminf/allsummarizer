@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package kariminf.as.process.extraction.bayes;
+package kariminf.as.process.topicclassif.bayes;
 
 import java.util.ArrayList;
 import java.util.List;
