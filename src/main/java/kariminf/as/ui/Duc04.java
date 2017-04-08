@@ -27,14 +27,14 @@ import java.util.List;
 import kariminf.as.preProcess.DynamicPreProcessor;
 import kariminf.as.process.Scorer;
 import kariminf.as.process.topicclassif.BayesScoreHandler;
-import kariminf.as.process.topicclassif.bayes.Feature;
-import kariminf.as.process.topicclassif.bayes.PLeng;
-import kariminf.as.process.topicclassif.bayes.Pos;
-import kariminf.as.process.topicclassif.bayes.RLeng;
-import kariminf.as.process.topicclassif.bayes.TFB;
-import kariminf.as.process.topicclassif.bayes.TFU;
-import kariminf.as.process.topicclassif.cluster.Cluster;
-import kariminf.as.process.topicclassif.cluster.NaiveCluster;
+import kariminf.as.process.topicclassif.Cluster;
+import kariminf.as.process.topicclassif.Feature;
+import kariminf.as.process.topicclassif.NaiveCluster;
+import kariminf.as.process.topicclassif.PLeng;
+import kariminf.as.process.topicclassif.Pos;
+import kariminf.as.process.topicclassif.RLeng;
+import kariminf.as.process.topicclassif.TFB;
+import kariminf.as.process.topicclassif.TFU;
 import kariminf.ktoolja.math.Calculus;
 import kariminf.as.tools.Data;
 import kariminf.ktoolja.file.FileManager;
@@ -128,7 +128,7 @@ public class Duc04 {
 						
 						scorer.setData(data);
 						scorer.scoreUnits();
-						List<Integer> order = scorer.getSentNumber(5);
+						List<Integer> order = scorer.getAmount(5);
 						String summary = "";
 						
 						

@@ -13,13 +13,13 @@ import javax.servlet.http.HttpServletResponse;
 import kariminf.as.preProcess.StaticPreProcessor;
 import kariminf.as.process.Scorer;
 import kariminf.as.process.topicclassif.BayesScoreHandler;
-import kariminf.as.process.topicclassif.bayes.PLeng;
-import kariminf.as.process.topicclassif.bayes.Pos;
-import kariminf.as.process.topicclassif.bayes.RLeng;
-import kariminf.as.process.topicclassif.bayes.TFB;
-import kariminf.as.process.topicclassif.bayes.TFU;
-import kariminf.as.process.topicclassif.cluster.Cluster;
-import kariminf.as.process.topicclassif.cluster.NaiveCluster;
+import kariminf.as.process.topicclassif.Cluster;
+import kariminf.as.process.topicclassif.NaiveCluster;
+import kariminf.as.process.topicclassif.PLeng;
+import kariminf.as.process.topicclassif.Pos;
+import kariminf.as.process.topicclassif.RLeng;
+import kariminf.as.process.topicclassif.TFB;
+import kariminf.as.process.topicclassif.TFU;
 import kariminf.as.tools.Data;
 
 public class RequestSummarizer extends HttpServlet {

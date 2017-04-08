@@ -12,5 +12,11 @@ public abstract class PreProcessor {
 		this.data = data;
 		
 	}
+	
+	public Data getData(){
+		return data;
+	}
+	
+	public abstract void preProcess(String inTxt);
 
 }

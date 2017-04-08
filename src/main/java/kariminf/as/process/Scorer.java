@@ -88,12 +88,12 @@ public class Scorer {
 	 * @param nbrSent number of sentences to be extracted
 	 * @return a list of first important sentences
 	 */
-	public List<Integer> getSentNumber(int nbrSent) {
+	public List<Integer> getAmount(int amount) {
 
-		if (nbrSent < 1)
+		if (amount < 1)
 			return null;
 
-		return orderNumSent.subList(0, nbrSent);
+		return orderNumSent.subList(0, amount);
 	}
 
 
@@ -103,7 +103,7 @@ public class Scorer {
 	 * @param percent percentage to be extracted
 	 * @return a list of first important sentences
 	 */
-	public List<Integer> getSentPercent(int percent) {
+	public List<Integer> getPercent(int percent) {
 
 		if (percent < 1)
 			return null;
@@ -130,9 +130,5 @@ public class Scorer {
 	public Double getScore(int unitID){
 		return scores.get(unitID);
 	}
-	
-	/*public int getNbrFeatures(){
-		return features.size();
-	}*/
 
 }

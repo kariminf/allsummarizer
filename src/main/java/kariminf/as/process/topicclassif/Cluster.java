@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package kariminf.as.process.topicclassif.cluster;
+package kariminf.as.process.topicclassif;
 
 import kariminf.as.preProcess.DynamicPreProcessor;
 import kariminf.as.tools.Data;

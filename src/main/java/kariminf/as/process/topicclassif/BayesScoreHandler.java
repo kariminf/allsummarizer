@@ -25,7 +25,6 @@ import java.util.List;
 
 import kariminf.as.preProcess.DynamicPreProcessor;
 import kariminf.as.process.ScoreHandler;
-import kariminf.as.process.topicclassif.bayes.Feature;
 import kariminf.as.tools.Data;
 
 
