@@ -37,6 +37,7 @@ public class Data {
 	private HashMap<Integer, List<Integer>> classes;
 	private HashMap<Integer, Integer> sentPos;
 	private List<Double> sentSim;
+	
 	private List<Integer> nbrWords;
 
 	private HashMap<String, Integer> trainType = new HashMap<String, Integer>();
@@ -57,7 +58,7 @@ public class Data {
 		scoreType.put("sentRLeng", 4);// Integer
 
 	}
-	
+
 	public void clear(){
 		sentences = new ArrayList<String>();
 		sentWords = null;
@@ -289,16 +290,17 @@ public class Data {
 	private void calculateSimilarity() {
 
 		sentSim = new ArrayList<Double>();
-		for (int i = 0; i < sentWords.size(); i++)
-			for (int j = i + 1; j < sentWords.size(); j++) {
+		for (int i = 0; i < sentWords.size(); i++){
+			for (int j = i+1; j < sentWords.size(); j++) {
 				Double sim = Tools.calcSimilarity(sentWords.get(i),
 						sentWords.get(j));
 				sentSim.add(sim);
-			}
 
+			}
+		}
 	}
 
-	
+
 	/**
 	 * Gets the similarity between two sentences.
 	 * 
@@ -320,18 +322,19 @@ public class Data {
 
 		//The matrix is transformed to a list, so we have to search for the position
 		//of the similarity of these two sentences in this list
-		
+
 		// Suppose S is the number of sentences and x < y 
 		//The starting point is the number of elements from (S-x) to (S-1)
 		int realPos = xPos * (2 * sentWords.size() - xPos - 1) / 2;
-		
+
 		// We add the position of the column in the matrix
 		realPos += (yPos - xPos - 1);
 
 		return sentSim.get(realPos);
 	}
-
 	
+
+
 	/**
 	 * Gets the list of similarities.
 	 * 
