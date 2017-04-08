@@ -26,7 +26,7 @@ import java.util.List;
 
 import kariminf.as.preProcess.DynamicPreProcessor;
 import kariminf.as.process.Scorer;
-import kariminf.as.process.topicclassif.BayesClassifier;
+import kariminf.as.process.topicclassif.BayesScoreHandler;
 import kariminf.as.process.topicclassif.bayes.Feature;
 import kariminf.as.process.topicclassif.bayes.PLeng;
 import kariminf.as.process.topicclassif.bayes.Pos;
@@ -112,13 +112,13 @@ public class Duc04 {
 							Calculus.getCombinations(features.length, combNbr);
 					
 					for (List<Integer> oneComb : comb){
-						BayesClassifier bc = new BayesClassifier();
+						BayesScoreHandler bc = new BayesScoreHandler();
 						String combStr = "";
 						for (int index: oneComb){
 							bc.addFeature(features[index]);
 							combStr += features[index].getClass().getSimpleName() + "-";
 						}
-						Scorer summarizer = new Scorer(bc);
+						Scorer scorer = Scorer.create(bc);
 						combStr = combStr.substring(0, combStr.length()-1);
 						
 						FileManager.createFolder(new File(peerfolder + combStr));
@@ -126,8 +126,9 @@ public class Duc04 {
 						
 						//System.out.println("features: " + combStr);
 						
-						summarizer.summarize(data);
-						List<Integer> order = summarizer.getSentNumber(5);
+						scorer.setData(data);
+						scorer.scoreUnits();
+						List<Integer> order = scorer.getSentNumber(5);
 						String summary = "";
 						
 						

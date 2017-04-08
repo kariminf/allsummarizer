@@ -23,7 +23,7 @@ import java.util.List;
 
 import kariminf.as.preProcess.DynamicPreProcessor;
 import kariminf.as.process.Scorer;
-import kariminf.as.process.topicclassif.BayesClassifier;
+import kariminf.as.process.topicclassif.BayesScoreHandler;
 import kariminf.as.process.topicclassif.bayes.PLeng;
 import kariminf.as.process.topicclassif.bayes.Pos;
 import kariminf.as.process.topicclassif.bayes.RLeng;
@@ -64,19 +64,20 @@ public class MonoDoc {
 		
 		// Processing: Notation & Ordering
 		{
-			BayesClassifier bc = new BayesClassifier();
+			BayesScoreHandler bc = new BayesScoreHandler();
 			//bc.addFeature(new TFU());
 			bc.addFeature(new TFB());
 			//bc.addFeature(new RLeng());
 			bc.addFeature(new PLeng());
 			//bc.addFeature(new Pos());
 			
-			Scorer summarizer = new Scorer(bc);
-			summarizer.summarize(data);
-			orderNumSent = summarizer.getOrdered();
+			Scorer scorer = Scorer.create(bc);
+			scorer.setData(data);
+			scorer.scoreUnits();
+			orderNumSent = scorer.getOrdered();
 			sentences = data.getSentences();
 			for (int order: orderNumSent)
-				orderedScores.add(summarizer.getScore(order));
+				orderedScores.add(scorer.getScore(order));
 		}
 		
 	}

@@ -34,7 +34,7 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import kariminf.as.confs.multiling.MMS;
 import kariminf.as.preProcess.DynamicPreProcessor;
 import kariminf.as.process.Scorer;
-import kariminf.as.process.topicclassif.BayesClassifier;
+import kariminf.as.process.topicclassif.BayesScoreHandler;
 import kariminf.as.process.topicclassif.bayes.Feature;
 import kariminf.as.process.topicclassif.bayes.PLeng;
 import kariminf.as.process.topicclassif.bayes.Pos;
@@ -464,7 +464,7 @@ public class AS {
 				//Loop over feature combinations
 				for(ArrayList<Feature> fs: featuresSets){
 					
-					BayesClassifier bc = new BayesClassifier();
+					BayesScoreHandler bc = new BayesScoreHandler();
 					//add the feature combination
 					String featused = "";
 					for (Feature f: fs){
@@ -472,17 +472,17 @@ public class AS {
 						featused += f.getClass().getSimpleName() + "-";
 					}
 					
-					Scorer summarizer = new Scorer(bc);
+					Scorer scorer = Scorer.create(bc);
 					
 					featused = featused.substring(0, featused.length()-1);
 						
-					
-					summarizer.summarize(data);
+					scorer.setData(data);
+					scorer.scoreUnits();
 					
 					//loop over summary size
 					for (int size: sizes){
 						
-						String result = getSummary(data, summarizer.getOrdered(), th, size, totalSize);
+						String result = getSummary(data, scorer.getOrdered(), th, size, totalSize);
 						String filename = outputs.get(testCount);
 						filename += "_" + th + "_" + featused + "_" + size ;
 						filename += sizeFix? "": "%";

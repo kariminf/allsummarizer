@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import kariminf.as.preProcess.StaticPreProcessor;
 import kariminf.as.process.Scorer;
-import kariminf.as.process.topicclassif.BayesClassifier;
+import kariminf.as.process.topicclassif.BayesScoreHandler;
 import kariminf.as.process.topicclassif.bayes.PLeng;
 import kariminf.as.process.topicclassif.bayes.Pos;
 import kariminf.as.process.topicclassif.bayes.RLeng;
@@ -139,15 +139,12 @@ public class RequestSummarizer extends HttpServlet {
 		
 		// Processing: Notation & Ordering
 		{
-			BayesClassifier bc = new BayesClassifier();
-			Scorer summarizer = new Scorer(bc);
+			BayesScoreHandler bc = new BayesScoreHandler();
+			Scorer scorer = Scorer.create(bc);
 			addfeatures(bc, featNames);
-			/*
-			if (data != null)
-				throw new IOException("features: " + summarizer.getNbrFeatures());
-				*/
-			summarizer.summarize(data);
-			orderNumSent = summarizer.getOrdered();
+			scorer.setData(data);
+			scorer.scoreUnits();
+			orderNumSent = scorer.getOrdered();
 			/*
 			if (data != null)
 				throw new IOException("ordered" + orderNumSent);
@@ -156,13 +153,13 @@ public class RequestSummarizer extends HttpServlet {
 			//sentences.add("");
 			
 			for (int order: orderNumSent)
-				orderedScores.add(summarizer.getScore(order));
+				orderedScores.add(scorer.getScore(order));
 			
 		}
 		
 	}
 	
-	public void addfeatures(BayesClassifier bc, String featNames){
+	public void addfeatures(BayesScoreHandler bc, String featNames){
 		featNames = featNames.toLowerCase();
 		
 		if (featNames.contains("pleng"))

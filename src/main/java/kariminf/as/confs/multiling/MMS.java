@@ -29,7 +29,7 @@ import java.util.List;
 
 import kariminf.as.preProcess.DynamicPreProcessor;
 import kariminf.as.process.Scorer;
-import kariminf.as.process.topicclassif.BayesClassifier;
+import kariminf.as.process.topicclassif.BayesScoreHandler;
 import kariminf.as.process.topicclassif.bayes.Feature;
 import kariminf.as.process.topicclassif.bayes.PLeng;
 import kariminf.as.process.topicclassif.bayes.Pos;
@@ -96,15 +96,16 @@ public class MMS {
 		if(features.size() <1 ) throw new Exception("add at least one feature");
 		if (! clustered ) throw new Exception("Use cluster before summarize");
 		
-		BayesClassifier bc = new BayesClassifier();
-		Scorer summarizer = new Scorer(bc);
+		BayesScoreHandler bc = new BayesScoreHandler();
+		Scorer scorer = Scorer.create(bc);
 		
 		for (Feature feature: features)
 			bc.addFeature(feature);
 		
-		summarizer.summarize(data);
+		scorer.setData(data);
+		scorer.scoreUnits();
 		
-		return getSummary(data, summarizer.getOrdered(), simTH);
+		return getSummary(data, scorer.getOrdered(), simTH);
 	}
 	
 	/**

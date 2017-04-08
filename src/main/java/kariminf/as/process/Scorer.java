@@ -19,10 +19,9 @@
 package kariminf.as.process;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import kariminf.as.process.topicclassif.BayesClassifier;
-import kariminf.as.process.topicclassif.bayes.Feature;
 import kariminf.as.tools.Data;
 
 
@@ -35,26 +34,54 @@ import kariminf.as.tools.Data;
 public class Scorer {
 
 	private List<Integer> orderNumSent = new ArrayList<Integer>();
-	//private List<Feature> features = new ArrayList<Feature>();
+	private HashMap<Integer,Double> scores = new HashMap<Integer,Double>();
 	private ScoreHandler scoreHandler;
+	private Data data;
 	
 	
-	public Scorer(ScoreHandler scoreHandler){
+	protected Scorer(ScoreHandler scoreHandler){
 		this.scoreHandler = scoreHandler;
 	}
-
-
-	/**
-	 * Summarizes a text or more using their preprocessed data
-	 * 
-	 * @param data data container
-	 */
-	public void summarize(Data data) 
-	{
-		orderNumSent = scoreHandler.reorderUnits(data);
+	
+	
+	public static Scorer create(ScoreHandler scoreHandler){
+		if (scoreHandler == null) return null;
+		
+		return new Scorer(scoreHandler);
+	}
+	
+	
+	public boolean setData(Data data){
+		if (data == null) return false;
+		orderNumSent = new ArrayList<Integer>();
+		scores = new HashMap<Integer,Double>();
+		this.data = data;
+		return true;
 	}
 
+	
+	public void scoreUnits(){
+		if (data == null) return;
+		List<Integer> orderedSentences = new ArrayList<Integer>();
+		List<Double> orderedScores = new ArrayList<Double>();
+		
+		for(int unitID = 0; unitID < data.getSentNumber(); unitID++){
+			Double currentScore = scoreHandler.scoreUnit(data, unitID);
+			
+			int j = 0;
+			while (j < orderedScores.size() && currentScore <= orderedScores.get(j))
+				j++;
 
+			orderedSentences.add(j, unitID);
+			orderedScores.add(j, currentScore);
+			
+			scores.put(unitID, currentScore);
+		}
+		
+		orderNumSent = orderedSentences;
+		
+	}
+	
 	/**
 	 * Gets the first important sentences in the text.
 	 * 
@@ -100,8 +127,8 @@ public class Scorer {
 	}
 	
 	
-	public Double getScore(int sentID){
-		return scoreHandler.getScore(sentID);
+	public Double getScore(int unitID){
+		return scores.get(unitID);
 	}
 	
 	/*public int getNbrFeatures(){

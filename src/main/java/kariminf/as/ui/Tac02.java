@@ -26,7 +26,7 @@ import java.util.List;
 
 import kariminf.as.preProcess.DynamicPreProcessor;
 import kariminf.as.process.Scorer;
-import kariminf.as.process.topicclassif.BayesClassifier;
+import kariminf.as.process.topicclassif.BayesScoreHandler;
 import kariminf.as.process.topicclassif.bayes.Pos;
 import kariminf.as.process.topicclassif.bayes.RLeng;
 import kariminf.as.process.topicclassif.bayes.TFB;
@@ -170,17 +170,18 @@ public class Tac02 {
 			
 			cluster.createClasses();
 			
-			BayesClassifier bc = new BayesClassifier();
+			BayesScoreHandler bc = new BayesScoreHandler();
 			bc.addFeature(new TFB());
 			bc.addFeature(new RLeng());
 			bc.addFeature(new Pos());
 			
-			Scorer summarizer = new Scorer(bc);
-			summarizer.summarize(data);
+			Scorer scorer = Scorer.create(bc);
+			scorer.setData(data);
+			scorer.scoreUnits();
 			
 			//String //240-250 words
 			String summary = getSummary(data.getSentWords(), data.getNbrWords(),
-					data.getSentences(), summarizer.getOrdered());
+					data.getSentences(), scorer.getOrdered());
 			
 			try {
 				FileManager.saveFile(peerfolder + "AS12/"+ lang + "/M00" + i, summary);

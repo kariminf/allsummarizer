@@ -25,7 +25,7 @@ import java.util.List;
 
 import kariminf.as.preProcess.DynamicPreProcessor;
 import kariminf.as.process.Scorer;
-import kariminf.as.process.topicclassif.BayesClassifier;
+import kariminf.as.process.topicclassif.BayesScoreHandler;
 import kariminf.as.process.topicclassif.bayes.*;
 import kariminf.as.process.topicclassif.cluster.Cluster;
 import kariminf.as.process.topicclassif.cluster.NaiveCluster;
@@ -116,14 +116,14 @@ public class Cmplg {
 				for (List<Integer> oneComb : comb){
 					
 					combStr = peerfolder + filename + "/";
-					BayesClassifier bc = new BayesClassifier();
+					BayesScoreHandler bc = new BayesScoreHandler();
 					String featused = "";
 					for (int index: oneComb){
 						bc.addFeature(features[index]);
 						featused += features[index].getClass().getSimpleName() + "-";
 					}
 					
-					Scorer summarizer = new Scorer(bc);
+					Scorer scorer = Scorer.create(bc);
 
 					featused = featused.substring(0, featused.length()-1) + "/";
 
@@ -132,8 +132,9 @@ public class Cmplg {
 					{
 						FileManager.createFolder(new File(combStr));
 						//System.out.println("features: " + featused);
-						summarizer.summarize(data);
-						String summary = getSummary(data, summarizer.getOrdered());
+						scorer.setData(data);
+						scorer.scoreUnits();
+						String summary = getSummary(data, scorer.getOrdered());
 
 						combStr +=  th_name[th] + ".asz";
 						try {
