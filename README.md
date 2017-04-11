@@ -2,7 +2,7 @@
 
 [![Project](https://img.shields.io/badge/Project-AllSummarizer-4B0082.svg)](https://github.com/kariminf/AllSummarizer)
 [![Type](https://img.shields.io/badge/Type-Research-4B0082.svg)](https://github.com/kariminf/AllSummarizer)
-[![Version](https://img.shields.io/badge/Version-2.2.0-4B0082.svg)](https://github.com/kariminf/AllSummarizer/releases)
+[![Version](https://img.shields.io/badge/Version-3.0.0-4B0082.svg)](https://github.com/kariminf/AllSummarizer/releases)
 [![License](https://img.shields.io/badge/License-Apache_2-4B0082.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 <!---
 [![Travis](https://img.shields.io/travis/kariminf/AllSummarizer.svg)](https://travis-ci.org/kariminf/AllSummarizer)

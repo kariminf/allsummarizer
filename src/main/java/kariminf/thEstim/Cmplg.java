@@ -169,7 +169,6 @@ public class Cmplg {
 	public static String getSummary(Data data, List<Integer> order){
 
 		List<List<String>> sentWords = data.getSentWords();
-		List<Integer> nbrWords = data.getNbrWords();
 		List<String> sentences = data.getSentences();
 
 		String summary = "";
@@ -193,13 +192,13 @@ public class Cmplg {
 				}
 			}
 
-			if (nbrWords.get(index) ==0){
+			if (data.getNbrWords(index) ==0){
 				numOrder ++;
 				continue;
 			}
 
 
-			numWords += nbrWords.get(index);
+			numWords += data.getNbrWords(index);
 
 
 			if (numWords > 240){

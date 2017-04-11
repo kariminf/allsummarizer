@@ -440,8 +440,8 @@ public class AS {
 					totalSize = allText.length(); //number of chars
 					break;
 				case 'w':
-					for (int nb: data.getNbrWords())//number of words
-						totalSize += nb;
+					for (int id=0; id < data.getSentAmount(); id++)//number of words
+						totalSize += data.getNbrWords(id);
 					break;
 				case 's':
 					totalSize = data.getSentences().size(); //number of sentences
@@ -513,7 +513,6 @@ public class AS {
 		
 		List<String> sentences = data.getSentences();
 		List<List<String>> sentWords = data.getSentWords();
-		List<Integer> nbrWords = data.getNbrWords();
 		
 		
 		//percentage
@@ -557,7 +556,7 @@ public class AS {
 				currentSize += sentences.get(index).length(); //number of chars
 				break;
 			case 'w':
-				currentSize += nbrWords.get(index); //number of words
+				currentSize += data.getNbrWords(index); //number of words
 				break;
 			case 's':
 				currentSize ++; //number of sentences

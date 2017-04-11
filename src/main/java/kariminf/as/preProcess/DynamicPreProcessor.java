@@ -149,27 +149,15 @@ public class DynamicPreProcessor extends PreProcessor{
 	 */
 	public void preProcess(){
 
-		List<String> sentences = new ArrayList<String>();
-		HashMap<Integer, Integer> sentPos = new HashMap<Integer, Integer>();
-
-		int sentMergePos = 0;
 		for (String text: texts){
 			text = normalizer.normalize(text);
 			List<String> sentInText = segmenter.splitToSentences(text);
-			int textPos = - 1 - sentMergePos;
-			sentPos.put(textPos, sentInText.size());
-			for (int i = 1; i <= sentInText.size(); i++){
-				sentPos.put(sentMergePos, i);
-				sentMergePos++;
-			}
-			sentences.addAll(sentInText);
+			data.addSentences(sentInText);
 		}
 
 
-		List<List<String>> sentWords = PreProcess(sentences);
-
-		data.setSentPos(sentPos);
-		data.setSentences(sentences);
+		List<List<String>> sentWords = preProcess(data.getSentences());
+		
 		data.setSentWords(sentWords);
 
 	}
@@ -181,7 +169,7 @@ public class DynamicPreProcessor extends PreProcessor{
 	 * @param Sents list of sentences
 	 * @return list of sentences where each sentence is a list of preprocessed words
 	 */
-	public List<List<String>> PreProcess (List<String> Sents){
+	public List<List<String>> preProcess (List<String> Sents){
 
 		List<List<String>> sentWords = new ArrayList<List<String>>();
 		//number of words in the sentences including stop-words
@@ -217,15 +205,9 @@ public class DynamicPreProcessor extends PreProcessor{
 		inTxt = normalizer.normalize(inTxt);
 
 		List<String> sentences = segmenter.splitToSentences(inTxt);
-		HashMap<Integer, Integer> sentPos = new HashMap<Integer, Integer>();
-		List<List<String>> sentWords = PreProcess(sentences);
+		List<List<String>> sentWords = preProcess(sentences);
 
-		sentPos.put(-1, sentences.size());
-		for (int i = 0; i < sentences.size(); i++)
-			sentPos.put(i, i + 1);
-
-		data.setSentences(sentences);
-		data.setSentPos(sentPos);
+		data.addSentences(sentences);
 		data.setSentWords(sentWords);
 
 

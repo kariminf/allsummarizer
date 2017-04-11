@@ -108,11 +108,10 @@ public class PreProcess {
 		pp.addText(input);
 		pp.preProcess();
 		List<List<String>> l = data.getSentWords();
-		List<Integer> n = data.getNbrWords();
 		
 		int i=0;
 		for (List<String> s: l){
-			System.out.println(n.get(i) + "=" + s.toString());
+			System.out.println(data.getNbrWords(i) + "=" + s.toString());
 			i++;
 		}
 

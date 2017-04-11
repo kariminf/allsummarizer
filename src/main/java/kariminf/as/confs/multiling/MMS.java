@@ -170,7 +170,6 @@ public class MMS {
 		
 		List<String> sentences = data.getSentences();
 		List<List<String>> sentWords = data.getSentWords();
-		List<Integer> nbrWords = data.getNbrWords();
 
 		String summary = "";
 		int numChars = 0;
@@ -193,7 +192,7 @@ public class MMS {
 				}
 			}
 			
-			numChars += nbrWords.get(index);
+			numChars += data.getNbrWords(index);
 			
 			if (numChars > summarySize)
 				break;

@@ -73,11 +73,13 @@ public class Tac02 {
 	    } 
 	  }
 	
-	public static String getSummary(List<List<String>> sentWords, List<Integer> nbrWords,
-			List<String> sentences, List<Integer> order){
+	public static String getSummary(Data data, List<Integer> order){
 		String summary = "";
 		int numWords = 0;
 		int numOrder = 0;
+		
+		List<List<String>> sentWords = data.getSentWords();
+		List<String> sentences = data.getSentences();
 		
 		while(true){
 			
@@ -96,13 +98,13 @@ public class Tac02 {
 				}
 			}
 			
-			if (nbrWords.get(index) ==0){
+			if (data.getNbrWords(index) ==0){
 				numOrder ++;
 				continue;
 			}
 				
 				
-			numWords += nbrWords.get(index);
+			numWords += data.getNbrWords(index);
 			
 			
 			if (numWords > 240){
@@ -180,8 +182,7 @@ public class Tac02 {
 			scorer.scoreUnits();
 			
 			//String //240-250 words
-			String summary = getSummary(data.getSentWords(), data.getNbrWords(),
-					data.getSentences(), scorer.getOrdered());
+			String summary = getSummary(data , scorer.getOrdered());
 			
 			try {
 				FileManager.saveFile(peerfolder + "AS12/"+ lang + "/M00" + i, summary);
