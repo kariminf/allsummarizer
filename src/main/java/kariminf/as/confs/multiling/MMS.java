@@ -27,16 +27,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import kariminf.as.preProcess.PreProcessor;
-import kariminf.as.process.extraction.Summarizer;
-import kariminf.as.process.extraction.bayes.Feature;
-import kariminf.as.process.extraction.bayes.PLeng;
-import kariminf.as.process.extraction.bayes.Pos;
-import kariminf.as.process.extraction.bayes.RLeng;
-import kariminf.as.process.extraction.bayes.TFB;
-import kariminf.as.process.extraction.bayes.TFU;
-import kariminf.as.process.extraction.cluster.Cluster;
-import kariminf.as.process.extraction.cluster.NaiveCluster;
+import kariminf.as.preProcess.DynamicPreProcessor;
+import kariminf.as.process.Scorer;
+import kariminf.as.process.topicclassif.BayesScoreHandler;
+import kariminf.as.process.topicclassif.Cluster;
+import kariminf.as.process.topicclassif.Feature;
+import kariminf.as.process.topicclassif.NaiveCluster;
+import kariminf.as.process.topicclassif.PLeng;
+import kariminf.as.process.topicclassif.Pos;
+import kariminf.as.process.topicclassif.RLeng;
+import kariminf.as.process.topicclassif.TFB;
+import kariminf.as.process.topicclassif.TFU;
 import kariminf.as.tools.Data;
 import kariminf.as.tools.Tools;
 
@@ -50,7 +51,7 @@ public class MMS {
 	
 	private Data data;
 	private boolean clustered = false;
-	private PreProcessor preprocessor;
+	private DynamicPreProcessor preprocessor;
 	private final static int summarySize = 250; //words
 	private final static int zhSummarySize = 750; //bytes
 	
@@ -59,7 +60,7 @@ public class MMS {
 		this.lang = (lang.length()==2)?lang:"en";
 		clustered = false;
 		data = new Data();
-		preprocessor = new PreProcessor(this.lang, this.data);
+		preprocessor = new DynamicPreProcessor(this.lang, this.data);
 		
 	}
 	
@@ -95,14 +96,16 @@ public class MMS {
 		if(features.size() <1 ) throw new Exception("add at least one feature");
 		if (! clustered ) throw new Exception("Use cluster before summarize");
 		
-		Summarizer summarizer = new Summarizer();
+		BayesScoreHandler bc = new BayesScoreHandler();
+		Scorer scorer = Scorer.create(bc);
 		
 		for (Feature feature: features)
-			summarizer.addFeature(feature);
+			bc.addFeature(feature);
 		
-		summarizer.summarize(data);
+		scorer.setData(data);
+		scorer.scoreUnits();
 		
-		return getSummary(data, summarizer.getOrdered(), simTH);
+		return getSummary(data, scorer.getOrdered(), simTH);
 	}
 	
 	/**
@@ -167,7 +170,6 @@ public class MMS {
 		
 		List<String> sentences = data.getSentences();
 		List<List<String>> sentWords = data.getSentWords();
-		List<Integer> nbrWords = data.getNbrWords();
 
 		String summary = "";
 		int numChars = 0;
@@ -190,7 +192,7 @@ public class MMS {
 				}
 			}
 			
-			numChars += nbrWords.get(index);
+			numChars += data.getNbrWords(index);
 			
 			if (numChars > summarySize)
 				break;

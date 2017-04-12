@@ -23,11 +23,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import kariminf.as.preProcess.PreProcessor;
-import kariminf.as.process.extraction.Summarizer;
-import kariminf.as.process.extraction.bayes.*;
-import kariminf.as.process.extraction.cluster.Cluster;
-import kariminf.as.process.extraction.cluster.NaiveCluster;
+import kariminf.as.preProcess.DynamicPreProcessor;
+import kariminf.as.process.Scorer;
+import kariminf.as.process.topicclassif.BayesScoreHandler;
+import kariminf.as.process.topicclassif.Cluster;
+import kariminf.as.process.topicclassif.Feature;
+import kariminf.as.process.topicclassif.NaiveCluster;
+import kariminf.as.process.topicclassif.PLeng;
+import kariminf.as.process.topicclassif.Pos;
+import kariminf.as.process.topicclassif.RLeng;
+import kariminf.as.process.topicclassif.TFB;
+import kariminf.as.process.topicclassif.TFU;
 import kariminf.as.tools.*;
 import kariminf.ktoolja.file.FileManager;
 import kariminf.ktoolja.math.Calculus;
@@ -69,7 +75,7 @@ public class Cmplg {
 
 			Data data = new Data();
 			{
-				PreProcessor preprocess = new PreProcessor("en", data);
+				DynamicPreProcessor preprocess = new DynamicPreProcessor("en", data);
 				String text = FileManager.readFile(file);
 				preprocess.preProcess(text);
 			}
@@ -113,14 +119,16 @@ public class Cmplg {
 				info += th_name[th] + ": " + th_value[th] + "\n";
 
 				for (List<Integer> oneComb : comb){
-					Summarizer summarizer = new Summarizer();
-
+					
 					combStr = peerfolder + filename + "/";
+					BayesScoreHandler bc = new BayesScoreHandler();
 					String featused = "";
 					for (int index: oneComb){
-						summarizer.addFeature(features[index]);
+						bc.addFeature(features[index]);
 						featused += features[index].getClass().getSimpleName() + "-";
 					}
+					
+					Scorer scorer = Scorer.create(bc);
 
 					featused = featused.substring(0, featused.length()-1) + "/";
 
@@ -129,8 +137,9 @@ public class Cmplg {
 					{
 						FileManager.createFolder(new File(combStr));
 						//System.out.println("features: " + featused);
-						summarizer.summarize(data);
-						String summary = getSummary(data, summarizer.getOrdered());
+						scorer.setData(data);
+						scorer.scoreUnits();
+						String summary = getSummary(data, scorer.getOrdered());
 
 						combStr +=  th_name[th] + ".asz";
 						try {
@@ -160,7 +169,6 @@ public class Cmplg {
 	public static String getSummary(Data data, List<Integer> order){
 
 		List<List<String>> sentWords = data.getSentWords();
-		List<Integer> nbrWords = data.getNbrWords();
 		List<String> sentences = data.getSentences();
 
 		String summary = "";
@@ -184,13 +192,13 @@ public class Cmplg {
 				}
 			}
 
-			if (nbrWords.get(index) ==0){
+			if (data.getNbrWords(index) ==0){
 				numOrder ++;
 				continue;
 			}
 
 
-			numWords += nbrWords.get(index);
+			numWords += data.getNbrWords(index);
 
 
 			if (numWords > 240){

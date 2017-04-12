@@ -11,14 +11,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import kariminf.as.preProcess.StaticPreProcessor;
-import kariminf.as.process.extraction.Summarizer;
-import kariminf.as.process.extraction.bayes.PLeng;
-import kariminf.as.process.extraction.bayes.Pos;
-import kariminf.as.process.extraction.bayes.RLeng;
-import kariminf.as.process.extraction.bayes.TFB;
-import kariminf.as.process.extraction.bayes.TFU;
-import kariminf.as.process.extraction.cluster.Cluster;
-import kariminf.as.process.extraction.cluster.NaiveCluster;
+import kariminf.as.process.Scorer;
+import kariminf.as.process.topicclassif.BayesScoreHandler;
+import kariminf.as.process.topicclassif.Cluster;
+import kariminf.as.process.topicclassif.NaiveCluster;
+import kariminf.as.process.topicclassif.PLeng;
+import kariminf.as.process.topicclassif.Pos;
+import kariminf.as.process.topicclassif.RLeng;
+import kariminf.as.process.topicclassif.TFB;
+import kariminf.as.process.topicclassif.TFU;
 import kariminf.as.tools.Data;
 
 public class RequestSummarizer extends HttpServlet {
@@ -138,14 +139,12 @@ public class RequestSummarizer extends HttpServlet {
 		
 		// Processing: Notation & Ordering
 		{
-			Summarizer summarizer = new Summarizer();
-			addfeatures(summarizer, featNames);
-			/*
-			if (data != null)
-				throw new IOException("features: " + summarizer.getNbrFeatures());
-				*/
-			summarizer.summarize(data);
-			orderNumSent = summarizer.getOrdered();
+			BayesScoreHandler bc = new BayesScoreHandler();
+			Scorer scorer = Scorer.create(bc);
+			addfeatures(bc, featNames);
+			scorer.setData(data);
+			scorer.scoreUnits();
+			orderNumSent = scorer.getOrdered();
 			/*
 			if (data != null)
 				throw new IOException("ordered" + orderNumSent);
@@ -154,29 +153,29 @@ public class RequestSummarizer extends HttpServlet {
 			//sentences.add("");
 			
 			for (int order: orderNumSent)
-				orderedScores.add(summarizer.getScore(order));
+				orderedScores.add(scorer.getScore(order));
 			
 		}
 		
 	}
 	
-	public void addfeatures(Summarizer s, String featNames){
+	public void addfeatures(BayesScoreHandler bc, String featNames){
 		featNames = featNames.toLowerCase();
 		
 		if (featNames.contains("pleng"))
-			s.addFeature(new PLeng());
+			bc.addFeature(new PLeng());
 		
 		if (featNames.contains("pos"))
-			s.addFeature(new Pos());
+			bc.addFeature(new Pos());
 		
 		if (featNames.contains("rleng"))
-			s.addFeature(new RLeng());
+			bc.addFeature(new RLeng());
 		
 		if (featNames.contains("tfb"))
-			s.addFeature(new TFB());
+			bc.addFeature(new TFB());
 		
 		if (featNames.contains("tfu"))
-			s.addFeature(new TFU());
+			bc.addFeature(new TFU());
 	}
 	
 	public String getSummaryNum(int nbrSent){

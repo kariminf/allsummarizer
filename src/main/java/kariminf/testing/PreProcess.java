@@ -20,7 +20,7 @@ package kariminf.testing;
 
 import java.util.List;
 
-import kariminf.as.preProcess.PreProcessor;
+import kariminf.as.preProcess.DynamicPreProcessor;
 import kariminf.as.tools.Data;
 
 
@@ -104,15 +104,14 @@ public class PreProcess {
 	public static void main(String[] args) {
 		Data data = new Data();
 		String input = getStringLang(lang);
-		PreProcessor pp = new PreProcessor(lang, data);
+		DynamicPreProcessor pp = new DynamicPreProcessor(lang, data);
 		pp.addText(input);
 		pp.preProcess();
 		List<List<String>> l = data.getSentWords();
-		List<Integer> n = data.getNbrWords();
 		
 		int i=0;
 		for (List<String> s: l){
-			System.out.println(n.get(i) + "=" + s.toString());
+			System.out.println(data.getNbrWords(i) + "=" + s.toString());
 			i++;
 		}
 

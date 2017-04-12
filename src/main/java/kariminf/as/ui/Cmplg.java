@@ -22,13 +22,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import kariminf.as.preProcess.PreProcessor;
-import kariminf.as.process.extraction.bayes.Feature;
-import kariminf.as.process.extraction.bayes.PLeng;
-import kariminf.as.process.extraction.bayes.Pos;
-import kariminf.as.process.extraction.bayes.RLeng;
-import kariminf.as.process.extraction.bayes.TFB;
-import kariminf.as.process.extraction.bayes.TFU;
+import kariminf.as.preProcess.DynamicPreProcessor;
+import kariminf.as.process.topicclassif.Feature;
+import kariminf.as.process.topicclassif.PLeng;
+import kariminf.as.process.topicclassif.Pos;
+import kariminf.as.process.topicclassif.RLeng;
+import kariminf.as.process.topicclassif.TFB;
+import kariminf.as.process.topicclassif.TFU;
 import kariminf.ktoolja.math.Calculus;
 import kariminf.as.tools.Data;
 import kariminf.ktoolja.file.FileManager;
@@ -57,7 +57,7 @@ public class Cmplg {
 
 			Data data = new Data();
 			{
-				PreProcessor preprocess = new PreProcessor("en", data);
+				DynamicPreProcessor preprocess = new DynamicPreProcessor("en", data);
 				String text = FileManager.readFile(file);
 				preprocess.preProcess(text);
 			}

@@ -21,15 +21,16 @@ package kariminf.as.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import kariminf.as.preProcess.PreProcessor;
-import kariminf.as.process.extraction.Summarizer;
-import kariminf.as.process.extraction.bayes.PLeng;
-import kariminf.as.process.extraction.bayes.Pos;
-import kariminf.as.process.extraction.bayes.RLeng;
-import kariminf.as.process.extraction.bayes.TFB;
-import kariminf.as.process.extraction.bayes.TFU;
-import kariminf.as.process.extraction.cluster.Cluster;
-import kariminf.as.process.extraction.cluster.NaiveCluster;
+import kariminf.as.preProcess.DynamicPreProcessor;
+import kariminf.as.process.Scorer;
+import kariminf.as.process.topicclassif.BayesScoreHandler;
+import kariminf.as.process.topicclassif.Cluster;
+import kariminf.as.process.topicclassif.NaiveCluster;
+import kariminf.as.process.topicclassif.PLeng;
+import kariminf.as.process.topicclassif.Pos;
+import kariminf.as.process.topicclassif.RLeng;
+import kariminf.as.process.topicclassif.TFB;
+import kariminf.as.process.topicclassif.TFU;
 import kariminf.as.tools.Data;
 
 
@@ -51,7 +52,7 @@ public class MonoDoc {
 		
 		// Pre-Processing
 		{
-			PreProcessor preprocess = new PreProcessor("en", data);
+			DynamicPreProcessor preprocess = new DynamicPreProcessor("en", data);
 			preprocess.preProcess(text);
 		}
 		
@@ -63,17 +64,20 @@ public class MonoDoc {
 		
 		// Processing: Notation & Ordering
 		{
-			Summarizer summarizer = new Summarizer();
-			//summarizer.addFeature(new TFU());
-			summarizer.addFeature(new TFB());
-			//summarizer.addFeature(new RLeng());
-			summarizer.addFeature(new PLeng());
-			//summarizer.addFeature(new Pos());
-			summarizer.summarize(data);
-			orderNumSent = summarizer.getOrdered();
+			BayesScoreHandler bc = new BayesScoreHandler();
+			//bc.addFeature(new TFU());
+			bc.addFeature(new TFB());
+			//bc.addFeature(new RLeng());
+			bc.addFeature(new PLeng());
+			//bc.addFeature(new Pos());
+			
+			Scorer scorer = Scorer.create(bc);
+			scorer.setData(data);
+			scorer.scoreUnits();
+			orderNumSent = scorer.getOrdered();
 			sentences = data.getSentences();
 			for (int order: orderNumSent)
-				orderedScores.add(summarizer.getScore(order));
+				orderedScores.add(scorer.getScore(order));
 		}
 		
 	}

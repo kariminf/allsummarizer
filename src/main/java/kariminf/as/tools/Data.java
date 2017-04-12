@@ -33,11 +33,28 @@ import java.util.List;
 public class Data {
 
 	private List<String> sentences = new ArrayList<String>();
-	private List<List<String>> sentWords;
+	private List<List<String>> sentWords = new ArrayList<>();
 	private HashMap<Integer, List<Integer>> classes;
-	private HashMap<Integer, Integer> sentPos;
+	
+	//sentID ==> real position in a document
+	private HashMap<Integer, Integer> sentPos = new HashMap<>();
+	
 	private List<Double> sentSim;
+	
 	private List<Integer> nbrWords;
+	
+	private int docAmount = 0;
+	
+	//sentID ==> docID
+	private HashMap<Integer, Integer> sentInDoc = new HashMap<Integer, Integer>();
+	//docID ==> length (number of sentences)
+	private HashMap<Integer, Integer> docLen = new HashMap<Integer, Integer>();
+	
+	//statistics on docs (int)
+	//"min" ==> {docID ==> minLengthSentID}
+	//"max" ==> {docID ==> minLengthSentID}
+	private HashMap<String, HashMap<Integer, Integer>> docStats = new HashMap<>();
+	
 
 	private HashMap<String, Integer> trainType = new HashMap<String, Integer>();
 	private HashMap<String, Integer> scoreType = new HashMap<String, Integer>();
@@ -55,27 +72,40 @@ public class Data {
 		scoreType.put("sentPos", 2);// Integer
 		scoreType.put("sentLeng", 3);// Integer
 		scoreType.put("sentRLeng", 4);// Integer
+		
+		
+		docStats.put("min", new HashMap<>());
+		docStats.put("max", new HashMap<>());
 
 	}
-	
+
 	public void clear(){
 		sentences = new ArrayList<String>();
 		sentWords = null;
 		classes = null;
 		sentPos = null;
 		sentSim = null;
-		nbrWords = null;
+		//nbrWords = null;
 	}
 
 	/**
-	 * Sets the sentences of the container
+	 * add the sentences of the container
 	 * 
 	 * @param sentences
 	 *            the sentences we want to add
 	 */
-	public void setSentences(List<String> sentences) {
-		// This is unprotected way to add sentences
-		this.sentences = sentences;
+	public void addSentences(List<String> sentences) {
+		int base = this.sentences.size();
+		for (int i = 0; i < sentences.size(); i++){
+			int ID = base + i;
+			sentPos.put(ID, i+1);
+			this.sentences.add(sentences.get(i));
+			sentInDoc.put(ID, docAmount);
+		}
+		
+		docLen.put(docAmount, sentences.size());
+		
+		docAmount++;
 	}
 
 	/**
@@ -86,8 +116,34 @@ public class Data {
 	 *            a list of sentences where each sentence is a list of words
 	 */
 	public void setSentWords(List<List<String>> sentWords) {
-		// This is unprotected way to add sentences words
-		this.sentWords = sentWords;
+		
+		int currentDoc = -1;
+		int minSize = Integer.MAX_VALUE;
+		int maxSize = 0;
+		for (int sentID = 0; sentID < sentWords.size(); sentID++){
+			List<String> words = sentWords.get(sentID);
+			this.sentWords.add(words);
+			int doc = sentInDoc.get(sentID);
+			
+			if (currentDoc != doc ){
+				minSize = Integer.MAX_VALUE;
+				maxSize = 0;
+				currentDoc = doc;
+			}
+			
+			int size = words.size();
+			
+			if (minSize >  size){
+				minSize = size;
+				docStats.get("min").put(currentDoc, sentID);
+			}
+			
+			if (maxSize <  size){
+				maxSize = size;
+				docStats.get("max").put(currentDoc, sentID);
+			}
+		}
+		
 		calculateSimilarity();
 	}
 
@@ -111,18 +167,6 @@ public class Data {
 	public void setNbrWords(List<Integer> nbrWords) {
 		// This is unprotected way
 		this.nbrWords = nbrWords;
-	}
-
-	/**
-	 * Sets sentences positions in original text(s).
-	 * 
-	 * @param sentPos
-	 *            the index of the sentence when we merge all input text, and
-	 *            its position in the original text
-	 */
-	public void setSentPos(HashMap<Integer, Integer> sentPos) {
-		// This is unprotected way
-		this.sentPos = sentPos;
 	}
 
 	/**
@@ -269,9 +313,13 @@ public class Data {
 	 * 
 	 * @return a list of words' numbers in each sentence
 	 */
-	public List<Integer> getNbrWords() {
-		// unprotected way
-		return nbrWords;
+	public int getNbrWords(int sentID) {
+		return nbrWords.get(sentID);
+	}
+	
+	
+	public int getSentAmount(){
+		return sentences.size();
 	}
 
 	/**
@@ -279,8 +327,8 @@ public class Data {
 	 * 
 	 * @return the sentence index (ID) and its position in the source text
 	 */
-	public HashMap<Integer, Integer> getRealPos() {
-		return sentPos;
+	public int getRealPos(int sentID) {
+		return sentPos.get(sentID);
 	}
 
 	/**
@@ -289,16 +337,17 @@ public class Data {
 	private void calculateSimilarity() {
 
 		sentSim = new ArrayList<Double>();
-		for (int i = 0; i < sentWords.size(); i++)
-			for (int j = i + 1; j < sentWords.size(); j++) {
+		for (int i = 0; i < sentWords.size(); i++){
+			for (int j = i+1; j < sentWords.size(); j++) {
 				Double sim = Tools.calcSimilarity(sentWords.get(i),
 						sentWords.get(j));
 				sentSim.add(sim);
-			}
 
+			}
+		}
 	}
 
-	
+
 	/**
 	 * Gets the similarity between two sentences.
 	 * 
@@ -320,18 +369,19 @@ public class Data {
 
 		//The matrix is transformed to a list, so we have to search for the position
 		//of the similarity of these two sentences in this list
-		
+
 		// Suppose S is the number of sentences and x < y 
 		//The starting point is the number of elements from (S-x) to (S-1)
 		int realPos = xPos * (2 * sentWords.size() - xPos - 1) / 2;
-		
+
 		// We add the position of the column in the matrix
 		realPos += (yPos - xPos - 1);
 
 		return sentSim.get(realPos);
 	}
-
 	
+
+
 	/**
 	 * Gets the list of similarities.
 	 * 
@@ -340,6 +390,32 @@ public class Data {
 	public List<Double> getSimList() {
 		//unprotected way
 		return sentSim;
+	}
+	
+	public int getDocLength(int docID){
+		return docLen.get(docID);
+	}
+	
+	public int getSentDoc(int sentID){
+		return sentInDoc.get(sentID);
+	}
+	
+	public boolean isSentInDoc(int sentID, int docID){
+		
+		int doc = sentInDoc.get(sentID);
+		return (docID == doc);
+	}
+	
+	public int getSentSize(int sentID){
+		return sentWords.get(sentID).size();
+	}
+	
+	public int getMaxLenSentID(int docID){
+		return docStats.get("max").get(docID);
+	}
+	
+	public int getMinLenSentID(int docID){
+		return docStats.get("min").get(docID);
 	}
 
 }

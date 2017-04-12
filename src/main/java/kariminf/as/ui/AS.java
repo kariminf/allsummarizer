@@ -32,16 +32,17 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import kariminf.as.confs.multiling.MMS;
-import kariminf.as.preProcess.PreProcessor;
-import kariminf.as.process.extraction.Summarizer;
-import kariminf.as.process.extraction.bayes.Feature;
-import kariminf.as.process.extraction.bayes.PLeng;
-import kariminf.as.process.extraction.bayes.Pos;
-import kariminf.as.process.extraction.bayes.RLeng;
-import kariminf.as.process.extraction.bayes.TFB;
-import kariminf.as.process.extraction.bayes.TFU;
-import kariminf.as.process.extraction.cluster.Cluster;
-import kariminf.as.process.extraction.cluster.NaiveCluster;
+import kariminf.as.preProcess.DynamicPreProcessor;
+import kariminf.as.process.Scorer;
+import kariminf.as.process.topicclassif.BayesScoreHandler;
+import kariminf.as.process.topicclassif.Cluster;
+import kariminf.as.process.topicclassif.Feature;
+import kariminf.as.process.topicclassif.NaiveCluster;
+import kariminf.as.process.topicclassif.PLeng;
+import kariminf.as.process.topicclassif.Pos;
+import kariminf.as.process.topicclassif.RLeng;
+import kariminf.as.process.topicclassif.TFB;
+import kariminf.as.process.topicclassif.TFU;
 import kariminf.as.tools.Data;
 import kariminf.as.tools.Tools;
 import kariminf.as.ui.gui.GUI;
@@ -399,7 +400,7 @@ public class AS {
 		ArrayList<ArrayList<Feature>> featuresSets = getFeatures();
 		
 		Data data = new Data();
-		PreProcessor preprocessor = new PreProcessor(language, data);
+		DynamicPreProcessor preprocessor = new DynamicPreProcessor(language, data);
 		
 		//The output is always a folder
 		FileManager.createFolder(new File(outputDocURL));
@@ -439,8 +440,8 @@ public class AS {
 					totalSize = allText.length(); //number of chars
 					break;
 				case 'w':
-					for (int nb: data.getNbrWords())//number of words
-						totalSize += nb;
+					for (int id=0; id < data.getSentAmount(); id++)//number of words
+						totalSize += data.getNbrWords(id);
 					break;
 				case 's':
 					totalSize = data.getSentences().size(); //number of sentences
@@ -463,22 +464,25 @@ public class AS {
 				//Loop over feature combinations
 				for(ArrayList<Feature> fs: featuresSets){
 					
-					Summarizer summarizer = new Summarizer();
+					BayesScoreHandler bc = new BayesScoreHandler();
 					//add the feature combination
 					String featused = "";
 					for (Feature f: fs){
-						summarizer.addFeature(f);
+						bc.addFeature(f);
 						featused += f.getClass().getSimpleName() + "-";
 					}
+					
+					Scorer scorer = Scorer.create(bc);
+					
 					featused = featused.substring(0, featused.length()-1);
 						
-					
-					summarizer.summarize(data);
+					scorer.setData(data);
+					scorer.scoreUnits();
 					
 					//loop over summary size
 					for (int size: sizes){
 						
-						String result = getSummary(data, summarizer.getOrdered(), th, size, totalSize);
+						String result = getSummary(data, scorer.getOrdered(), th, size, totalSize);
 						String filename = outputs.get(testCount);
 						filename += "_" + th + "_" + featused + "_" + size ;
 						filename += sizeFix? "": "%";
@@ -509,7 +513,6 @@ public class AS {
 		
 		List<String> sentences = data.getSentences();
 		List<List<String>> sentWords = data.getSentWords();
-		List<Integer> nbrWords = data.getNbrWords();
 		
 		
 		//percentage
@@ -553,7 +556,7 @@ public class AS {
 				currentSize += sentences.get(index).length(); //number of chars
 				break;
 			case 'w':
-				currentSize += nbrWords.get(index); //number of words
+				currentSize += data.getNbrWords(index); //number of words
 				break;
 			case 's':
 				currentSize ++; //number of sentences

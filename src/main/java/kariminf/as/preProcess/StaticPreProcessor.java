@@ -74,7 +74,7 @@ import kariminf.ktoolja.plugins.JarLoader;
  * @author Abdelkrime Aries
  *
  */
-public class StaticPreProcessor {
+public class StaticPreProcessor extends PreProcessor {
 	
 	// In multi-document summarization, we have many texts
 	private List<String> texts = new ArrayList<String>();
@@ -97,8 +97,8 @@ public class StaticPreProcessor {
 	 * @param data The data container
 	 */
 	public StaticPreProcessor(String lang, Data data){
+		super(lang, data);
 		setLanguage(lang);
-		this.data = data;
 		
 	}
 
@@ -408,6 +408,20 @@ public class StaticPreProcessor {
 	 */
 	public void preProcess(){
 
+		for (String text: texts){
+			text = normalizer.normalize(text);
+			List<String> sentInText = segmenter.splitToSentences(text);
+			data.addSentences(sentInText);
+		}
+
+		List<List<String>> sentWords = PreProcess(data.getSentences());
+		data.setSentWords(sentWords);
+
+	}
+	
+	/*
+	public void preProcess(){
+
 		List<String> sentences = new ArrayList<String>();
 		HashMap<Integer, Integer> sentPos = new HashMap<Integer, Integer>();
 
@@ -431,7 +445,7 @@ public class StaticPreProcessor {
 		data.setSentences(sentences);
 		data.setSentWords(sentWords);
 
-	}
+	}*/
 
 
 	/**
@@ -476,15 +490,9 @@ public class StaticPreProcessor {
 		inTxt = normalizer.normalize(inTxt);
 
 		List<String> sentences = segmenter.splitToSentences(inTxt);
-		HashMap<Integer, Integer> sentPos = new HashMap<Integer, Integer>();
 		List<List<String>> sentWords = PreProcess(sentences);
 
-		sentPos.put(-1, sentences.size());
-		for (int i = 0; i < sentences.size(); i++)
-			sentPos.put(i, i + 1);
-
-		data.setSentences(sentences);
-		data.setSentPos(sentPos);
+		data.addSentences(sentences);
 		data.setSentWords(sentWords);
 
 

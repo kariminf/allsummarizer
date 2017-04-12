@@ -26,11 +26,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import kariminf.as.preProcess.PreProcessor;
-import kariminf.as.process.extraction.Summarizer;
-import kariminf.as.process.extraction.bayes.Feature;
-import kariminf.as.process.extraction.cluster.Cluster;
-import kariminf.as.process.extraction.cluster.NaiveCluster;
+import kariminf.as.preProcess.DynamicPreProcessor;
+import kariminf.as.process.Scorer;
+import kariminf.as.process.topicclassif.BayesScoreHandler;
+import kariminf.as.process.topicclassif.Cluster;
+import kariminf.as.process.topicclassif.Feature;
+import kariminf.as.process.topicclassif.NaiveCluster;
 import kariminf.as.tools.Data;
 import kariminf.ktoolja.file.FileManager;
 import kariminf.as.tools.Tools;
@@ -44,7 +45,7 @@ public class MSS {
 	
 	private Data data;
 	private boolean clustered = false;
-	private PreProcessor preprocessor;
+	private DynamicPreProcessor preprocessor;
 	
 	private boolean nobrackets = false;
 	
@@ -52,7 +53,7 @@ public class MSS {
 		this.lang = (lang.length()==2)?lang:"en";
 		clustered = false;
 		data = new Data();
-		preprocessor = new PreProcessor(this.lang, this.data);
+		preprocessor = new DynamicPreProcessor(this.lang, this.data);
 	}
 	
 	/**
@@ -123,14 +124,16 @@ public class MSS {
 		if(features.size() <1 ) throw new Exception("add at least one feature");
 		if (! clustered ) throw new Exception("Use cluster before summarize");
 		
-		Summarizer summarizer = new Summarizer();
+		BayesScoreHandler bc = new BayesScoreHandler();
+		Scorer scorer = Scorer.create(bc);
 		
 		for (Feature feature: features)
-			summarizer.addFeature(feature);
+			bc.addFeature(feature);
 		
-		summarizer.summarize(data);
+		scorer.setData(data);
+		scorer.scoreUnits();
 		
-		return getSummary(data, summarizer.getOrdered(), summarySize, simTH);
+		return getSummary(data, scorer.getOrdered(), summarySize, simTH);
 	}
 	
 	/**

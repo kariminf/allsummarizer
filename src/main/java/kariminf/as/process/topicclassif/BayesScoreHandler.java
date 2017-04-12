@@ -16,15 +16,15 @@
  * limitations under the License.
  */
 
-package kariminf.as.process.extraction;
+package kariminf.as.process.topicclassif;
 
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import kariminf.as.preProcess.PreProcessor;
-import kariminf.as.process.extraction.bayes.Feature;
+import kariminf.as.preProcess.DynamicPreProcessor;
+import kariminf.as.process.ScoreHandler;
 import kariminf.as.tools.Data;
 
 
@@ -43,21 +43,27 @@ import kariminf.as.tools.Data;
  * @author Abdelkrime Aries
  *
  */
-public class BayesClassifier {
+public class BayesScoreHandler implements ScoreHandler{
 	
 	private List<Feature> features = new ArrayList<Feature>();
-	private HashMap<Integer,Double> scores = new HashMap<Integer,Double>();
+	//private HashMap<Integer,Double> scores = new HashMap<Integer,Double>();
 	
 	private boolean normalized = false;
+	
+	
+	public static BayesScoreHandler create(){
+		return new BayesScoreHandler();
+	}
 	
 	/**
 	 * Sets the list of features to be used to score a sentence
 	 * 
 	 * @param features list of features (See {@link Feature})
 	 */
-	public void setFeatures(List<Feature> features){
+	public BayesScoreHandler setFeatures(List<Feature> features){
 		for (Feature feature: features)
 			this.features.add(feature);
+		return this;
 	}
 	
 	
@@ -65,8 +71,9 @@ public class BayesClassifier {
 	 * Add a new feature to the list 
 	 * @param feature the feature to be add
 	 */
-	public void addFeature(Feature feature){
+	public BayesScoreHandler addFeature(Feature feature){
 		features.add(feature);
+		return this;
 	}
 	
 	
@@ -76,40 +83,9 @@ public class BayesClassifier {
 	 * 
 	 * @param normalized Normalize the score or not
 	 */
-	public void normalize(boolean normalized){
+	public BayesScoreHandler normalize(boolean normalized){
 		this.normalized = normalized;
-	}
-	
-	
-	/**
-	 * Scores the sentences and reorder them from the more important to the less one.
-	 * 
-	 * In order to use this method, the data container must contain preprocessed text. 
-	 * To do this, we must call the preprocessor first (See {@link PreProcessor}).
-	 * 
-	 * @param data the data container
-	 * @return a list of sentences' indexes ordered by importance
-	 */
-	public List<Integer> classify(Data data) {
-		//HashMap<Integer, List<Integer>> classes, List<List<String>> sentences
-		
-		List<Integer> orderedSentences = new ArrayList<Integer>();
-		List<Double> orderedScores = new ArrayList<Double>();
-		
-		for(int sentID = 0; sentID < data.getSentNumber(); sentID++){
-			Double currentScore = scoreSentence(data, sentID);
-			
-			//System.out.println("Sentence:" + sentID + " - Score:" + currentScore);
-			int j = 0;
-			while (j < orderedScores.size() && currentScore <= orderedScores.get(j))
-				j++;
-
-			orderedSentences.add(j, sentID);
-			orderedScores.add(j, currentScore);
-			
-		}
-		
-		return orderedSentences;
+		return this;
 	}
 
 	
@@ -160,23 +136,23 @@ public class BayesClassifier {
 	 * @param sentID The index (ID) of the sentence to be scored
 	 * @return the score of the sentence
 	 */
-	public Double scoreSentence(Data data, int sentID){
+	public Double scoreUnit(Data data, int unitID){
 		
 		Double score = 0.0;
 		
 		//Multiplication is addition in log space
 		for (int classID = 0; classID < data.getClassesNumber(); classID++){
-			Double scoreclass = scoreSentInClass(data, sentID, classID);
+			Double scoreclass = scoreSentInClass(data, unitID, classID);
 			score += scoreclass;
 		}
 		
 		//If the normalization of the score is activated
 		if (normalized){
-			int sentLeng = (int) data.makeScoreParam("sentRLeng", sentID);
+			int sentLeng = (int) data.makeScoreParam("sentRLeng", unitID);
 			return score - Math.log(sentLeng);
 		}
 		
-		scores.put(sentID, score);
+		//scores.put(sentID, score);
 		
 		return score;
 	}
@@ -193,12 +169,6 @@ public class BayesClassifier {
 			String trainParam = feature.getTrainParam();
 			feature.train(data.makeTrainParams(trainParam));
 		}
-	}
-	
-	public Double getScore(int sentID){
-		if (! scores.containsKey(sentID)) return -1.0;
-		
-		return scores.get(sentID);
 	}
 
 }

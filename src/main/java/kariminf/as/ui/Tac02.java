@@ -24,13 +24,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 
-import kariminf.as.preProcess.PreProcessor;
-import kariminf.as.process.extraction.Summarizer;
-import kariminf.as.process.extraction.bayes.Pos;
-import kariminf.as.process.extraction.bayes.RLeng;
-import kariminf.as.process.extraction.bayes.TFB;
-import kariminf.as.process.extraction.cluster.Cluster;
-import kariminf.as.process.extraction.cluster.NaiveCluster;
+import kariminf.as.preProcess.DynamicPreProcessor;
+import kariminf.as.process.Scorer;
+import kariminf.as.process.topicclassif.BayesScoreHandler;
+import kariminf.as.process.topicclassif.Cluster;
+import kariminf.as.process.topicclassif.NaiveCluster;
+import kariminf.as.process.topicclassif.Pos;
+import kariminf.as.process.topicclassif.RLeng;
+import kariminf.as.process.topicclassif.TFB;
 import kariminf.as.tools.Data;
 import kariminf.ktoolja.file.FileManager;
 import kariminf.as.tools.Tools;
@@ -72,11 +73,13 @@ public class Tac02 {
 	    } 
 	  }
 	
-	public static String getSummary(List<List<String>> sentWords, List<Integer> nbrWords,
-			List<String> sentences, List<Integer> order){
+	public static String getSummary(Data data, List<Integer> order){
 		String summary = "";
 		int numWords = 0;
 		int numOrder = 0;
+		
+		List<List<String>> sentWords = data.getSentWords();
+		List<String> sentences = data.getSentences();
 		
 		while(true){
 			
@@ -95,13 +98,13 @@ public class Tac02 {
 				}
 			}
 			
-			if (nbrWords.get(index) ==0){
+			if (data.getNbrWords(index) ==0){
 				numOrder ++;
 				continue;
 			}
 				
 				
-			numWords += nbrWords.get(index);
+			numWords += data.getNbrWords(index);
 			
 			
 			if (numWords > 240){
@@ -148,7 +151,7 @@ public class Tac02 {
 		String accro = language[count][1];
 		
 		Data data= new Data();
-		PreProcessor pre = new PreProcessor(accro, data);
+		DynamicPreProcessor pre = new DynamicPreProcessor(accro, data);
 		
 		for (int i =0; i< 10; i++){ //10 topics
 			
@@ -169,15 +172,17 @@ public class Tac02 {
 			
 			cluster.createClasses();
 			
-			Summarizer summarizer = new Summarizer();
-			summarizer.addFeature(new TFB());
-			summarizer.addFeature(new RLeng());
-			summarizer.addFeature(new Pos());
-			summarizer.summarize(data);
+			BayesScoreHandler bc = new BayesScoreHandler();
+			bc.addFeature(new TFB());
+			bc.addFeature(new RLeng());
+			bc.addFeature(new Pos());
+			
+			Scorer scorer = Scorer.create(bc);
+			scorer.setData(data);
+			scorer.scoreUnits();
 			
 			//String //240-250 words
-			String summary = getSummary(data.getSentWords(), data.getNbrWords(),
-					data.getSentences(), summarizer.getOrdered());
+			String summary = getSummary(data , scorer.getOrdered());
 			
 			try {
 				FileManager.saveFile(peerfolder + "AS12/"+ lang + "/M00" + i, summary);
