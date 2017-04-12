@@ -20,7 +20,6 @@ package kariminf.as.confs.multiling;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,13 +27,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import kariminf.ktoolja.math.Calculus;
-import kariminf.as.process.topicclassif.Feature;
 import kariminf.as.process.topicclassif.PLeng;
 import kariminf.as.process.topicclassif.Pos;
 import kariminf.as.process.topicclassif.RLeng;
 import kariminf.as.process.topicclassif.TFB;
 import kariminf.as.process.topicclassif.TFU;
-import kariminf.as.tools.Data;
 import kariminf.ktoolja.file.FileManager;
 
 

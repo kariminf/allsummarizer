@@ -107,16 +107,20 @@ public class SLPScoreHandlerTest extends SLPScoreHandler {
 		SLPScoreHandler slpSH = new SLPScoreHandlerTest();
 		
 		double[] _expectedScores = new double[]{
-				0.486701,
-				0.0,
-				0.0,
-				0.0
+				0.555467,
+				1.012262,
+				-0.998138,
+				9.500543
 		};
 		
 		double[] _realScores = new double[data.getSentNumber()];
 		
+		
 		for (int unitID = 0; unitID < data.getSentNumber(); unitID++){
 			_realScores[unitID] = slpSH.getSLPScore(data, unitID);
+			//System.out.println("sim= " + slpSH.sentSimDoc.get(unitID));
+			//System.out.println("score= " + _realScores[unitID]);
+			
 		}
 		
 		assertArrayEquals(_expectedScores, _realScores, 0.0001);

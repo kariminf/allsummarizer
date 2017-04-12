@@ -47,12 +47,14 @@ public class Data {
 	
 	//sentID ==> docID
 	private HashMap<Integer, Integer> sentInDoc = new HashMap<Integer, Integer>();
-	//docID ==> length
+	//docID ==> length (number of sentences)
 	private HashMap<Integer, Integer> docLen = new HashMap<Integer, Integer>();
 	
-	//statistics on docs
+	//statistics on docs (int)
 	//"min" ==> {docID ==> minLengthSentID}
+	//"max" ==> {docID ==> minLengthSentID}
 	private HashMap<String, HashMap<Integer, Integer>> docStats = new HashMap<>();
+	
 
 	private HashMap<String, Integer> trainType = new HashMap<String, Integer>();
 	private HashMap<String, Integer> scoreType = new HashMap<String, Integer>();
@@ -83,7 +85,7 @@ public class Data {
 		classes = null;
 		sentPos = null;
 		sentSim = null;
-		nbrWords = null;
+		//nbrWords = null;
 	}
 
 	/**
@@ -408,5 +410,12 @@ public class Data {
 		return sentWords.get(sentID).size();
 	}
 	
+	public int getMaxLenSentID(int docID){
+		return docStats.get("max").get(docID);
+	}
+	
+	public int getMinLenSentID(int docID){
+		return docStats.get("min").get(docID);
+	}
 
 }

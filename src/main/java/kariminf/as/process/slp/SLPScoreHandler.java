@@ -41,25 +41,46 @@ public abstract class SLPScoreHandler implements ScoreHandler {
 		//=================
 		{
 			//calculate the maximum size of the same document
-			double maxSize = 0.0;
-			for(int i=0; i < data.getSentAmount(); i++){
-				if (! data.isSentInDoc(unitID, docID)) continue;
+			double maxSize = data.getSentWords().get(
+					data.getMaxLenSentID(docID)
+					).size();
+			
+			double minSize = data.getSentWords().get(
+					data.getMinLenSentID(docID)
+					).size();
+			
+			if (maxSize != minSize){
+				double size = data.getSentWords().get(unitID).size();
 				
-				int currentSize = data.getSentSize(unitID);
-				if (currentSize <= maxSize) continue;
+				//Add a very low amount to not have infinnity score
+				double sizeNorm = ((maxSize - size) + 0.0001)/(maxSize - minSize);
+						
+				score -= Math.log(sizeNorm);
 				
-				maxSize = currentSize;
+				//System.out.printf("min=%d, max=%d, size=%d, norm=%f", (int)minSize, (int)maxSize, (int)size, sizeNorm);
 			}
 			
-			double sizeNorm = ((double))
-					
-					score -= Math.log(data.getSentWords().get(unitID).size());
 		}
 		
 		
+		//Normalize the position
+		//=======================
+		{
+			double posMiddle = data.getDocLength(docID);
+			posMiddle = posMiddle/2;
+			
+			double pos = data.getRealPos(unitID);
+			
+			//The normalized position goes to zero every time we approach the middle 
+			//We can't have a zero score
+			//So, the score of the middle
+			double posNorm = (posMiddle == pos)?
+					1/ posMiddle:
+						Math.abs(posMiddle - pos)/ posMiddle;
+			
+			score -= Math.log(posNorm);
+		}
 		
-		//TODO Normalize the position
-		score -= Math.log(data.getRealPos(unitID));
 		return score; 
 	}
 	
