@@ -10,7 +10,7 @@ public class SLP1ScoreHandler extends SLPScoreHandler {
 		
 		double score = getSLPScore(data, unitID);
 		
-		for(int otherUnitID = 0; otherUnitID < data.getSentNumber(); otherUnitID++){
+		for(int otherUnitID: candidates){
 			if (otherUnitID == unitID) continue;
 			score += data.getSimilarity(unitID, otherUnitID) * 
 					getSLPScore(data, otherUnitID);
