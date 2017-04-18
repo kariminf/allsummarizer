@@ -356,11 +356,21 @@ public class Data {
 	 * @return the similarity
 	 */
 	public Double getSimilarity(int xPos, int yPos) {
-
-		if (xPos >= sentWords.size() || yPos >= sentWords.size())
-			return 0.0;
+		
 		if (xPos == yPos)
 			return 1.0;
+		
+		int realPos = getMatrixPos(xPos, yPos);
+		
+		if(realPos < 0) return 0.0;
+
+		return sentSim.get(realPos);
+	}
+	
+	public int getMatrixPos(int xPos, int yPos){
+		
+		if (xPos >= sentWords.size() || yPos >= sentWords.size())
+			return -1;
 		if (xPos > yPos) {
 			int tmp = yPos;
 			yPos = xPos;
@@ -376,10 +386,9 @@ public class Data {
 
 		// We add the position of the column in the matrix
 		realPos += (yPos - xPos - 1);
-
-		return sentSim.get(realPos);
+		
+		return realPos;
 	}
-	
 
 
 	/**

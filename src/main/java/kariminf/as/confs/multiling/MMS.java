@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import kariminf.as.preProcess.DynamicPreProcessor;
+import kariminf.as.preProcess.StaticPreProcessor;
 import kariminf.as.process.Scorer;
 import kariminf.as.process.topicclassif.BayesScoreHandler;
 import kariminf.as.process.topicclassif.Cluster;
@@ -44,14 +45,12 @@ import kariminf.as.tools.Tools;
 
 public class MMS {
 
-	
-	
 	private List<Feature> features = new ArrayList<Feature>();
 	private String lang = "en";
 	
 	private Data data;
 	private boolean clustered = false;
-	private DynamicPreProcessor preprocessor;
+	private StaticPreProcessor preprocessor;
 	private final static int summarySize = 250; //words
 	private final static int zhSummarySize = 750; //bytes
 	
@@ -60,7 +59,7 @@ public class MMS {
 		this.lang = (lang.length()==2)?lang:"en";
 		clustered = false;
 		data = new Data();
-		preprocessor = new DynamicPreProcessor(this.lang, this.data);
+		preprocessor = new StaticPreProcessor(this.lang, this.data);
 		
 	}
 	

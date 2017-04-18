@@ -10,10 +10,13 @@ public class SLP2ScoreHandler extends SLPScoreHandler {
 		
 		double score = getSLPScore(data, unitID);
 		
+		int nbrRelatives = (relatives.containsKey(unitID))?
+				relatives.get(unitID).size():
+					0;
+		
 		for(int otherUnitID: candidates){
 			if (otherUnitID == unitID) continue;
-			score += data.getSimilarity(unitID, otherUnitID) * 
-					getSLPScore(data, otherUnitID);
+			score += nbrRelatives *  getSLPScore(data, otherUnitID);
 		}
 		
 		return score;

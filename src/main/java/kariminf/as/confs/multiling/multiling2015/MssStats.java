@@ -16,12 +16,13 @@
  * limitations under the License.
  */
 
-package kariminf.as.confs.multiling;
+package kariminf.as.confs.multiling.multiling2015;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import kariminf.as.confs.multiling.MSS;
 import kariminf.ktoolja.file.FileManager;
 
 

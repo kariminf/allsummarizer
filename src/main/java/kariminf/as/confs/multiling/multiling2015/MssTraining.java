@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package kariminf.as.confs.multiling;
+package kariminf.as.confs.multiling.multiling2015;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import kariminf.ktoolja.math.Calculus;
+import kariminf.as.confs.multiling.MSS;
 import kariminf.as.process.topicclassif.Feature;
 import kariminf.as.process.topicclassif.PLeng;
 import kariminf.as.process.topicclassif.Pos;

@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import kariminf.as.preProcess.DynamicPreProcessor;
+import kariminf.as.preProcess.StaticPreProcessor;
 import kariminf.as.process.Scorer;
 import kariminf.as.process.topicclassif.BayesScoreHandler;
 import kariminf.as.process.topicclassif.Cluster;
@@ -45,7 +46,7 @@ public class MSS {
 	
 	private Data data;
 	private boolean clustered = false;
-	private DynamicPreProcessor preprocessor;
+	private StaticPreProcessor preprocessor;
 	
 	private boolean nobrackets = false;
 	
@@ -53,7 +54,7 @@ public class MSS {
 		this.lang = (lang.length()==2)?lang:"en";
 		clustered = false;
 		data = new Data();
-		preprocessor = new DynamicPreProcessor(this.lang, this.data);
+		preprocessor = new StaticPreProcessor(this.lang, this.data);
 	}
 	
 	/**

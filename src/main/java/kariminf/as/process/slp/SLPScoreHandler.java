@@ -17,15 +17,28 @@ public abstract class SLPScoreHandler implements ScoreHandler {
 	
 	protected List<Double> sentSimDoc = new ArrayList<Double>();
 	
-	// sentence ID ==> most similar sentence ID
-	protected HashMap<Integer, Integer> simSentID =  new HashMap<>();
+	//protected HashMap<Integer, Integer> connections = new HashMap<>();
 	
-	public void setThresholdSimilarity(double thSimilarity){
+	// sentence ID ==> most similar sentence ID
+	protected HashMap<Integer, Integer> simMaxSentID =  new HashMap<>();
+	
+	protected HashMap<Integer, List<Integer>> relatives =  new HashMap<>();
+	
+	public SLPScoreHandler setThresholdSimilarity(double thSimilarity){
 		this.thSimilarity = thSimilarity;
+		return this;
 	}
 	
 	public double getThresholdSimilarity(){
 		return thSimilarity;
+	}
+	
+	public HashMap<Integer, List<Integer>> getRelatives(int sentID){
+		return relatives;
+	}
+	
+	public List<Integer> getCandidates(){
+		return candidates;
 	}
 
 	public double getSLPScore(Data data, int unitID){
@@ -88,7 +101,8 @@ public abstract class SLPScoreHandler implements ScoreHandler {
 		
 		// Clear data
 		sentSimDoc = new ArrayList<Double>();
-		simSentID =  new HashMap<>();
+		simMaxSentID =  new HashMap<>();
+		relatives =  new HashMap<>();
 		candidates = new ArrayList<Integer>();
 		
 		List<List<String>> sentWords = data.getSentWords();
@@ -107,10 +121,12 @@ public abstract class SLPScoreHandler implements ScoreHandler {
 				
 				if (sim < thSimilarity) continue;
 				
+				
+				
 				isCandidate = true;
 				
 				if (maxSim < sim){
-					simSentID.put(i, j);
+					simMaxSentID.put(i, j);
 					maxSim = sim;
 				}
 			}
@@ -121,6 +137,8 @@ public abstract class SLPScoreHandler implements ScoreHandler {
 		
 		
 		// claculate the new similarities
+		//The max similar sentence to each one
+		//The list of similar sentences
 		//================================
 		
 		for(int i = 0; i < sentWords.size(); i++){
@@ -130,11 +148,19 @@ public abstract class SLPScoreHandler implements ScoreHandler {
 				continue;
 			}
 			
+			List<Integer> simSentIDs = new ArrayList<>();
+			relatives.put(i, simSentIDs);
+			
 			List<String> otherWords = new ArrayList<>();
 			
 			for(int j: candidates){
 				if (i == j) continue;
 				otherWords.addAll(sentWords.get(j));
+				
+				if (data.getSimilarity(i, j) > thSimilarity){
+					simSentIDs.add(j);
+				}
+					
 			}
 			
 			//System.out.printf(">>%d => %d\n", i, otherWords.size());

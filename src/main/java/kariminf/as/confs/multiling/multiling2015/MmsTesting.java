@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package kariminf.as.confs.multiling;
+package kariminf.as.confs.multiling.multiling2015;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import kariminf.ktoolja.math.Calculus;
-import kariminf.as.process.topicclassif.Feature;
+import kariminf.as.confs.multiling.MMS;
 import kariminf.as.process.topicclassif.PLeng;
 import kariminf.as.process.topicclassif.Pos;
 import kariminf.as.process.topicclassif.RLeng;
@@ -36,30 +36,35 @@ import kariminf.as.process.topicclassif.TFU;
 import kariminf.ktoolja.file.FileManager;
 
 
-public class MssTesting {
+public class MmsTesting {
 
-	private static final String mssFolder = 
-			"/home/kariminf/Data/ATS/multilingMss2015Testing/";
+	private static final String mmsFolder = 
+			"/home/kariminf/Data/ATS/multilingMms2015Testing/body/";
 
 	private static final String outFolder =
-			"/home/kariminf/Data/ATS/multilingMss2015Testing/AllSummarizer/";
+			"/home/kariminf/Data/ATS/multilingMms2015Testing/AllSummarizer_MMS/";
 	
 	private static final String parFile =
-			"/home/kariminf/Data/ATS/multilingMss2015Testing/parameters.info";
+			"/home/kariminf/Data/ATS/multilingMms2015Testing/parameters.info";
 
-	private static final String [] langs = 
+	private static final String [][] langs = 
 		{
-		//"af", "ar", "bg", "ca", "cs", "de", "el", "en", "eo", 
-		//"es", "eu", "fa", "fi", "fr", "he", "hr", "hu", "id", 
-		"it"//, 
-		//"ja", "ms", "nl", "no", "pt", "ro", "ru", "sh", 
-		//"sl", "sr", "sv", "th", "tr", "vi", "zh"
-		//"ka", "ko", "pl", "sk"
+		{"arabic","ar"},
+		{"chinese","zh"},
+		{"czech","cs"},
+		{"english","en"},
+		{"french","fr"},
+		{"greek","el"},
+		{"hebrew","he"},
+		{"hindi","hi"},
+		{"romanian","ro"},
+		{"spanish","es"}
 		};
+
 	
-	private static double getThreshold(String thName, MSS mss){
+	private static double getThreshold(String thName, MMS mms){
 		
-		List<Double> sim = Calculus.delMultiple(mss.getSimilarity(), 0.0);
+		List<Double> sim = Calculus.delMultiple(mms.getSimilarity(), 0.0);
 		
 		if(thName.startsWith("median"))
 			return Calculus.median(sim);
@@ -76,12 +81,12 @@ public class MssTesting {
 		if(thName.startsWith("lmode"))
 			return Calculus.modeLow(sim);
 		
-		double dist = mss.getTermDistribution();
+		double dist = mms.getTermDistribution();
 		
 		if(thName.startsWith("d/s"))
 			return 1/dist;
 		
-		int sentNum = mss.sentNum();
+		int sentNum = mms.sentNum();
 		
 		if(thName.startsWith("s/dn"))			
 			return dist/sentNum;
@@ -122,55 +127,51 @@ public class MssTesting {
 
 	}
 	
-	private static void setFeatures(String featNames, MSS mss){
+	private static void setFeatures(String featNames, MMS mms){
 		
 		featNames = featNames.toLowerCase();
 		
 		if (featNames.contains("pleng"))
-			mss.addFeature(new PLeng());
+			mms.addFeature(new PLeng());
 		
 		if (featNames.contains("pos"))
-			mss.addFeature(new Pos());
+			mms.addFeature(new Pos());
 		
 		if (featNames.contains("rleng"))
-			mss.addFeature(new RLeng());
+			mms.addFeature(new RLeng());
 		
 		if (featNames.contains("tfb"))
-			mss.addFeature(new TFB());
+			mms.addFeature(new TFB());
 		
 		if (featNames.contains("tfu"))
-			mss.addFeature(new TFU());
+			mms.addFeature(new TFU());
 
 	}
-
-	private static HashMap<String, Integer> readSizes(String lang){
-		HashMap<String, Integer> sizes =
-				new HashMap<String, Integer>();
-
-		File sizefile = new File(mssFolder + "target-length/" + lang + ".txt");
-
-		if (! sizefile.exists()) return null;
-
-		try {
-			BufferedReader in = new BufferedReader(new FileReader(sizefile));
-			String line;
-			while ( (line = in.readLine()) != null) {
-				if (line.trim().length() < 1) continue;
-
-				String[] values = line.split(",");
-				if (values.length<2) continue;
-
-				sizes.put(values[0], new Integer(values[1]));
+	
+	public static HashMap<String, List<String>> getFiles(String lang){
+		HashMap<String, List<String>> result = new HashMap<String, List<String>>();
+		
+		File folder = new File(mmsFolder + lang);
+		if (! folder.isDirectory()){
+			System.out.println(folder.getAbsolutePath() + ": is not a folder");
+			return result;
+		}
+		
+		File[] files = folder.listFiles();
+		
+		for (File file: files){
+			String filename = file.getName();
+			String topic = filename.substring(0, 4);
+			if (! result.containsKey(topic)){
+				List<String> fileList = new ArrayList<String>();
+				result.put(topic, fileList);
 			}
-			in.close();
+			result.get(topic).add(file.getAbsolutePath());
 		}
-		catch (IOException ex) {
-			ex.printStackTrace();
-			return sizes;
-		}
-
-		return sizes;
+		
+		return result;
 	}
+
 
 	/**
 	 * @param args
@@ -178,62 +179,43 @@ public class MssTesting {
 	public static void main(String[] args) {
 
 		HashMap<String, List<String>> parameters = getParameters();
-
-		for (String lang: langs){//langs
-
-			if(! parameters.containsKey(lang)){
+		
+		for (String[] lang: langs){//langs
+			
+			if(! parameters.containsKey(lang[1])){
 				System.out.println("No parameters for this language");
 				continue;
 			}
 			
-			MSS mss = new MSS(lang);
-			mss.noBrackets();
-			HashMap<String, Integer> sizes = readSizes(lang);
-			List<String> param = parameters.get(lang);
+			/*String newfolderName = outFolder + lang[0] + "/";
+				FileManager.createFolder(newfolderName);*/
+				
+			MMS mms = new MMS(lang[1]);
+			List<String> param = parameters.get(lang[1]);
+
+			HashMap<String, List<String>> topics =  getFiles(lang[0]);
 			
-
-			File folder = new File(mssFolder + "body/text/" +  lang + "/");
-			if (! folder.exists()) continue;
-			if (! folder.isDirectory()) continue;
-
-			File[] files = folder.listFiles();
-			int count = 0;
-			for (File file: files){
-
-				String fileName = file.getName();
-				if (! fileName.endsWith("_body.txt")) continue;
+			for(String topic: topics.keySet()){
 				
-				int summarySize = sizes.get(fileName);
+				mms.clear();
+				setFeatures(param.get(1), mms);
 				
-				count++;
+				System.out.println(lang[0] + ", topic" + topic);
 				
-				System.out.print(lang + count + ": ");
+				List<String> files = topics.get(topic);
+				for(String file: files)
+					mms.addDocument(file);
 				
-				//verify if the file have been already processed
-				fileName = fileName.substring(0, fileName.length()-9) + ".txt";
-				if (new File(outFolder + lang + "/" + fileName).exists()){
-					System.out.println(fileName  + " already processsed");
-					continue; 
-				}
+				mms.preprocess();
 				
-				FileManager.createFolder(new File(outFolder + lang + "/"));
+				double th = getThreshold(param.get(0), mms);
+				System.out.println("====> th= " + th);
 				
-
-				mss.preprocess(file);
-				
-				System.out.print("summary size= " + summarySize);
-				
-				double th = getThreshold(param.get(0), mss);
-				System.out.println(", th= " + th);
-				
-				mss.cluster(th);
-				
-				mss.clearFeatures();
-				setFeatures(param.get(1), mss);
+				mms.cluster(th);
 				
 				String summary="";
 				try {
-					summary = mss.summarize(summarySize, th);
+					summary = mms.summarize(th);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 					summary="";
@@ -241,12 +223,12 @@ public class MssTesting {
 				
 				try {
 
-					FileManager.saveFile(outFolder + lang + "/" + fileName, summary);
+					FileManager.saveFile(outFolder + topic + "." + lang[0], summary);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				
-			} //files
+			}
+			
 
 		}//languages
 
