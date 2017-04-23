@@ -5,21 +5,16 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import kariminf.as.confs.multiling.MSS;
+import kariminf.as.preProcess.PreProcessor;
 import kariminf.as.preProcess.StaticPreProcessor;
 import kariminf.as.process.ScoreHandler;
 import kariminf.as.process.Scorer;
 import kariminf.as.process.slp.SLP1ScoreHandler;
 import kariminf.as.process.slp.SLP2ScoreHandler;
 import kariminf.as.process.slp.SLPScoreHandler;
-import kariminf.as.process.topicclassif.BayesScoreHandler;
-import kariminf.as.process.topicclassif.Cluster;
-import kariminf.as.process.topicclassif.Feature;
-import kariminf.as.process.topicclassif.NaiveCluster;
 import kariminf.as.tools.Data;
 import kariminf.as.tools.Tools;
 import kariminf.ktoolja.file.FileManager;
@@ -27,11 +22,13 @@ import kariminf.ktoolja.math.Calculus;
 
 public class MssTraining {
 
-	private String lang = "en";
+	//private String lang = "en";
 
 	private Data data;
-	private StaticPreProcessor preprocessor;
+	private PreProcessor preprocessor;
 	private int summarySize;
+	
+	private Scorer scorer;
 
 	private static final String mssFolder = 
 			"/home/kariminf/Data/ATS/Mss15Train/";
@@ -40,13 +37,13 @@ public class MssTraining {
 			"/home/kariminf/Data/ATS/Mss15Train/tests/training2017/";
 
 	private static final String [] langs = 
-		{"en"};
-	//"af", "eo", "hr", "ms", "sh", "sl", "sr", "vi"
+		{"fa"};
+	//fa
 
 	public MssTraining (String lang){
-		this.lang = (lang.length()==2)?lang:"en";
+		//this.lang = (lang.length()==2)?lang:"en";
 		data = new Data();
-		preprocessor = new StaticPreProcessor(this.lang, this.data);
+		preprocessor = new StaticPreProcessor(lang, data);
 	}
 	
 	
@@ -98,7 +95,7 @@ public class MssTraining {
 
 	public Scorer summarize(int summarySize, ScoreHandler sh){
 
-		Scorer scorer = Scorer.create(sh);
+		scorer = Scorer.create(sh);
 		scorer.setData(data);
 		scorer.scoreUnits();
 
@@ -129,11 +126,16 @@ public class MssTraining {
 
 
 	
-	private String getSummary1(List<Integer> order, double simTH){
+	private String getSummary1(){
 
 		String summary = "";
 		int numChars = 0;
 		int numOrder = 0;
+		
+		List<Integer> order = scorer.getOrdered();
+		
+		double simTH = ((SLPScoreHandler)scorer.getScoreHandler())
+				.getThresholdSimilarity();
 		
 		List<List<String>> sentWords = data.getSentWords();
 		List<String> sentences = data.getSentences();
@@ -174,48 +176,97 @@ public class MssTraining {
 	}
 	
 	
-	private String getSummary2(List<Integer> order, SLPScoreHandler slp){
+	private String getSummary2(){
 
 		String summary = "";
 		int numChars = 0;
-		int numOrder = 0;
 		
-		List<List<String>> sentWords = data.getSentWords();
+		List<Integer> order = scorer.getOrdered();
+		HashMap<Integer, List<Integer>> relatives = 
+				((SLPScoreHandler)scorer.getScoreHandler()).getRelatives();
+		
 		List<String> sentences = data.getSentences();
-
+		
+		
+		List<Integer> included = new ArrayList<>();
+		
+		//The first scored sentence is held as summary
+		int index = order.get(0);
+		included.add(index);
+		summary += sentences.get(index) + "\n";
+		numChars += sentences.get(index).length();
+		
 		while(true){
-
-			if (numOrder >=  order.size())
-				break;
-
-			int index = order.get(numOrder);
-
-			if (numOrder > 0){
-				List<String> prevWords = sentWords.get(order.get(numOrder-1));
-				List<String> actWords = sentWords.get(index);
-				if (Tools.similar(prevWords, actWords, simTH)){
-					numOrder ++;
-					if (numOrder < order.size())
-						index = order.get(numOrder);
-				}
+			List<Integer> relIDs = relatives.get(index);
+			index = -1;
+			int minOrder = Integer.MAX_VALUE;
+			for(int relID: relIDs){
+				int thisOrder = order.indexOf(relID);
+				if (thisOrder >= 0 && minOrder > thisOrder)
+					if(! included.contains(relID)){
+						index = relID;
+						minOrder = thisOrder;
+					}
 			}
-
-			numChars += sentences.get(index).length();
-
-
-			if (numChars > summarySize)
-				break;
-
+			if (index < 0) break;
+			
+			included.add(index);
 			summary += sentences.get(index) + "\n";
-
-			numOrder ++;
+			numChars += sentences.get(index).length();
+			
+			if (numChars >= summarySize) break;
 		}
-
-		if (summary.length() < 1)
-			summary = sentences.get(order.get(0));
 
 
 		return summary;
+	}
+	
+	
+	private String getSummary3(){
+
+		String summary = "";
+		int numChars = 0;
+		
+		List<Integer> order = scorer.getOrdered();
+		HashMap<Integer, List<Integer>> relatives = 
+				((SLPScoreHandler)scorer.getScoreHandler()).getRelatives();
+		
+		List<String> sentences = data.getSentences();
+		
+		List<Integer> included = new ArrayList<>();
+		
+		//The first scored sentence is held as summary
+		int index = order.get(0);
+		included.add(index);
+		summary += sentences.get(index) + "\n";
+		numChars += sentences.get(index).length();
+		
+		while(true){
+			List<Integer> relIDs = relatives.get(index);
+			int prevIndex = index;
+			index = -1;
+			double max = Double.MIN_VALUE;
+			for(int relID: relIDs){
+				double score = order.indexOf(relID);
+				score = score/(order.size() * data.getSimilarity(prevIndex, relID));
+				if (score > max)
+					if(! included.contains(relID)){
+						index = relID;
+						max = score;
+					}
+			}
+			
+			if (index < 0) break;
+			
+			included.add(index);
+			summary += sentences.get(index) + "\n";
+			numChars += sentences.get(index).length();
+			
+			if (numChars >= summarySize) break;
+		}
+
+
+		return summary;								
 	}
 
 
@@ -255,7 +306,7 @@ public class MssTraining {
 
 		for (String lang: langs){//langs
 
-			MssTraining mss = new MssTraining(lang);
+			
 			HashMap<String, Integer> sizes = readSizes(lang);
 
 			File folder = new File(mssFolder + "body/text/" +  lang + "/");
@@ -264,10 +315,10 @@ public class MssTraining {
 
 			File[] files = folder.listFiles();
 			
+			String newfolderName = outFolder + lang + "/";
+			FileManager.createFolder(new File(newfolderName));
+			
 			for (File file: files){//files
-
-				double min = 0.0;
-				double max = 0.0;
 
 				String fileName = file.getName();
 				if (! fileName.endsWith("_body.txt")) continue;
@@ -281,68 +332,102 @@ public class MssTraining {
 					continue;
 				}
 
-
-
-				String newfolderName = outFolder + lang + "/";
-				FileManager.createFolder(new File(newfolderName));
-				newfolderName += fileName;
+				newfolderName = outFolder + lang + "/" + fileName;
 				FileManager.createFolder(new File(newfolderName));
 
 				System.out.println(file.getName()  + " preprocessing...");
+				MssTraining mss = new MssTraining(lang);
 				mss.preprocess(file);
-
-				System.out.println("summary size= " + summarySize);
 				
 				List<Double> sim = Calculus.delMultiple(mss.getSimilarity(), 0.0);
 
 				double mean = Calculus.mean(sim);
 				
+				System.out.println("creating score handlers ...");
+				
 				SLPScoreHandler s1t0 = 
-						new SLP1ScoreHandler().setThresholdSimilarity(0.0);
+						new SLP1ScoreHandler(mss.getData(), 0.0);
 				SLPScoreHandler s2t0 = 
-						new SLP2ScoreHandler().setThresholdSimilarity(0.0);
+						new SLP2ScoreHandler(mss.getData(), 0.0);
 				SLPScoreHandler s1tm = 
-						new SLP1ScoreHandler().setThresholdSimilarity(mean);
+						new SLP1ScoreHandler(mss.getData(), mean);
 				SLPScoreHandler s2tm = 
-						new SLP2ScoreHandler().setThresholdSimilarity(mean);
+						new SLP2ScoreHandler(mss.getData(), mean);
 
 				try {
-	
-					Scorer scorer;
 					String summary;
+					
+					System.out.println("setting summary size to " + summarySize);
 					
 					mss.setSummarySize(summarySize);
 					
 					//SLP1 with sim=0.0
 					//==================
-					scorer = mss.summarize(summarySize, s1t0);
+					System.out.println("summarizing with SLP1 threshold 0.0 ");
+					mss.summarize(summarySize, s1t0);
 					
-					summary = mss.getSummary1(scorer.getOrdered(), mean);
+					System.out.println("SLP1 0.0: extraction method 1");
+					summary = mss.getSummary1();
 					FileManager.saveFile(newfolderName + "SLP1_0_e1.asz", summary);
 					
+					System.out.println("SLP1 0.0: extraction method 2");
+					summary = mss.getSummary2();
+					FileManager.saveFile(newfolderName + "SLP1_0_e2.asz", summary);
+					
+					System.out.println("SLP1 0.0: extraction method 3");
+					summary = mss.getSummary3();
+					FileManager.saveFile(newfolderName + "SLP1_0_e3.asz", summary);
 					
 					//SLP1 with sim=mean
 					//==================
-					scorer = mss.summarize(summarySize, s1tm);
+					System.out.println("summarizing with SLP1 threshold mean ");
+					mss.summarize(summarySize, s1tm);
 					
-					summary = mss.getSummary1(scorer.getOrdered(), mean);
-					FileManager.saveFile(newfolderName + "SLP2_m_e1.asz", summary);
+					System.out.println("SLP1 mean: extraction method 1");
+					summary = mss.getSummary1();
+					FileManager.saveFile(newfolderName + "SLP1_m_e1.asz", summary);
 					
+					System.out.println("SLP1 mean: extraction method 2");
+					summary = mss.getSummary2();
+					FileManager.saveFile(newfolderName + "SLP1_m_e2.asz", summary);
+					
+					System.out.println("SLP1 mean: extraction method 3");
+					summary = mss.getSummary3();
+					FileManager.saveFile(newfolderName + "SLP1_m_e3.asz", summary);
 					
 					//SLP2 with sim=0.0
 					//==================
-					scorer = mss.summarize(summarySize, s2t0);
+					System.out.println("summarizing with SLP2 threshold 0.0 ");
+					mss.summarize(summarySize, s2t0);
 					
-					summary = mss.getSummary1(scorer.getOrdered(), mean);
+					System.out.println("SLP2 0.0: extraction method 1");
+					summary = mss.getSummary1();
 					FileManager.saveFile(newfolderName + "SLP2_0_e1.asz", summary);
 					
+					System.out.println("SLP2 0.0: extraction method 2");
+					summary = mss.getSummary2();
+					FileManager.saveFile(newfolderName + "SLP2_0_e2.asz", summary);
+					
+					System.out.println("SLP2 0.0: extraction method 3");
+					summary = mss.getSummary3();
+					FileManager.saveFile(newfolderName + "SLP2_0_e3.asz", summary);
 					
 					//SLP2 with sim=mean
 					//==================
-					scorer = mss.summarize(summarySize, s2tm);
+					System.out.println("summarizing with SLP2 threshold mean ");
+					mss.summarize(summarySize, s2tm);
 					
-					summary = mss.getSummary1(scorer.getOrdered(), mean);
+					System.out.println("SLP2 mean: extraction method 1");
+					summary = mss.getSummary1();
 					FileManager.saveFile(newfolderName + "SLP2_m_e1.asz", summary);
+					
+					System.out.println("SLP2 mean: extraction method 2");
+					summary = mss.getSummary2();
+					FileManager.saveFile(newfolderName + "SLP2_m_e2.asz", summary);
+					
+					System.out.println("SLP2 mean: extraction method 3");
+					summary = mss.getSummary3();
+					FileManager.saveFile(newfolderName + "SLP2_m_e3.asz", summary);
 
 					
 					

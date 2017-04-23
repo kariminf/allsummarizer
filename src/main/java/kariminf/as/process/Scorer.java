@@ -58,6 +58,11 @@ public class Scorer {
 		this.data = data;
 		return true;
 	}
+	
+	
+	public ScoreHandler getScoreHandler(){
+		return scoreHandler;
+	}
 
 	
 	public void scoreUnits(){
@@ -66,7 +71,7 @@ public class Scorer {
 		List<Double> orderedScores = new ArrayList<Double>();
 		
 		for(int unitID = 0; unitID < data.getSentNumber(); unitID++){
-			Double currentScore = scoreHandler.scoreUnit(data, unitID);
+			Double currentScore = scoreHandler.scoreUnit(unitID);
 			
 			int j = 0;
 			while (j < orderedScores.size() && currentScore <= orderedScores.get(j))

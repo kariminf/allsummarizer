@@ -12,8 +12,21 @@ import org.junit.Test;
 
 import kariminf.as.tools.Data;
 
-public class SLPScoreHandlerTest extends SLPScoreHandler {
+public class SLPScoreHandlerTest  {
 	
+	private static class TstSLP extends SLPScoreHandler {
+		public TstSLP(Data data, double thSimilarity) {
+			super(data, thSimilarity);
+		}
+		
+		@Override
+		public Double scoreUnit(int unitID) {
+			return 0.0;
+		}
+	}
+	
+
+
 	private static Data data;
 
 	@BeforeClass
@@ -44,16 +57,14 @@ public class SLPScoreHandlerTest extends SLPScoreHandler {
 	@Test
 	public void setThresholdSimilarityTest() {
 		double threshold = 0.25;
-		SLPScoreHandler slpSH = new SLPScoreHandlerTest();
-		slpSH.setThresholdSimilarity(threshold);
+		SLPScoreHandler slpSH = new TstSLP(data, threshold);
 		assertEquals(threshold, slpSH.getThresholdSimilarity(), 0.0001);
 	}
 	
 	@Test
 	public void calculateSimilarityTest(){
 		
-		SLPScoreHandler slpSH = new SLPScoreHandlerTest();
-		slpSH.calculateSimilarity(data);
+		SLPScoreHandler slpSH = new TstSLP(data, 0.0);
 		
 		HashMap<Integer, Integer> _simSentID =  new HashMap<>();
 		
@@ -62,7 +73,7 @@ public class SLPScoreHandlerTest extends SLPScoreHandler {
 		_simSentID.put(2, 3);
 		_simSentID.put(3, 0);
 		
-		assertEquals(_simSentID, slpSH.simSentID);
+		assertEquals(_simSentID, slpSH.simMaxSentID);
 		
 		double[] _sentSimDoc = new double[]{
 				0.580947,
@@ -78,14 +89,13 @@ public class SLPScoreHandlerTest extends SLPScoreHandler {
 		//assertEquals(_sentSimDoc, slpSH.sentSimDoc);
 		
 		slpSH.setThresholdSimilarity(0.4);
-		slpSH.calculateSimilarity(data);
 		
 		_simSentID = new HashMap<>();
 		_simSentID.put(0, 1);
 		_simSentID.put(1, 0);
 		_simSentID.put(3, 0);
 		
-		assertEquals(_simSentID, slpSH.simSentID);
+		assertEquals(_simSentID, slpSH.simMaxSentID);
 		
 		_sentSimDoc = new double[]{
 				0.682288,
@@ -104,12 +114,12 @@ public class SLPScoreHandlerTest extends SLPScoreHandler {
 	
 	@Test
 	public void getSLPScoreTest(){
-		SLPScoreHandler slpSH = new SLPScoreHandlerTest();
+		SLPScoreHandler slpSH = new TstSLP(data, 0.0);
 		
 		double[] _expectedScores = new double[]{
 				0.555467,
 				1.012262,
-				-0.998138,
+				-1.691285,
 				9.500543
 		};
 		
@@ -117,7 +127,7 @@ public class SLPScoreHandlerTest extends SLPScoreHandler {
 		
 		
 		for (int unitID = 0; unitID < data.getSentNumber(); unitID++){
-			_realScores[unitID] = slpSH.getSLPScore(data, unitID);
+			_realScores[unitID] = slpSH.getSLPScore(unitID);
 			//System.out.println("sim= " + slpSH.sentSimDoc.get(unitID));
 			//System.out.println("score= " + _realScores[unitID]);
 			
@@ -125,12 +135,25 @@ public class SLPScoreHandlerTest extends SLPScoreHandler {
 		
 		assertArrayEquals(_expectedScores, _realScores, 0.0001);
 		
-	}
-	
-	
-	@Override
-	public Double scoreUnit(Data data, int unitID) {
-		return 0.0;
+		
+		_expectedScores = new double[]{
+				0.716259,
+				1.043105,
+				Double.NEGATIVE_INFINITY,
+				9.364491
+		};
+		
+		slpSH.setThresholdSimilarity(0.4);
+		for (int unitID = 0; unitID < data.getSentNumber(); unitID++){
+			_realScores[unitID] = slpSH.getSLPScore(unitID);
+			//System.out.println("sim= " + slpSH.sentSimDoc.get(unitID));
+			System.out.println("score= " + _realScores[unitID]);
+			
+		}
+		
+		assertArrayEquals(_expectedScores, _realScores, 0.0001);
+		
+		
 	}
 
 }

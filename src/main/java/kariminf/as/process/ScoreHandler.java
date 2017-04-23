@@ -4,6 +4,6 @@ import kariminf.as.tools.Data;
 
 public interface ScoreHandler {
 	
-	public abstract Double scoreUnit(Data data, int unitID);
+	public abstract Double scoreUnit(int unitID);
 
 }

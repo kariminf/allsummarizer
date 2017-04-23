@@ -50,6 +50,8 @@ public class BayesScoreHandler implements ScoreHandler{
 	
 	private boolean normalized = false;
 	
+	private Data data;
+	
 	
 	public static BayesScoreHandler create(){
 		return new BayesScoreHandler();
@@ -100,12 +102,11 @@ public class BayesScoreHandler implements ScoreHandler{
 	 * &#8719;<sub>k</sub> P(s<sub>i</sub> &#8712; c<sub>j</sub> | f<sub>k</sub>)
 	 * </code></p>
 	 * 
-	 * @param data the data container
 	 * @param sentID sentence index (ID)
 	 * @param classID index (ID) of the class (topic).
 	 * @return the score of a sentence in a class with a set of features.
 	 */
-	private Double scoreSentInClass (Data data, int sentID, int classID){
+	private Double scoreSentInClass (int sentID, int classID){
 		
 		Double scoreSent = 0.0;
 		
@@ -132,17 +133,16 @@ public class BayesScoreHandler implements ScoreHandler{
 	 * &#8719;<sub>j</sub> P(s<sub>i</sub> &#8712; c<sub>j</sub> | F)
 	 * </code></p>
 	 * 
-	 * @param data the data container
 	 * @param sentID The index (ID) of the sentence to be scored
 	 * @return the score of the sentence
 	 */
-	public Double scoreUnit(Data data, int unitID){
+	public Double scoreUnit(int unitID){
 		
 		Double score = 0.0;
 		
 		//Multiplication is addition in log space
 		for (int classID = 0; classID < data.getClassesNumber(); classID++){
-			Double scoreclass = scoreSentInClass(data, unitID, classID);
+			Double scoreclass = scoreSentInClass(unitID, classID);
 			score += scoreclass;
 		}
 		
@@ -169,6 +169,8 @@ public class BayesScoreHandler implements ScoreHandler{
 			String trainParam = feature.getTrainParam();
 			feature.train(data.makeTrainParams(trainParam));
 		}
+		
+		this.data = data;
 	}
 
 }

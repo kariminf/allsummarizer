@@ -12,10 +12,13 @@ public abstract class SLPScoreHandler implements ScoreHandler {
 	
 	private double thSimilarity = 0.0;
 	
+	protected Data data;
 	
 	protected List<Integer> candidates = new ArrayList<>();
 	
 	protected List<Double> sentSimDoc = new ArrayList<Double>();
+	
+	protected List<Double> slpScores = new ArrayList<Double>();
 	
 	//protected HashMap<Integer, Integer> connections = new HashMap<>();
 	
@@ -24,8 +27,15 @@ public abstract class SLPScoreHandler implements ScoreHandler {
 	
 	protected HashMap<Integer, List<Integer>> relatives =  new HashMap<>();
 	
+	public SLPScoreHandler(Data data, double thSimilarity){
+		this.data = data;
+		setThresholdSimilarity(thSimilarity);
+	}
+	
 	public SLPScoreHandler setThresholdSimilarity(double thSimilarity){
 		this.thSimilarity = thSimilarity;
+		calculateSimilarity();
+		calculateSLPScores();
 		return this;
 	}
 	
@@ -33,17 +43,33 @@ public abstract class SLPScoreHandler implements ScoreHandler {
 		return thSimilarity;
 	}
 	
-	public HashMap<Integer, List<Integer>> getRelatives(int sentID){
+	public HashMap<Integer, List<Integer>> getRelatives(){
 		return relatives;
 	}
 	
 	public List<Integer> getCandidates(){
 		return candidates;
 	}
+	
+	public double getSLPScore(int unitID){
+		if (slpScores.size() <= unitID)
+			return Double.NEGATIVE_INFINITY;
+		return slpScores.get(unitID);
+	}
+	
 
-	public double getSLPScore(Data data, int unitID){
+	private void calculateSLPScores(){
+		slpScores = new ArrayList<Double>();
+		for(int i = 0; i < data.getSentNumber(); i++){
+			slpScores.add(calculateSLPScore(i));
+			//System.out.println(">>>> score= " + slpScores.get(i));
+		}
+	}
+	
+	private double calculateSLPScore(int unitID){
 		
-		calculateSimilarity(data);
+		if (! candidates.contains(unitID))
+			return Double.NEGATIVE_INFINITY;
 		
 		
 		double score = Math.log(sentSimDoc.get(unitID));
@@ -83,6 +109,12 @@ public abstract class SLPScoreHandler implements ScoreHandler {
 			posMiddle = posMiddle/2;
 			
 			double pos = data.getRealPos(unitID);
+			if (simMaxSentID.containsKey(unitID)){
+				double pos2 = data.getRealPos(simMaxSentID.get(unitID));
+				
+				if (Math.abs(pos-posMiddle) < Math.abs(pos2-posMiddle)) 
+					pos = pos2;
+			}
 			
 			//The normalized position goes to zero every time we approach the middle 
 			//We can't have a zero score
@@ -97,7 +129,7 @@ public abstract class SLPScoreHandler implements ScoreHandler {
 		return score; 
 	}
 	
-	public void calculateSimilarity(Data data){
+	private void calculateSimilarity(){
 		
 		// Clear data
 		sentSimDoc = new ArrayList<Double>();

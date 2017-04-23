@@ -79,9 +79,6 @@ public class StaticPreProcessor extends PreProcessor {
 	// In multi-document summarization, we have many texts
 	private List<String> texts = new ArrayList<String>();
 
-	//Data container
-	private Data data;
-
 	//Different preprocessing tasks
 	private BasicInfo info = null;
 	private Normalizer normalizer = null;
