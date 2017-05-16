@@ -21,7 +21,9 @@ package kariminf.as.confs.multiling.multiling2015;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import kariminf.ktoolja.math.Calculus;
 import kariminf.ktoolja.file.FileManager;
@@ -31,48 +33,136 @@ public class MssROUGE {
 
 
 	private static final String peerFolder = 
-			"/home/kariminf/Data/ATS/multilingMss2015Training/training2015/";
+			"/home/kariminf/Data/ATS/Mss15Train/tests";
 
 	private static final String summaryFolder =
-			"/home/kariminf/Data/ATS/multilingMss2015Training/summary/";
+			"/home/kariminf/Data/ATS/Mss15Train/summary";
+	
+	public static final Map<String, String> langs = new HashMap<String, String>() {{
+		/*put("af", "D_sn/TFU-TFB-Pos-RLeng-PLeng");
+		put("ar", "D_s/TFB-Pos-PLeng");
+		put("bg", "Lmode/TFU-PLeng");
+		put("ca", "Hmode/TFB-Pos-PLeng");
+		put("cs", "Hmode/TFU-TFB-Pos-PLeng");
+		put("de", "Lmode/TFU-Pos-PLeng");
+		put("el", "median/TFU-TFB-Pos-RLeng-PLeng");
+		put("en", "median/TFU-Pos-RLeng-PLeng");
+		put("eo", "D_sn/TFU-TFB-RLeng-PLeng");
+		put("es", "s_Dn/TFB-PLeng");
+		put("eu", "Lmode/TFU-PLeng");
+		put("fa", "variance/TFB-Pos-PLeng");
+		put("fi", "mean/TFU-TFB");
+		put("fr", "median/TFB-Pos-RLeng");
+		put("he", "D_s/TFB-PLeng");
+		put("hr", "variance/TFU-TFB-RLeng");
+		put("hu", "s_Dn/TFU-PLeng");
+		put("id", "median/TFU-Pos-RLeng");
+		put("it", "median/TFB-Pos-RLeng-PLeng");
+		put("ja", "variance/TFU-PLeng");
+		put("ka", "variance/TFU-TFB-Pos-RLeng-PLeng");
+		put("ko", "s_Dn/TFU-Pos-RLeng-PLeng");
+		put("ms", "mean/TFB-RLeng-PLeng");
+		put("nl", "Hmode/TFU-TFB-PLeng");
+		put("no", "Lmode/TFU-TFB-Pos-RLeng-PLeng");
+		put("pl", "mean/TFU-TFB-Pos-RLeng-PLeng");
+		put("pt", "Lmode/TFU-TFB-Pos-RLeng-PLeng");
+		put("ro", "Hmode/TFB-RLeng-PLeng");
+		put("ru", "median/TFB-RLeng");
+		put("sh", "s_Dn/TFB-Pos-RLeng-PLeng");
+		put("sk", "median/TFB-RLeng");
+		put("sl", "D_sn/TFB-RLeng-PLeng");
+		put("sr", "Lmode/TFB-Pos-RLeng");
+		put("sv", "Lmode/TFB-Pos-RLeng-PLeng");
+		put("th", "D_s/TFB-RLeng-PLeng");
+		put("tr", "median/TFB-Pos-PLeng");
+		put("vi", "D_s/TFB-Pos-RLeng-PLeng");
+		put("zh", "Hmode/TFB-RLeng-PLeng");*/
+		put("en", "median/TFU-Pos-RLeng-PLeng");
+	}};
 
-	private static final String [] langs = 
-		{"ru"};
+	/*private static final String [] langs = 
+		{"ar"};*/
 
 	private static String [] features = {
-		"TFU",
-		"TFB",
-		"Pos",
-		"RLeng",
-		"PLeng",
+			"SSF-GC0_00_e1",
+			"SSF-GC0_00_e2",
+			"SSF-GC0_00_e3",
+			"SSF-GC0_hmode_e1",
+			"SSF-GC0_hmode_e2",
+			"SSF-GC0_hmode_e3",
+			"SSF-GC0_mean_e1",
+			"SSF-GC0_mean_e2",
+			"SSF-GC0_mean_e3",
+			"SSF-GC0_median_e1",
+			"SSF-GC0_median_e2",
+			"SSF-GC0_median_e3",
+			
+			"SSF-GC1_00_e1",
+			"SSF-GC1_00_e2",
+			"SSF-GC1_00_e3",
+			"SSF-GC1_hmode_e1",
+			"SSF-GC1_hmode_e2",
+			"SSF-GC1_hmode_e3",
+			"SSF-GC1_mean_e1",
+			"SSF-GC1_mean_e2",
+			"SSF-GC1_mean_e3",
+			"SSF-GC1_median_e1",
+			"SSF-GC1_median_e2",
+			"SSF-GC1_median_e3",
+			
+			
+			"SSF-GC2_00_e1",
+			"SSF-GC2_00_e2",
+			"SSF-GC2_00_e3",
+			"SSF-GC2_hmode_e1",
+			"SSF-GC2_hmode_e2",
+			"SSF-GC2_hmode_e3",
+			"SSF-GC2_mean_e1",
+			"SSF-GC2_mean_e2",
+			"SSF-GC2_mean_e3",
+			"SSF-GC2_median_e1",
+			"SSF-GC2_median_e2",
+			"SSF-GC2_median_e3",
+			
+			"SSF-GC3_00_e1",
+			"SSF-GC3_00_e2",
+			"SSF-GC3_00_e3",
+			"SSF-GC3_hmode_e1",
+			"SSF-GC3_hmode_e2",
+			"SSF-GC3_hmode_e3",
+			"SSF-GC3_mean_e1",
+			"SSF-GC3_mean_e2",
+			"SSF-GC3_mean_e3",
+			"SSF-GC3_median_e1",
+			"SSF-GC3_median_e2",
+			"SSF-GC3_median_e3",
+			
+			
+			"SSF-GC4_00_e1",
+			"SSF-GC4_00_e2",
+			"SSF-GC4_00_e3",
+			"SSF-GC4_hmode_e1",
+			"SSF-GC4_hmode_e2",
+			"SSF-GC4_hmode_e3",
+			"SSF-GC4_mean_e1",
+			"SSF-GC4_mean_e2",
+			"SSF-GC4_mean_e3",
+			"SSF-GC4_median_e1",
+			"SSF-GC4_median_e2",
+			"SSF-GC4_median_e3",
 	};
-
-	//add static thresholds let say 31 from 0.00 to 0.30
-	private static String[] th_name = 
-		{"mean", "median", "variance", "Hmode", "Lmode", 
-		"s_Dn", "D_sn", "D_s",
-		"00", "01", "02", "03", "04", "05", "06", "07", "08", "09",
-		"10", "11", "12", "13", "14", "15", "16", "17", "18", "19",
-		"20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"
-		};
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 
-		List<List<Integer>> comb = new ArrayList<List<Integer>>();
-		for (int combNbr=1; combNbr <= features.length; combNbr++)
-			comb.addAll(Calculus.getCombinations(features.length, combNbr));
-
-		for (String lang: langs){//langs
+		for (String lang: langs.keySet()){//langs
 		    
-			File folder = new File(summaryFolder + lang);
+			File folder = new File(summaryFolder + "/" + lang + "");
 			if (! folder.exists()) continue;
 			if (! folder.isDirectory()) continue;
 			
-			String perlscript = "#!/usr/bin/perl -w \n";
-		    perlscript += "$ROUGE=\"perl KROUGE.pl\";\n";
 		    
 		    String xmlcontent = "<ROUGE-EVAL version=\"1.0\">\n";
 
@@ -80,9 +170,9 @@ public class MssROUGE {
 			for (File file: files){
 
 				String fileName = file.getName();
-				if (! fileName.endsWith("_summary.txt")) continue;
+				if (! fileName.endsWith(".txt")) continue;
 
-				fileName = fileName.substring(0, fileName.length()-12);
+				fileName = fileName.substring(0, fileName.length()-12);//4
 				//String newfolderName = outFolder + lang + "/";
 				//newfolderName += fileName.substring(0, fileName.length()-9) + "/";
 				
@@ -90,14 +180,16 @@ public class MssROUGE {
 				xmlcontent += "<EVAL ID=\""+fileName+"\">\n";
 				
 				xmlcontent += "<PEER-ROOT>\n";
-				xmlcontent += peerFolder + lang + "/" + fileName + "\n";
+				xmlcontent += peerFolder + "\n";
 				xmlcontent += "</PEER-ROOT>\n";
 				xmlcontent += "<MODEL-ROOT>\n";
-				xmlcontent += summaryFolder + lang + "\n";
+				xmlcontent += summaryFolder + "/" + lang + "\n";
 				xmlcontent += "</MODEL-ROOT>\n";
 				xmlcontent += "<INPUT-FORMAT TYPE=\"SPL\">\n";
 				xmlcontent += "</INPUT-FORMAT>\n";
 				xmlcontent += "<PEERS>\n";
+				
+				/*
 
 				for(int th=0;th<th_name.length;th++){//threshold 40
 					
@@ -109,7 +201,7 @@ public class MssROUGE {
 						
 						featused = featused.substring(0, featused.length()-1);
 						
-						xmlcontent += "<P ID=\""+ th_name[th] + "#" + featused + "\">" + th_name[th] + "/" + featused + ".asz</P>\n";
+						xmlcontent += "<P ID=\"" + featused + "\">" + th_name[th] + "/" + featused + ".asz</P>\n";
 						
 						//pid++;
 						
@@ -117,6 +209,19 @@ public class MssROUGE {
 					
 
 				} //thresholds
+				
+				*/
+				
+				xmlcontent += "<P ID=\"TC\">training2015/" + lang + "/" + fileName;
+				xmlcontent += "/" + langs.get(lang) + ".asz</P>\n";
+				/*
+				xmlcontent += "<P ID=\"TC\">testing2015/" + lang + "/";
+				xmlcontent += fileName + ".txt</P>\n";*/
+				
+				for (String feat: features){
+					xmlcontent += "<P ID=\"" + feat + "\">training2017/" + lang ;
+					xmlcontent += "_norm/" + fileName + "/" + feat + ".asz</P>\n";
+				}
 				
 				xmlcontent += "</PEERS>\n";
 				xmlcontent += "<MODELS>\n";
@@ -127,17 +232,9 @@ public class MssROUGE {
 			} //files
 			xmlcontent += "</ROUGE-EVAL>";
 			
-			perlscript += "$cmd=\"$ROUGE -e data ";
-			perlscript += " -a -x -c 95 -r 1000 -n 2 -f A -p 0.5 -t 0 -d ";
-			perlscript += peerFolder + "ROUGE/xml/" + lang + ".xml > " ;
-			perlscript += peerFolder + "ROUGE/out/" + lang + ".out" + "\";\n";
-			perlscript += "print $cmd,\"\\n\";\n";
-			perlscript += "system($cmd);\n\n";
-			
 			try {
 
-				FileManager.saveFile(peerFolder + "ROUGE/xml/" + lang + ".xml", xmlcontent);
-				FileManager.saveFile(peerFolder + "ROUGE/script/" + lang + ".pl", perlscript);
+				FileManager.saveFile(peerFolder + "/" + lang + "-norm-2017.xml", xmlcontent);
 				
 			} catch (IOException e) {
 				e.printStackTrace();

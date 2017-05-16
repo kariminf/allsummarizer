@@ -28,11 +28,11 @@ import java.util.List;
 
 import kariminf.ktoolja.math.Calculus;
 import kariminf.as.confs.multiling.MMS;
-import kariminf.as.process.topicclassif.PLeng;
-import kariminf.as.process.topicclassif.Pos;
-import kariminf.as.process.topicclassif.RLeng;
-import kariminf.as.process.topicclassif.TFB;
-import kariminf.as.process.topicclassif.TFU;
+import kariminf.as.process.tcc.PLeng;
+import kariminf.as.process.tcc.Pos;
+import kariminf.as.process.tcc.RLeng;
+import kariminf.as.process.tcc.TFB;
+import kariminf.as.process.tcc.TFU;
 import kariminf.ktoolja.file.FileManager;
 
 

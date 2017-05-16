@@ -10,11 +10,12 @@ import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import kariminf.as.process.ssfgc.SSFScoreHandler;
 import kariminf.as.tools.Data;
 
 public class SLPScoreHandlerTest  {
 	
-	private static class TstSLP extends SLPScoreHandler {
+	private static class TstSLP extends SSFScoreHandler {
 		public TstSLP(Data data, double thSimilarity) {
 			super(data, thSimilarity);
 		}
@@ -57,14 +58,14 @@ public class SLPScoreHandlerTest  {
 	@Test
 	public void setThresholdSimilarityTest() {
 		double threshold = 0.25;
-		SLPScoreHandler slpSH = new TstSLP(data, threshold);
+		SSFScoreHandler slpSH = new TstSLP(data, threshold);
 		assertEquals(threshold, slpSH.getThresholdSimilarity(), 0.0001);
 	}
 	
 	@Test
 	public void calculateSimilarityTest(){
 		
-		SLPScoreHandler slpSH = new TstSLP(data, 0.0);
+		SSFScoreHandler slpSH = new TstSLP(data, 0.0);
 		
 		HashMap<Integer, Integer> _simSentID =  new HashMap<>();
 		
@@ -114,7 +115,7 @@ public class SLPScoreHandlerTest  {
 	
 	@Test
 	public void getSLPScoreTest(){
-		SLPScoreHandler slpSH = new TstSLP(data, 0.0);
+		SSFScoreHandler slpSH = new TstSLP(data, 0.0);
 		
 		double[] _expectedScores = new double[]{
 				0.555467,

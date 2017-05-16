@@ -120,6 +120,7 @@ public class StaticPreProcessor extends PreProcessor {
 		switch (iso){
 		case AR:
 			info = new ArInfo();
+			System.out.println("arabic");
 			normalizer = new ArNormalizer();
 			segmenter = new ArSegmenter();
 			sweliminator = new ArSWEliminator();

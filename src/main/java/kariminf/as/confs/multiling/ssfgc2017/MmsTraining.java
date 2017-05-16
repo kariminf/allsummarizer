@@ -1,4 +1,4 @@
-package kariminf.as.confs.multiling.slp2017;
+package kariminf.as.confs.multiling.ssfgc2017;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

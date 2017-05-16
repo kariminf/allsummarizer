@@ -1,4 +1,4 @@
-package kariminf.as.confs.multiling.slp2017;
+package kariminf.as.confs.multiling.ssfgc2017;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,17 +10,19 @@ import java.util.List;
 
 import kariminf.as.preProcess.PreProcessor;
 import kariminf.as.preProcess.StaticPreProcessor;
-import kariminf.as.process.ScoreHandler;
 import kariminf.as.process.Scorer;
-import kariminf.as.process.slp.SLP1ScoreHandler;
-import kariminf.as.process.slp.SLP2ScoreHandler;
-import kariminf.as.process.slp.SLPScoreHandler;
+import kariminf.as.process.ssfgc.GC0ScoreHandler;
+import kariminf.as.process.ssfgc.GC1ScoreHandler;
+import kariminf.as.process.ssfgc.GC2ScoreHandler;
+import kariminf.as.process.ssfgc.GC3ScoreHandler;
+import kariminf.as.process.ssfgc.GC4ScoreHandler;
+import kariminf.as.process.ssfgc.SSFScoreHandler;
 import kariminf.as.tools.Data;
 import kariminf.as.tools.Tools;
 import kariminf.ktoolja.file.FileManager;
 import kariminf.ktoolja.math.Calculus;
 
-public class MssTraining {
+public class Mss2017 {
 
 	//private String lang = "en";
 
@@ -37,10 +39,60 @@ public class MssTraining {
 			"/home/kariminf/Data/ATS/Mss15Train/tests/training2017/";
 
 	private static final String [] langs = 
-		{"fa"};
+		{/*"af", 
+				"ar", 
+				"bg", 
+				"ca", 
+				"cs", 
+				"de", 
+				"el", 
+				"en", 
+				"eo", 
+				"es", 
+				"eu", 
+				"fa", 
+				"fi", 
+				"fr", 
+				"he", 
+				"hr", 
+				"hu", 
+				"id", 
+				"it", 
+				"ja", 
+				"ka", 
+				"ko", 
+				"ms", 
+				"nl", 
+				"no", 
+				"pl", 
+				"pt", 
+				"ro", 
+				"ru", 
+				"sh", 
+				"sk", 
+				"sl", 
+				"sr", 
+				"sv", 
+				"th", 
+				"tr", 
+				"vi", 
+				"zh"*/
+				"en"};
+	
+	private static final String[] types = {
+			"SSF-GC0", "SSF-GC2", "SSF-GC4"
+	};
+	
+	private static final double [] ths = 
+		{0.0, 0.0, 0.0, 0.0};
+	private static final String [] thNames = 
+		{"00", "mean", "median", "hmode"};
+	/*private static final String [] thNames = 
+		{"median"};*/
+	
 	//fa
 
-	public MssTraining (String lang){
+	public Mss2017 (String lang){
 		//this.lang = (lang.length()==2)?lang:"en";
 		data = new Data();
 		preprocessor = new StaticPreProcessor(lang, data);
@@ -93,13 +145,34 @@ public class MssTraining {
 	}
 
 
-	public Scorer summarize(int summarySize, ScoreHandler sh){
-
-		scorer = Scorer.create(sh);
+	public void summarize(int summarySize, String type, double thSimilarity){
+		
+		SSFScoreHandler ssh;
+		
+		int typenum = Integer.parseInt(type.substring(type.length()-1));
+		
+		System.out.println(typenum);
+		
+		switch (typenum) {
+		case 1:
+			ssh = new GC1ScoreHandler(data, thSimilarity);
+			break;
+		case 2:
+			ssh = new GC2ScoreHandler(data, thSimilarity);
+			break;
+		case 3:
+			ssh = new GC3ScoreHandler(data, thSimilarity);
+			break;
+		case 4:
+			ssh = new GC4ScoreHandler(data, thSimilarity);
+			break;
+		default:
+			ssh = new GC0ScoreHandler(data, thSimilarity);
+		}
+		
+		scorer = Scorer.create(ssh);
 		scorer.setData(data);
 		scorer.scoreUnits();
-
-		return scorer;
 	}
 
 
@@ -134,7 +207,7 @@ public class MssTraining {
 		
 		List<Integer> order = scorer.getOrdered();
 		
-		double simTH = ((SLPScoreHandler)scorer.getScoreHandler())
+		double simTH = ((SSFScoreHandler)scorer.getScoreHandler())
 				.getThresholdSimilarity();
 		
 		List<List<String>> sentWords = data.getSentWords();
@@ -183,7 +256,7 @@ public class MssTraining {
 		
 		List<Integer> order = scorer.getOrdered();
 		HashMap<Integer, List<Integer>> relatives = 
-				((SLPScoreHandler)scorer.getScoreHandler()).getRelatives();
+				((SSFScoreHandler)scorer.getScoreHandler()).getRelatives();
 		
 		List<String> sentences = data.getSentences();
 		
@@ -200,6 +273,7 @@ public class MssTraining {
 			List<Integer> relIDs = relatives.get(index);
 			index = -1;
 			int minOrder = Integer.MAX_VALUE;
+			if (relIDs == null) break;
 			for(int relID: relIDs){
 				int thisOrder = order.indexOf(relID);
 				if (thisOrder >= 0 && minOrder > thisOrder)
@@ -229,7 +303,7 @@ public class MssTraining {
 		
 		List<Integer> order = scorer.getOrdered();
 		HashMap<Integer, List<Integer>> relatives = 
-				((SLPScoreHandler)scorer.getScoreHandler()).getRelatives();
+				((SSFScoreHandler)scorer.getScoreHandler()).getRelatives();
 		
 		List<String> sentences = data.getSentences();
 		
@@ -246,6 +320,7 @@ public class MssTraining {
 			int prevIndex = index;
 			index = -1;
 			double max = Double.MIN_VALUE;
+			if(relIDs == null) break;
 			for(int relID: relIDs){
 				double score = order.indexOf(relID);
 				score = score/(order.size() * data.getSimilarity(prevIndex, relID));
@@ -327,113 +402,62 @@ public class MssTraining {
 
 				//verify if the file have been already processed
 				fileName = fileName.substring(0, fileName.length()-9) + "/";
-				if (new File(outFolder + lang + "/" + fileName).exists()){
+				/*if (new File(outFolder + lang + "/" + fileName).exists()){
 					System.out.println(fileName  + " already processsed");
 					continue;
-				}
+				}*/
 
-				newfolderName = outFolder + lang + "/" + fileName;
+				newfolderName = outFolder + lang + "_norm/" + fileName;
 				FileManager.createFolder(new File(newfolderName));
 
 				System.out.println(file.getName()  + " preprocessing...");
-				MssTraining mss = new MssTraining(lang);
+				Mss2017 mss = new Mss2017(lang);
 				mss.preprocess(file);
 				
-				List<Double> sim = Calculus.delMultiple(mss.getSimilarity(), 0.0);
-
-				double mean = Calculus.mean(sim);
-				
-				System.out.println("creating score handlers ...");
-				
-				SLPScoreHandler s1t0 = 
-						new SLP1ScoreHandler(mss.getData(), 0.0);
-				SLPScoreHandler s2t0 = 
-						new SLP2ScoreHandler(mss.getData(), 0.0);
-				SLPScoreHandler s1tm = 
-						new SLP1ScoreHandler(mss.getData(), mean);
-				SLPScoreHandler s2tm = 
-						new SLP2ScoreHandler(mss.getData(), mean);
-
-				try {
-					String summary;
-					
-					System.out.println("setting summary size to " + summarySize);
-					
-					mss.setSummarySize(summarySize);
-					
-					//SLP1 with sim=0.0
-					//==================
-					System.out.println("summarizing with SLP1 threshold 0.0 ");
-					mss.summarize(summarySize, s1t0);
-					
-					System.out.println("SLP1 0.0: extraction method 1");
-					summary = mss.getSummary1();
-					FileManager.saveFile(newfolderName + "SLP1_0_e1.asz", summary);
-					
-					System.out.println("SLP1 0.0: extraction method 2");
-					summary = mss.getSummary2();
-					FileManager.saveFile(newfolderName + "SLP1_0_e2.asz", summary);
-					
-					System.out.println("SLP1 0.0: extraction method 3");
-					summary = mss.getSummary3();
-					FileManager.saveFile(newfolderName + "SLP1_0_e3.asz", summary);
-					
-					//SLP1 with sim=mean
-					//==================
-					System.out.println("summarizing with SLP1 threshold mean ");
-					mss.summarize(summarySize, s1tm);
-					
-					System.out.println("SLP1 mean: extraction method 1");
-					summary = mss.getSummary1();
-					FileManager.saveFile(newfolderName + "SLP1_m_e1.asz", summary);
-					
-					System.out.println("SLP1 mean: extraction method 2");
-					summary = mss.getSummary2();
-					FileManager.saveFile(newfolderName + "SLP1_m_e2.asz", summary);
-					
-					System.out.println("SLP1 mean: extraction method 3");
-					summary = mss.getSummary3();
-					FileManager.saveFile(newfolderName + "SLP1_m_e3.asz", summary);
-					
-					//SLP2 with sim=0.0
-					//==================
-					System.out.println("summarizing with SLP2 threshold 0.0 ");
-					mss.summarize(summarySize, s2t0);
-					
-					System.out.println("SLP2 0.0: extraction method 1");
-					summary = mss.getSummary1();
-					FileManager.saveFile(newfolderName + "SLP2_0_e1.asz", summary);
-					
-					System.out.println("SLP2 0.0: extraction method 2");
-					summary = mss.getSummary2();
-					FileManager.saveFile(newfolderName + "SLP2_0_e2.asz", summary);
-					
-					System.out.println("SLP2 0.0: extraction method 3");
-					summary = mss.getSummary3();
-					FileManager.saveFile(newfolderName + "SLP2_0_e3.asz", summary);
-					
-					//SLP2 with sim=mean
-					//==================
-					System.out.println("summarizing with SLP2 threshold mean ");
-					mss.summarize(summarySize, s2tm);
-					
-					System.out.println("SLP2 mean: extraction method 1");
-					summary = mss.getSummary1();
-					FileManager.saveFile(newfolderName + "SLP2_m_e1.asz", summary);
-					
-					System.out.println("SLP2 mean: extraction method 2");
-					summary = mss.getSummary2();
-					FileManager.saveFile(newfolderName + "SLP2_m_e2.asz", summary);
-					
-					System.out.println("SLP2 mean: extraction method 3");
-					summary = mss.getSummary3();
-					FileManager.saveFile(newfolderName + "SLP2_m_e3.asz", summary);
-
-					
-					
-				} catch (IOException e) {
-					e.printStackTrace();
+				//Affecting similarity thresholds
+				{
+					List<Double> sim = Calculus.delMultiple(mss.getSimilarity(), 0.0);
+					ths[1] = Calculus.mean(sim);
+					ths[2] = Calculus.median(sim);
+					ths[3] = Calculus.modeHigh(sim);
 				}
+				
+				for (int thIdx=0; thIdx < ths.length; thIdx++){
+					
+					for (int typeIdx = 0; typeIdx < types.length; typeIdx++){
+						try {
+							String summary;
+							
+							System.out.println("setting summary size to " + summarySize);
+							
+							mss.setSummarySize(summarySize);
+
+							System.out.println(types[typeIdx] + ".threshold=" + thNames[thIdx]);
+							mss.summarize(summarySize, types[typeIdx], ths[thIdx]);
+							
+							String name = newfolderName + types[typeIdx];
+							name += "_" + thNames[thIdx] + "_";
+							
+							System.out.println("\t extraction method 1");
+							summary = mss.getSummary1();
+							FileManager.saveFile(name + "e1.asz", summary);
+							
+							System.out.println("\t extraction method 2");
+							summary = mss.getSummary2();
+							FileManager.saveFile(name + "e2.asz", summary);
+							
+							System.out.println("\t extraction method 3");
+							summary = mss.getSummary3();
+							FileManager.saveFile(name + "e3.asz", summary);
+					
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}//Types
+					
+				}//Thresholds
+
+				
 
 			} //files
 

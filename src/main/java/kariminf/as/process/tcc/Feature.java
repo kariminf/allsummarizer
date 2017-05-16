@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package kariminf.as.process.topicclassif;
+package kariminf.as.process.tcc;
 
 import java.util.List;
 
