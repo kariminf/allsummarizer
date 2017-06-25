@@ -33,13 +33,13 @@ public class Mss2017 {
 	private Scorer scorer;
 
 	private static final String mssFolder = 
-			"/home/kariminf/Data/ATS/Mss15Train/";
+			"/home/kariminf/Data/ATS/Mss15Test/src/";
 
 	private static final String outFolder =
-			"/home/kariminf/Data/ATS/Mss15Train/tests/training2017/";
+			"/home/kariminf/Data/ATS/Mss15Test/tests/testing2017/";
 
 	private static final String [] langs = 
-		{/*"af", 
+		{		"af", 
 				"ar", 
 				"bg", 
 				"ca", 
@@ -76,21 +76,17 @@ public class Mss2017 {
 				"th", 
 				"tr", 
 				"vi", 
-				"zh"*/
-				"en"};
+				"zh"
+				};
 	
 	private static final String[] types = {
-			"SSF-GC0", "SSF-GC2", "SSF-GC4"
+			"SSF-GC0", "SSF-GC1", "SSF-GC2", "SSF-GC3", "SSF-GC4", "SSF-GC5"
 	};
 	
 	private static final double [] ths = 
-		{0.0, 0.0, 0.0, 0.0};
+		{/*0.0, 0.0, 0.0, */0.0};
 	private static final String [] thNames = 
-		{"00", "mean", "median", "hmode"};
-	/*private static final String [] thNames = 
-		{"median"};*/
-	
-	//fa
+		{/*"00", */"mean"/*, "median", "hmode"*/};
 
 	public Mss2017 (String lang){
 		//this.lang = (lang.length()==2)?lang:"en";
@@ -164,12 +160,18 @@ public class Mss2017 {
 			ssh = new GC3ScoreHandler(data, thSimilarity);
 			break;
 		case 4:
-			ssh = new GC4ScoreHandler(data, thSimilarity);
+			ssh = new GC4ScoreHandler(data, thSimilarity, false);
+			break;
+		case 5:
+			ssh = new GC4ScoreHandler(data, thSimilarity, true);
 			break;
 		default:
 			ssh = new GC0ScoreHandler(data, thSimilarity);
 		}
 		
+		//ssh.setNormalization(true, true);
+		ssh.calculateSSFScores();
+		//ssh.converge();
 		scorer = Scorer.create(ssh);
 		scorer.setData(data);
 		scorer.scoreUnits();
@@ -197,8 +199,41 @@ public class Mss2017 {
 		return content.toString();
 	}
 
+	/*
+	 * First most scored ones 
+	 */
+	private String getSummary0(){
 
-	
+		String summary = "";
+		int numChars = 0;
+		
+		List<Integer> order = scorer.getOrdered();
+		
+		List<String> sentences = data.getSentences();
+		numChars += sentences.get(0).length();
+		summary += sentences.get(0) + "\n";
+		
+		int numOrder = 1;
+		
+		while(numOrder < order.size()){
+			int index = order.get(numOrder);
+			String sentence = sentences.get(index);
+			numChars += sentence.length();
+
+			if (numChars > summarySize)
+				break;
+
+			summary += sentence + "\n";
+
+			numOrder ++;
+		}
+		
+		return summary;
+	}
+
+	/*
+	 * Most scored with less similarity to the last added one
+	 */
 	private String getSummary1(){
 
 		String summary = "";
@@ -248,7 +283,9 @@ public class Mss2017 {
 		return summary;
 	}
 	
-	
+	/* 
+	 * Neighbor with max score
+	 */
 	private String getSummary2(){
 
 		String summary = "";
@@ -275,20 +312,23 @@ public class Mss2017 {
 			int minOrder = Integer.MAX_VALUE;
 			if (relIDs == null) break;
 			for(int relID: relIDs){
-				int thisOrder = order.indexOf(relID);
+				int thisOrder = order.indexOf(relID)+1;
 				if (thisOrder >= 0 && minOrder > thisOrder)
 					if(! included.contains(relID)){
 						index = relID;
 						minOrder = thisOrder;
 					}
 			}
+			
 			if (index < 0) break;
 			
-			included.add(index);
-			summary += sentences.get(index) + "\n";
 			numChars += sentences.get(index).length();
 			
-			if (numChars >= summarySize) break;
+			if (numChars > summarySize) break;
+			
+			included.add(index);
+			
+			summary += sentences.get(index) + "\n";
 		}
 
 
@@ -296,6 +336,10 @@ public class Mss2017 {
 	}
 	
 	
+	/*
+	 * Neighbor with most score, most similarity (order + order_sim)/2
+	 * Similarity descending order
+	 */
 	private String getSummary3(){
 
 		String summary = "";
@@ -317,27 +361,204 @@ public class Mss2017 {
 		
 		while(true){
 			List<Integer> relIDs = relatives.get(index);
-			int prevIndex = index;
+			
+			if(relIDs == null || relIDs.isEmpty()) break;
+			
+			//Calculate similarity order
+			List<Integer> relsSimOrder = new ArrayList<>();
+			{
+				List<Double> orderedSims = new ArrayList<>();
+				
+				for(int relID: relIDs){
+					int j = 0;
+					double currentSim = data.getSimilarity(index, relID);
+					
+					//The bigger similarity comes first
+					while (j < orderedSims.size() && currentSim <= orderedSims.get(j))
+						j++;
+
+					relsSimOrder.add(j, relID);
+					orderedSims.add(j, currentSim);
+				}
+			}
+			//===========================
+			
+			
+			//int prevIndex = index;
 			index = -1;
-			double max = Double.MIN_VALUE;
-			if(relIDs == null) break;
+			Double min = Double.MAX_VALUE;
+			
 			for(int relID: relIDs){
-				double score = order.indexOf(relID);
-				score = score/(order.size() * data.getSimilarity(prevIndex, relID));
-				if (score > max)
+				int scoreOrder = order.indexOf(relID)+1;
+				int simOrder = relsSimOrder.indexOf(relID)+1;
+				
+				double score = ((double) (scoreOrder+simOrder))/2.0;
+				
+				if (score < min)
 					if(! included.contains(relID)){
 						index = relID;
-						max = score;
+						min = score;
 					}
 			}
 			
+			//When all relatives are included into the summary
 			if (index < 0) break;
 			
-			included.add(index);
-			summary += sentences.get(index) + "\n";
 			numChars += sentences.get(index).length();
 			
 			if (numChars >= summarySize) break;
+			
+			included.add(index);
+			summary += sentences.get(index) + "\n";
+			
+		}
+
+		return summary;								
+	}
+	
+	/*
+	 * Neighbor with most score, less similarity (order + order_sim)/2
+	 * Similarity ascending order
+	 */
+	private String getSummary4(){
+
+		String summary = "";
+		int numChars = 0;
+		
+		List<Integer> order = scorer.getOrdered();
+		HashMap<Integer, List<Integer>> relatives = 
+				((SSFScoreHandler)scorer.getScoreHandler()).getRelatives();
+		
+		List<String> sentences = data.getSentences();
+		
+		List<Integer> included = new ArrayList<>();
+		
+		//The first scored sentence is held as summary
+		int index = order.get(0);
+		included.add(index);
+		summary += sentences.get(index) + "\n";
+		numChars += sentences.get(index).length();
+		
+		while(true){
+			List<Integer> relIDs = relatives.get(index);
+			
+			if(relIDs == null || relIDs.isEmpty()) break;
+			
+			//Calculate similarity order
+			List<Integer> relsSimOrder = new ArrayList<>();
+			{
+				List<Double> orderedSims = new ArrayList<>();
+				
+				for(int relID: relIDs){
+					int j = 0;
+					double currentSim = data.getSimilarity(index, relID);
+					
+					//The bigger similarity comes last
+					while (j < orderedSims.size() && currentSim >= orderedSims.get(j))
+						j++;
+
+					relsSimOrder.add(j, relID);
+					orderedSims.add(j, currentSim);
+				}
+			}
+			//===========================
+			
+			
+			//int prevIndex = index;
+			index = -1;
+			Double min = Double.MAX_VALUE;
+			
+			for(int relID: relIDs){
+				int scoreOrder = order.indexOf(relID)+1;
+				int simOrder = relsSimOrder.indexOf(relID)+1;
+				
+				double score = ((double) (scoreOrder+simOrder))/2.0;
+				
+				if (score < min)
+					if(! included.contains(relID)){
+						index = relID;
+						min = score;
+					}
+			}
+			
+			//When all relatives are included into the summary
+			if (index < 0) break;
+			
+			numChars += sentences.get(index).length();
+			
+			if (numChars >= summarySize) break;
+			
+			included.add(index);
+			summary += sentences.get(index) + "\n";
+			
+		}
+
+		return summary;								
+	}
+	
+	
+	/*
+	 * Maximize number of no-summary relatives with less order
+	 */
+	private String getSummary5(){
+
+		String summary = "";
+		int numChars = 0;
+		
+		List<Integer> order = scorer.getOrdered();
+		HashMap<Integer, List<Integer>> relatives = 
+				((SSFScoreHandler)scorer.getScoreHandler()).getRelatives();
+		
+		List<String> sentences = data.getSentences();
+		
+		List<Integer> included = new ArrayList<>();
+		
+		//The first scored sentence is held as summary
+		int index = order.get(0);
+		included.add(index);
+		summary += sentences.get(index) + "\n";
+		numChars += sentences.get(index).length();
+		
+		while(true){
+			List<Integer> relIDs = relatives.get(index);
+			
+			if(relIDs == null || relIDs.isEmpty()) break;
+			
+			
+			double max = Double.NEGATIVE_INFINITY;
+			index = -1;
+			
+			for(int relID: relIDs){
+				
+				if (included.contains(relID)) continue;
+				
+				int relNbr = 0;
+				List<Integer> relIDs2 = relatives.get(relID);
+				
+				for(int relID2: relIDs2)
+					if (!included.contains(relID2))
+						relNbr++;
+				if(relNbr> 0){
+					double score = 
+							((double) relNbr) / ((double)(order.indexOf(relID)+1));
+					if (score > max){
+						max = score;
+						index = relID;
+					}
+				}
+				
+			}
+			
+			//When all relatives are included into the summary
+			if (index < 0) break;
+			
+			numChars += sentences.get(index).length();
+			
+			if (numChars >= summarySize) break;
+			
+			included.add(index);
+			summary += sentences.get(index) + "\n";
+			
 		}
 
 
@@ -407,7 +628,7 @@ public class Mss2017 {
 					continue;
 				}*/
 
-				newfolderName = outFolder + lang + "_norm/" + fileName;
+				newfolderName = outFolder + lang + "/" + fileName;
 				FileManager.createFolder(new File(newfolderName));
 
 				System.out.println(file.getName()  + " preprocessing...");
@@ -417,9 +638,9 @@ public class Mss2017 {
 				//Affecting similarity thresholds
 				{
 					List<Double> sim = Calculus.delMultiple(mss.getSimilarity(), 0.0);
-					ths[1] = Calculus.mean(sim);
-					ths[2] = Calculus.median(sim);
-					ths[3] = Calculus.modeHigh(sim);
+					ths[0] = Calculus.mean(sim);
+					//ths[2] = Calculus.median(sim);
+					//ths[3] = Calculus.modeHigh(sim);
 				}
 				
 				for (int thIdx=0; thIdx < ths.length; thIdx++){
@@ -438,6 +659,10 @@ public class Mss2017 {
 							String name = newfolderName + types[typeIdx];
 							name += "_" + thNames[thIdx] + "_";
 							
+							System.out.println("\t extraction method 0");
+							summary = mss.getSummary0();
+							FileManager.saveFile(name + "e0.asz", summary);
+							
 							System.out.println("\t extraction method 1");
 							summary = mss.getSummary1();
 							FileManager.saveFile(name + "e1.asz", summary);
@@ -449,6 +674,14 @@ public class Mss2017 {
 							System.out.println("\t extraction method 3");
 							summary = mss.getSummary3();
 							FileManager.saveFile(name + "e3.asz", summary);
+							
+							System.out.println("\t extraction method 4");
+							summary = mss.getSummary4();
+							FileManager.saveFile(name + "e4.asz", summary);
+							
+							System.out.println("\t extraction method 5");
+							summary = mss.getSummary5();
+							FileManager.saveFile(name + "e5.asz", summary);
 					
 						} catch (Exception e) {
 							e.printStackTrace();

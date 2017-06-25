@@ -6,18 +6,22 @@ import kariminf.as.tools.Data;
 
 public class GC4ScoreHandler extends SSFScoreHandler {
 	
+	private int a;
 	
-	public GC4ScoreHandler(Data data, double thSimilarity) {
+	public GC4ScoreHandler(Data data, double thSimilarity, boolean keepMyScore){
 		super(data, thSimilarity);
+		a = (keepMyScore)? 1: 0;
 	}
 
 	@Override
-	public Double scoreUnit(int unitID) {
+	public Double scoreUnit(int unitID) throws UnitNotIncluded {
+		
+		if (! candidates.contains(unitID)) throw new UnitNotIncluded();
 		
 		List<Integer> rels = relatives.get(unitID);
 		
 		if (rels == null || rels.size() < 1)
-			return getSLPScore(unitID);
+			return getSSFScore(unitID);
 		
 		//System.out.println(unitID + "==>" + rels);
 		
@@ -28,12 +32,7 @@ public class GC4ScoreHandler extends SSFScoreHandler {
 			sumSims += data.getSimilarity(unitID, otherUnitID);
 		}
 		
-		
-		double normScore = (getSLPScore(unitID) - getMinSSF());
-		normScore = normScore / (getMaxSSF() - getMinSSF());
-		
-		
-		return normScore * (1.0 + sumSims) ;
+		return getSSFScore(unitID) * (a + sumSims) ;
 	}
 	
 	

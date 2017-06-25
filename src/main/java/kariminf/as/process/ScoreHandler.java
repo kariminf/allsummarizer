@@ -4,6 +4,8 @@ import kariminf.as.tools.Data;
 
 public interface ScoreHandler {
 	
-	public abstract Double scoreUnit(int unitID);
+	public static class UnitNotIncluded extends Exception {}
+	
+	public abstract Double scoreUnit(int unitID) throws UnitNotIncluded;
 
 }

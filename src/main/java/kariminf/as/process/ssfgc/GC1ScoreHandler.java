@@ -12,19 +12,20 @@ public class GC1ScoreHandler extends SSFScoreHandler {
 	}
 
 	@Override
-	public Double scoreUnit(int unitID) {
+	public Double scoreUnit(int unitID) throws UnitNotIncluded {
+		
+		if (! candidates.contains(unitID)) throw new UnitNotIncluded();
 		
 		List<Integer> rels = relatives.get(unitID);
 		
-		double score = getSLPScore(unitID);
+		double score = getSSFScore(unitID);
 		
 		if (rels == null || rels.size() < 1)
 			return score;
 		
 		for(int otherUnitID: rels){
 			if (otherUnitID == unitID) continue;
-			score += data.getSimilarity(unitID, otherUnitID) * 
-					getSLPScore(otherUnitID);
+			score += data.getSimilarity(unitID, otherUnitID) * score;
 		}
 		
 		return score;

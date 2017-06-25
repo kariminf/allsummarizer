@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import kariminf.as.process.ScoreHandler.UnitNotIncluded;
 import kariminf.as.tools.Data;
 
 
@@ -71,7 +72,12 @@ public class Scorer {
 		List<Double> orderedScores = new ArrayList<Double>();
 		
 		for(int unitID = 0; unitID < data.getSentNumber(); unitID++){
-			Double currentScore = scoreHandler.scoreUnit(unitID);
+			Double currentScore;
+			try {
+				currentScore = scoreHandler.scoreUnit(unitID);
+			} catch (UnitNotIncluded e) {
+				continue;
+			}
 			
 			int j = 0;
 			while (j < orderedScores.size() && currentScore <= orderedScores.get(j))

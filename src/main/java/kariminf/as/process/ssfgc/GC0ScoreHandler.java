@@ -10,9 +10,11 @@ public class GC0ScoreHandler extends SSFScoreHandler {
 	}
 
 	@Override
-	public Double scoreUnit(int unitID) {
+	public Double scoreUnit(int unitID) throws UnitNotIncluded {
 		
-		return getSLPScore(unitID);
+		if (! candidates.contains(unitID)) throw new UnitNotIncluded();
+		
+		return getSSFScore(unitID);
 	}
 	
 	

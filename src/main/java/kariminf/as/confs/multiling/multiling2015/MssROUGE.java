@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import kariminf.ktoolja.math.Calculus;
 import kariminf.ktoolja.file.FileManager;
 
 
@@ -33,13 +32,17 @@ public class MssROUGE {
 
 
 	private static final String peerFolder = 
-			"/home/kariminf/Data/ATS/Mss15Train/tests";
+			"/home/kariminf/Data/ATS/Mss15Test/tests";
+	/*private static final String peerFolder = 
+			"/home/kariminf/Data/ATS/Mss15Test/tests";*/
 
 	private static final String summaryFolder =
-			"/home/kariminf/Data/ATS/Mss15Train/summary";
+			"/home/kariminf/Data/ATS/Mss15Test/model";
+	/*private static final String summaryFolder =
+			"/home/kariminf/Data/ATS/Mss15Test/model";*/
 	
 	public static final Map<String, String> langs = new HashMap<String, String>() {{
-		/*put("af", "D_sn/TFU-TFB-Pos-RLeng-PLeng");
+		put("af", "D_sn/TFU-TFB-Pos-RLeng-PLeng");
 		put("ar", "D_s/TFB-Pos-PLeng");
 		put("bg", "Lmode/TFU-PLeng");
 		put("ca", "Hmode/TFB-Pos-PLeng");
@@ -76,86 +79,49 @@ public class MssROUGE {
 		put("th", "D_s/TFB-RLeng-PLeng");
 		put("tr", "median/TFB-Pos-PLeng");
 		put("vi", "D_s/TFB-Pos-RLeng-PLeng");
-		put("zh", "Hmode/TFB-RLeng-PLeng");*/
-		put("en", "median/TFU-Pos-RLeng-PLeng");
+		put("zh", "Hmode/TFB-RLeng-PLeng");
+		//put("en", "en");
 	}};
 
 	/*private static final String [] langs = 
 		{"ar"};*/
 
-	private static String [] features = {
-			"SSF-GC0_00_e1",
-			"SSF-GC0_00_e2",
-			"SSF-GC0_00_e3",
-			"SSF-GC0_hmode_e1",
-			"SSF-GC0_hmode_e2",
-			"SSF-GC0_hmode_e3",
-			"SSF-GC0_mean_e1",
-			"SSF-GC0_mean_e2",
-			"SSF-GC0_mean_e3",
-			"SSF-GC0_median_e1",
-			"SSF-GC0_median_e2",
-			"SSF-GC0_median_e3",
-			
-			"SSF-GC1_00_e1",
-			"SSF-GC1_00_e2",
-			"SSF-GC1_00_e3",
-			"SSF-GC1_hmode_e1",
-			"SSF-GC1_hmode_e2",
-			"SSF-GC1_hmode_e3",
-			"SSF-GC1_mean_e1",
-			"SSF-GC1_mean_e2",
-			"SSF-GC1_mean_e3",
-			"SSF-GC1_median_e1",
-			"SSF-GC1_median_e2",
-			"SSF-GC1_median_e3",
-			
-			
-			"SSF-GC2_00_e1",
-			"SSF-GC2_00_e2",
-			"SSF-GC2_00_e3",
-			"SSF-GC2_hmode_e1",
-			"SSF-GC2_hmode_e2",
-			"SSF-GC2_hmode_e3",
-			"SSF-GC2_mean_e1",
-			"SSF-GC2_mean_e2",
-			"SSF-GC2_mean_e3",
-			"SSF-GC2_median_e1",
-			"SSF-GC2_median_e2",
-			"SSF-GC2_median_e3",
-			
-			"SSF-GC3_00_e1",
-			"SSF-GC3_00_e2",
-			"SSF-GC3_00_e3",
-			"SSF-GC3_hmode_e1",
-			"SSF-GC3_hmode_e2",
-			"SSF-GC3_hmode_e3",
-			"SSF-GC3_mean_e1",
-			"SSF-GC3_mean_e2",
-			"SSF-GC3_mean_e3",
-			"SSF-GC3_median_e1",
-			"SSF-GC3_median_e2",
-			"SSF-GC3_median_e3",
-			
-			
-			"SSF-GC4_00_e1",
-			"SSF-GC4_00_e2",
-			"SSF-GC4_00_e3",
-			"SSF-GC4_hmode_e1",
-			"SSF-GC4_hmode_e2",
-			"SSF-GC4_hmode_e3",
-			"SSF-GC4_mean_e1",
-			"SSF-GC4_mean_e2",
-			"SSF-GC4_mean_e3",
-			"SSF-GC4_median_e1",
-			"SSF-GC4_median_e2",
-			"SSF-GC4_median_e3",
+	private static List<String> features = new ArrayList<>();
+	
+	private static String[] methods = {
+			//"SSF-GC0", 
+			"SSF-GC1",
+			"SSF-GC2",
+			"SSF-GC3",
+			"SSF-GC4",
+			"SSF-GC5"
+	};
+	
+	private static String[] ths = {
+			//"00", 
+			//"hmode",
+			"mean",
+			//"median"
+	};
+	
+	private static String[] exts = {
+			"e0", 
+			"e1",
+			"e2",
+			"e3",
+			"e4",
+			"e5"
 	};
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		
+		for(String method: methods)
+			for (String th: ths)
+				for (String ext: exts)
+					features.add(method + "_" + th + "_" + ext);
 
 		for (String lang: langs.keySet()){//langs
 		    
@@ -172,7 +138,7 @@ public class MssROUGE {
 				String fileName = file.getName();
 				if (! fileName.endsWith(".txt")) continue;
 
-				fileName = fileName.substring(0, fileName.length()-12);//4
+				fileName = fileName.substring(0, fileName.length()-4);//4//12
 				//String newfolderName = outFolder + lang + "/";
 				//newfolderName += fileName.substring(0, fileName.length()-9) + "/";
 				
@@ -212,20 +178,24 @@ public class MssROUGE {
 				
 				*/
 				
-				xmlcontent += "<P ID=\"TC\">training2015/" + lang + "/" + fileName;
-				xmlcontent += "/" + langs.get(lang) + ".asz</P>\n";
 				/*
-				xmlcontent += "<P ID=\"TC\">testing2015/" + lang + "/";
-				xmlcontent += fileName + ".txt</P>\n";*/
+				xmlcontent += "<P ID=\"TCC\">training2015/" + lang + "/" + fileName;
+				xmlcontent += "/" + langs.get(lang) + ".asz</P>\n";
+				*/
+				
+				xmlcontent += "<P ID=\"TCC\">testing2015/" + lang + "/";
+				xmlcontent += fileName + ".txt</P>\n";
+				
 				
 				for (String feat: features){
-					xmlcontent += "<P ID=\"" + feat + "\">training2017/" + lang ;
-					xmlcontent += "_norm/" + fileName + "/" + feat + ".asz</P>\n";
+					xmlcontent += "<P ID=\"" + feat + "\">testing2017/" + lang ;
+					xmlcontent += "/" + fileName + "/" + feat + ".asz</P>\n";
 				}
 				
 				xmlcontent += "</PEERS>\n";
 				xmlcontent += "<MODELS>\n";
-				xmlcontent += "<M ID=\"M"+fileName+"\">" + fileName + "_summary.txt</M>\n";
+				//xmlcontent += "<M ID=\"M"+fileName+"\">" + fileName + "_summary.txt</M>\n";
+				xmlcontent += "<M ID=\"M"+fileName+"\">" + fileName + ".txt</M>\n";
 				xmlcontent += "</MODELS>\n";
 				xmlcontent += "</EVAL>\n";
 
@@ -234,7 +204,7 @@ public class MssROUGE {
 			
 			try {
 
-				FileManager.saveFile(peerFolder + "/" + lang + "-norm-2017.xml", xmlcontent);
+				FileManager.saveFile(peerFolder + "/" + lang + "-2017.xml", xmlcontent);
 				
 			} catch (IOException e) {
 				e.printStackTrace();

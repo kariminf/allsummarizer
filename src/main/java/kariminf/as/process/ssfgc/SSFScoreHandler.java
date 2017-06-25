@@ -2,6 +2,7 @@ package kariminf.as.process.ssfgc;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import kariminf.as.process.ScoreHandler;
@@ -16,19 +17,28 @@ public abstract class SSFScoreHandler implements ScoreHandler {
 
 	protected List<Integer> candidates = new ArrayList<>();
 
-	protected List<Double> sentSimDoc = new ArrayList<Double>();
+	private List<Double> sentSimDoc = new ArrayList<Double>();
 
-	protected List<Double> slpScores = new ArrayList<Double>();
+	private HashMap<Integer,Double> ssfScores = new HashMap<>();
 
 	//protected HashMap<Integer, Integer> connections = new HashMap<>();
 
 	// sentence ID ==> most similar sentence ID
-	protected HashMap<Integer, Integer> simMaxSentID =  new HashMap<>();
+	private HashMap<Integer, Integer> simMaxSentID =  new HashMap<>();
 
 	protected HashMap<Integer, List<Integer>> relatives =  new HashMap<>();
 	
+	private HashMap<String, Integer> tfu = new HashMap<>();
+	private HashMap<String, Integer> sfu = new HashMap<>();
+	
 	private double maxSSF = Double.NEGATIVE_INFINITY;
 	private double minSSF = Double.POSITIVE_INFINITY;
+	
+	private boolean isPosNorm = false;
+	
+	private boolean isSizeNorm = false;
+	
+	//private int scoreRegulator = 1000;
 
 	public SSFScoreHandler(Data data, double thSimilarity){
 		this.data = data;
@@ -38,9 +48,16 @@ public abstract class SSFScoreHandler implements ScoreHandler {
 	public SSFScoreHandler setThresholdSimilarity(double thSimilarity){
 		this.thSimilarity = thSimilarity;
 		calculateSimilarity();
-		calculateSSFScores();
+		calculateTF();
+		//calculateSSFScores();
 		//System.out.println("candidates=" + candidates);
 		//System.out.println("nbr sentences=" + data.getSentWords().size());
+		return this;
+	}
+	
+	public SSFScoreHandler setNormalization(boolean isPosNorm, boolean isSizeNorm){
+		this.isPosNorm = isPosNorm;
+		this.isSizeNorm = isSizeNorm;
 		return this;
 	}
 
@@ -56,94 +73,106 @@ public abstract class SSFScoreHandler implements ScoreHandler {
 		return candidates;
 	}
 
-	public double getSLPScore(int unitID){
-		if (slpScores.size() <= unitID)
+	public double getSSFScore(int unitID){
+		if (ssfScores.size() <= unitID)
 			return Double.NEGATIVE_INFINITY;
-		return slpScores.get(unitID);
+		return ssfScores.get(unitID);
 	}
 
 
-	private void calculateSSFScores(){
-		slpScores = new ArrayList<Double>();
+	public void calculateSSFScores(){
+		ssfScores = new HashMap<>();
 		for(int i = 0; i < data.getSentNumber(); i++){
 			double score = calculateSSFScore(i);
-			slpScores.add(score);
+			ssfScores.put(i,score);
 			
 			if (candidates.contains(i)){
 				if (score > maxSSF) maxSSF = score;
 				if (score < minSSF) minSSF = score;
 			}
 			
-			//System.out.println(">>>> score= " + slpScores.get(i));
+			//System.out.println(">>>> score= " + ssfScores.get(i));
 		}
 	}
+	
+	
+	public double scoreTfIsf(int unitID){
+		double tfIsfSums = 0.0;
+		double logTotalSize = Math.log(candidates.size());
+		for (String word: data.getSentWords().get(unitID))
+			//tfIsfSums += tfu.get(word) * Math.pow(logTotalSize - Math.log(sfu.get(word)), 2.0);
+			tfIsfSums += Math.pow(tfu.get(word) * (logTotalSize - Math.log(sfu.get(word))), 2.0);
+		return Math.sqrt(tfIsfSums);
+	}
 
+	/*
+	 * Score(si) = log (1 + (sim(si, C)/(size(si)*pos(si))))
+	 */
 	private double calculateSSFScore(int unitID){
 
 		if (! candidates.contains(unitID))
 			return Double.NEGATIVE_INFINITY;
 
-
-		double score = Math.log(sentSimDoc.get(unitID));
-
+		
 		int docID = data.getSentDoc(unitID);
+		
 
-		//Normalize the size 
-		//=================
-		score -= Math.log(scoreSize(unitID, docID, true));
-
-
-		//the position
-		//=======================
-		score -= Math.log(scorePosition(unitID, docID, true));
+		double score = sentSimDoc.get(unitID);
+		
+		score *= scoreTfIsf(unitID);
+		score *= scoreSize(unitID, docID);
+		score *= scorePosition(unitID, docID);
 
 		return score; 
 	}
-
-	private double scoreSize(int unitID, int docID, boolean normalized){
-
-		double size = data.getSentWords().get(unitID).size();
-
-		if (!normalized) return size;
-
-		//calculate the maximum size of the same document
-		double maxSize = data.getSentWords().get(
-				data.getMaxLenSentID(docID)
-				).size();
-
-		double minSize = data.getSentWords().get(
-				data.getMinLenSentID(docID)
-				).size();
-
-		if (maxSize == minSize) return 1.0;
-
-		//Add a very low amount to not have infinity score
-		return  ((maxSize - size) + 0.0001)/(maxSize - minSize);
-
+	
+	public void converge(){
+		double prevSumScores = 0.001;
+		double precision = 1.0;
+		int i = 0;
+		while (precision > 0.01){
+			double sumScores = 0.0;
+			for (int unitID: candidates){
+				try {
+					double score = scoreUnit(unitID);
+					sumScores += score;
+					ssfScores.put(unitID, score);
+				} catch (UnitNotIncluded e) {
+				}
+			}
+			precision = (sumScores - prevSumScores)/prevSumScores;
+			prevSumScores = sumScores;
+			i++;
+			if (i >= 1000) break;
+		}
+		
+		
+		
 	}
 
-	private double scorePosition(int unitID, int docID, boolean normalized){
-		double posMiddle = data.getDocLength(docID);
-		posMiddle = posMiddle/2;
+	private double scoreSize(int unitID, int docID){
+
+		double size = data.getSentWords().get(unitID).size();
+		
+		if (size == 0) return 0;
+		
+		return 1/size;
+
+	}
+	
+
+	private double scorePosition(int unitID, int docID){
+		
+		int len = data.getDocLength(docID);
+		
+		double posMiddle = (double) len / 2.0;
 
 		double pos = data.getRealPos(unitID);
-		if (simMaxSentID.containsKey(unitID)){
-			double pos2 = data.getRealPos(simMaxSentID.get(unitID));
-
-			if (Math.abs(pos-posMiddle) < Math.abs(pos2-posMiddle)) 
-				pos = pos2;
-		}
-
-		if (! normalized) return pos;
-
-		//The normalized position goes to zero every time we approach the middle 
-		//We can't have a zero score
-		//So, the score of the middle
-		double posNorm = (posMiddle == pos)?
-				1/ posMiddle:
-					Math.abs(posMiddle - pos)/ posMiddle;
-
-		return posNorm;
+		
+		if (pos <= posMiddle) return 1.0/ (pos + 1.0);
+		
+		return 1.0/(len - pos + 1.0) ;
+		
 	}
 
 
@@ -159,21 +188,28 @@ public abstract class SSFScoreHandler implements ScoreHandler {
 
 		// Search for candidate units
 		//===========================
+		
+		HashMap<Integer, Integer> nbrImpNeighbors = new HashMap<>();
 
 		for(int i = 0; i < sentWords.size(); i++){
 
 			double maxSim = - 1.0;
-			boolean isCandidate = false;
+			//boolean isCandidate = false;
+			double simSum = 0.0;
+			
+			int nbrImportant = 0;
 
 			for(int j = 0; j< sentWords.size(); j++){
 				if (i == j) continue;
 				double sim = data.getSimilarity(i, j);
 
-				if (sim < thSimilarity) continue;
+				if (sim >= thSimilarity) nbrImportant++;
+				
+				simSum += sim;
 
 
 
-				isCandidate = true;
+				//isCandidate = true;
 
 				if (maxSim < sim){
 					simMaxSentID.put(i, j);
@@ -181,7 +217,14 @@ public abstract class SSFScoreHandler implements ScoreHandler {
 				}
 			}
 
-			if (isCandidate) candidates.add(i);
+			//if (isCandidate) candidates.add(i);
+			double vertexCut = (nbrImportant> 0)? 1.0/(double) nbrImportant: 1000;
+			
+			nbrImpNeighbors.put(i, nbrImportant);
+			
+			//System.out.println("cutting vertex for sentence " + i + " is " + vertexCut);
+			//System.out.println("sim sum for sentence " + i + " is " + simSum);
+			if (simSum >= vertexCut) candidates.add(i);
 
 		}
 
@@ -202,12 +245,17 @@ public abstract class SSFScoreHandler implements ScoreHandler {
 			relatives.put(i, simSentIDs);
 
 			List<String> otherWords = new ArrayList<>();
+			
+			double edgeCut = thSimilarity/(double) nbrImpNeighbors.get(i);
+			
+			//System.out.println("cutting edge for sentence " + i + " is " + edgeCut);
 
 			for(int j: candidates){
 				if (i == j) continue;
+				//compare with all other sentences
 				otherWords.addAll(sentWords.get(j));
-
-				if (data.getSimilarity(i, j) > thSimilarity){
+				if (data.getSimilarity(i, j) >= edgeCut){
+					//System.out.println("edge( " + i + ", " + j + ")");
 					simSentIDs.add(j);
 				}
 
@@ -220,6 +268,25 @@ public abstract class SSFScoreHandler implements ScoreHandler {
 
 
 	}
+	
+	public void calculateTF(){
+		tfu = new HashMap<>();
+		List<List<String>> sentWords = data.getSentWords();
+		for (int unitID : candidates){
+			HashSet<String> foundWords = new HashSet<>();
+			for (String word : sentWords.get(unitID)) {
+				int value = (tfu.containsKey(word)) ? tfu.get(word) + 1 : 1;
+				tfu.put(word, value);
+				foundWords.add(word);
+			}
+			
+			for (String word : foundWords) {
+				int value = (sfu.containsKey(word)) ? sfu.get(word) + 1 : 1;
+				sfu.put(word, value);
+			}
+		}
+			
+	}
 
 	public double getMinSSF() {
 		return minSSF;
@@ -227,6 +294,27 @@ public abstract class SSFScoreHandler implements ScoreHandler {
 
 	public double getMaxSSF() {
 		return maxSSF;
+	}
+
+	/*
+	public int getScoreRegulator() {
+		return scoreRegulator;
+	}
+
+	public void setScoreRegulator(int scoreRegulator) {
+		this.scoreRegulator = scoreRegulator;
+	}*/
+	
+	public double getSentCandidateSim(int unitID){
+		if (! candidates.contains(unitID))
+			return 0.0;
+		return sentSimDoc.get(unitID);
+	}
+	
+	public int getMostSimilar(int unitID){
+		if (! candidates.contains(unitID))
+			return -1;
+		return simMaxSentID.get(unitID);
 	}
 
 
