@@ -13,10 +13,10 @@ import org.junit.Test;
 import kariminf.as.process.ssfgc.SSFScoreHandler;
 import kariminf.as.tools.Data;
 
-public class SLPScoreHandlerTest  {
+public class SSFScoreHandlerTest  {
 	
-	private static class TstSLP extends SSFScoreHandler {
-		public TstSLP(Data data, double thSimilarity) {
+	private static class TstSSF extends SSFScoreHandler {
+		public TstSSF(Data data, double thSimilarity) {
 			super(data, thSimilarity);
 		}
 		
@@ -58,14 +58,14 @@ public class SLPScoreHandlerTest  {
 	@Test
 	public void setThresholdSimilarityTest() {
 		double threshold = 0.25;
-		SSFScoreHandler slpSH = new TstSLP(data, threshold);
-		assertEquals(threshold, slpSH.getThresholdSimilarity(), 0.0001);
+		SSFScoreHandler ssfSH = new TstSSF(data, threshold);
+		assertEquals(threshold, ssfSH.getThresholdSimilarity(), 0.0001);
 	}
 	
 	@Test
 	public void calculateSimilarityTest(){
 		
-		SSFScoreHandler slpSH = new TstSLP(data, 0.0);
+		SSFScoreHandler ssfSH = new TstSSF(data, 0.0);
 		
 		HashMap<Integer, Integer> _simSentID =  new HashMap<>();
 		
@@ -74,7 +74,8 @@ public class SLPScoreHandlerTest  {
 		_simSentID.put(2, 3);
 		_simSentID.put(3, 0);
 		
-		assertEquals(_simSentID, slpSH.simMaxSentID);
+		
+		assertEquals(_simSentID, ssfSH.getSimMaxSentID());
 		
 		double[] _sentSimDoc = new double[]{
 				0.580947,
@@ -84,71 +85,75 @@ public class SLPScoreHandlerTest  {
 		};
 		
 		assertArrayEquals(_sentSimDoc, 
-				slpSH.sentSimDoc.stream().mapToDouble(Double::doubleValue).toArray(), 0.0001);
+				ssfSH.getSentSimDoc().stream().mapToDouble(Double::doubleValue).toArray(), 0.0001);
 		
 		
 		//assertEquals(_sentSimDoc, slpSH.sentSimDoc);
 		
-		slpSH.setThresholdSimilarity(0.4);
+		ssfSH.setThresholdSimilarity(0.4);
 		
 		_simSentID = new HashMap<>();
 		_simSentID.put(0, 1);
 		_simSentID.put(1, 0);
 		_simSentID.put(3, 0);
+		//Not a candidate sentence, but its max is calculated anyway
+		_simSentID.put(2, 3);
 		
-		assertEquals(_simSentID, slpSH.simMaxSentID);
+		assertEquals(_simSentID, ssfSH.getSimMaxSentID());
 		
 		_sentSimDoc = new double[]{
-				0.682288,
-				0.473049,
-				0.0,
-				0.388888
+				0.6154574548966636,
+				0.6154574548966636,
+				0.0, //Not a candidate sentence
+				0.0 //Not a candidate sentence
 		};
 		
-		//System.out.println(slpSH.sentSimDoc);
+		//System.out.println(ssfSH.getSentSimDoc());
 		
 		assertArrayEquals(_sentSimDoc, 
-				slpSH.sentSimDoc.stream().mapToDouble(Double::doubleValue).toArray(), 0.0001);
+				ssfSH.getSentSimDoc().stream().mapToDouble(Double::doubleValue).toArray(), 0.0001);
 		
 	}
 	
 	
 	@Test
 	public void getSLPScoreTest(){
-		SSFScoreHandler slpSH = new TstSLP(data, 0.0);
+		SSFScoreHandler ssfSH = new TstSSF(data, 0.0);
 		
 		double[] _expectedScores = new double[]{
-				0.555467,
-				1.012262,
-				-1.691285,
-				9.500543
+				0.31154,
+				0.10791,
+				0.09986,
+				0.41597
 		};
+		
+		
+		
 		
 		double[] _realScores = new double[data.getSentNumber()];
 		
 		
+		ssfSH.calculateSSFScores();
+		
 		for (int unitID = 0; unitID < data.getSentNumber(); unitID++){
-			_realScores[unitID] = slpSH.getSLPScore(unitID);
-			//System.out.println("sim= " + slpSH.sentSimDoc.get(unitID));
-			//System.out.println("score= " + _realScores[unitID]);
-			
+			_realScores[unitID] = ssfSH.getSSFScore(unitID);
 		}
 		
 		assertArrayEquals(_expectedScores, _realScores, 0.0001);
 		
 		
 		_expectedScores = new double[]{
-				0.716259,
-				1.043105,
-				Double.NEGATIVE_INFINITY,
-				9.364491
+				0.36286,
+				0.27460,
+				Double.NEGATIVE_INFINITY, //not candidate
+				Double.NEGATIVE_INFINITY, //not candidate
 		};
 		
-		slpSH.setThresholdSimilarity(0.4);
+		ssfSH.setThresholdSimilarity(0.4);
+		ssfSH.calculateSSFScores();
 		for (int unitID = 0; unitID < data.getSentNumber(); unitID++){
-			_realScores[unitID] = slpSH.getSLPScore(unitID);
-			//System.out.println("sim= " + slpSH.sentSimDoc.get(unitID));
-			System.out.println("score= " + _realScores[unitID]);
+			_realScores[unitID] = ssfSH.getSSFScore(unitID);
+			System.out.println("ssf" + ssfSH.getSSFScore(unitID));
 			
 		}
 		

@@ -13,6 +13,13 @@ public abstract class SSFScoreHandler implements ScoreHandler {
 
 	private double thSimilarity = 0.0;
 
+	/**
+	 * @return the thSimilarity
+	 */
+	public double getThSimilarity() {
+		return thSimilarity;
+	}
+
 	protected Data data;
 
 	protected List<Integer> candidates = new ArrayList<>();
@@ -59,10 +66,6 @@ public abstract class SSFScoreHandler implements ScoreHandler {
 		this.isPosNorm = isPosNorm;
 		this.isSizeNorm = isSizeNorm;
 		return this;
-	}
-
-	public double getThresholdSimilarity(){
-		return thSimilarity;
 	}
 
 	public HashMap<Integer, List<Integer>> getRelatives(){
@@ -316,6 +319,30 @@ public abstract class SSFScoreHandler implements ScoreHandler {
 			return -1;
 		return simMaxSentID.get(unitID);
 	}
+	
+	//=============================================================
+	// These getters are usually used in the test 
+	// The variables are treated internally 
+	// The returned lists, etc. are clones and not the actual ones
+	//=============================================================
+	
+	public double getThresholdSimilarity(){
+		return thSimilarity;
+	}
+	
+	public List<Double> getSentSimDoc(){
+		List<Double> result = new ArrayList<>();
+		result.addAll(sentSimDoc);
+		return result;
+	}
+	
+	public HashMap<Integer, Integer> getSimMaxSentID(){
+		HashMap<Integer, Integer> result = new HashMap<>();
+		for (Integer k: simMaxSentID.keySet())
+			result.put(k, simMaxSentID.get(k));
+		return result;
+	}
+	
 
 
 }
