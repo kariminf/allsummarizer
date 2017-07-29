@@ -28,7 +28,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 // Release version
-version = '1.1.1'
+version = '3.0.1'
 
 ext.current_Date = getDate()
 
@@ -68,10 +68,10 @@ dependencies {
     // The production code uses the SLF4J logging API at compile time
     compile 'org.slf4j:slf4j-api:1.7.21'
     
-    //compile project(':KToolJa')
-    compile 'com.github.kariminf:KToolJa:1.1.0'
-    compile project(':LangPi')
-    //compile 'com.github.kariminf:LangPi:1.1.1'
+    //compile project(':k-toolja')
+    compile 'com.github.kariminf:k-toolja:1.1.0'
+    compile project(':langpi')
+    //compile 'com.github.kariminf:langpi:1.1.5'
 
     testCompile 'junit:junit:4.12'
     

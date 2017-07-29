@@ -18,10 +18,10 @@
  */
 
 
-rootProject.name = 'AllSummarizer'
+rootProject.name = 'allsummarizer'
 
-include ':KToolJa'
-project(':KToolJa').projectDir = new File(settingsDir, '../KToolJa')
+include ':k-toolja'
+project(':k-toolja').projectDir = new File(settingsDir, '../k-toolja')
 
-include ':LangPi'
-project(':LangPi').projectDir = new File(settingsDir, '../LangPi')
+include ':langpi'
+project(':langpi').projectDir = new File(settingsDir, '../langpi')
