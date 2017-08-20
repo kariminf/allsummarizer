@@ -60,6 +60,10 @@ public class Scorer {
 		return true;
 	}
 	
+	public Data getData(){
+		return data;
+	}
+	
 	
 	public ScoreHandler getScoreHandler(){
 		return scoreHandler;
