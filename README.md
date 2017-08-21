@@ -1,9 +1,10 @@
 # AllSummarizer
 
-[![Project](https://img.shields.io/badge/Project-AllSummarizer-4B0082.svg)](https://github.com/kariminf/AllSummarizer)
+[![Project](https://img.shields.io/badge/Project-AllSummarizer-4B0082.svg)](https://kariminf.github.io/as.web)
 [![Type](https://img.shields.io/badge/Type-Research-4B0082.svg)](https://github.com/kariminf/AllSummarizer)
-[![Version](https://img.shields.io/badge/Version-3.0.0-4B0082.svg)](https://github.com/kariminf/AllSummarizer/releases)
-[![License](https://img.shields.io/badge/License-Apache_2-4B0082.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+[![License](https://img.shields.io/github/license/kariminf/jslingua.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+[![GitHub release](https://img.shields.io/github/release/kariminf/allsummarizer.svg)](https://github.com/kariminf/AllSummarizer/releases)
+[![Github All Releases](https://img.shields.io/github/downloads/kariminf/allsummarizer/total.svg)](https://github.com/kariminf/AllSummarizer/releases)
 <!---
 [![Travis](https://img.shields.io/travis/kariminf/AllSummarizer.svg)](https://travis-ci.org/kariminf/AllSummarizer)
 [![codecov](https://img.shields.io/codecov/c/github/kariminf/AllSummarizer.svg)](https://codecov.io/gh/kariminf/AllSummarizer)
@@ -13,6 +14,8 @@
 A research project implementation for automatic text summarization.
 AllSummarizer uses an extractive method to generate the summary ;
 Each sentence is scored based on some criteria, reordered, then if it scores among the first ones it will be included in the summary.
+
+For more documentation [check this]((https://kariminf.github.io/as.web))
 
 You can find more about the method in the paper:
 ```TeX
@@ -46,16 +49,13 @@ Also, the participation of the system at [MultiLing 2015](http://multiling.iit.d
 }
 ```
 
-## How it works?
-TODO: add a brief description since there is a link to the paper
-
 ## Dependencies:
 This project is dependent to other projects:
-* [KToolJa](https://github.com/kariminf/KToolJa): for file management and plugins
-* [LangPi](https://github.com/kariminf/LangPi): for text preprocessing; which depends on other libraries
+* [KToolJa](https://github.com/kariminf/k-toolja): for file management and plugins
+* [LangPi](https://github.com/kariminf/langpi): for text preprocessing; which depends on other libraries
 
 Preprocessing plugins are in the folder: "preProcess".
-For Hebrew and Tai preprocessing tools, check [LangPi releases](https://github.com/kariminf/LangPi/releases/tag/v1.0.0).
+For Hebrew and Tai preprocessing tools, check [LangPi releases](https://github.com/kariminf/langpi/releases/tag/v1.0.0).
 Those two plugins are not Apache2 licensed.
 
 ## Command line usage
@@ -64,13 +64,11 @@ To execute from command line:
 * Class: java kariminf.as.ui.MonoDoc options
 
 ### input/output options:
-
 * -i <input_file>: it must be a file or a folder if it is multidocument or variant inputs
 * -o <output_file>: it must be a file or a folder if it is multidocument or there is multiple output lengths, feature combinations or thresholds
 * -v: variant inputs; a folder that contains files or folders to be summarized.
 
 ### summary options:
-
 sumary unit:
 * -b: we use Bytes to specify the summary size.
 * -c: we use characters to specify the summary size.
@@ -83,7 +81,6 @@ sumary length:
 you can specify more than one length, by separating the lengths with semicolons
 
 ### summarizer options:
-
 * -f <features>: the features used to score the sentences.
 the features are separated by commas; for example: tfu,pos
 for multiple combinations, we use semicolons; for example: tfu,pos;tfb,len
