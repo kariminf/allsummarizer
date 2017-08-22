@@ -54,15 +54,15 @@ public abstract class SSFScoreHandler implements ScoreHandler {
 	
 	public void setData(Data data){
 		this.data = data;
-	}
-
-	public SSFScoreHandler setThresholdSimilarity(double thSimilarity){
-		this.thSimilarity = thSimilarity;
 		calculateSimilarity();
 		calculateTF();
 		//calculateSSFScores();
 		//System.out.println("candidates=" + candidates);
 		//System.out.println("nbr sentences=" + data.getSentWords().size());
+	}
+
+	public SSFScoreHandler setThresholdSimilarity(double thSimilarity){
+		this.thSimilarity = thSimilarity;
 		return this;
 	}
 	
