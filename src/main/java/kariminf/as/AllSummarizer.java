@@ -76,8 +76,9 @@ public class AllSummarizer {
 		
 		if (preProcessors.isEmpty()) return false;
 		
+		
 		for(PreProcessor preProcessor: preProcessors){
-			preProcessor.preProcess(text);
+			preProcessor.preProcess();
 		}
 		
 		for(Scorer scorer: scorers){

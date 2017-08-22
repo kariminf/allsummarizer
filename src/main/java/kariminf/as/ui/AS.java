@@ -35,7 +35,7 @@ import kariminf.as.confs.multiling.MMS;
 import kariminf.as.preProcess.DynamicPreProcessor;
 import kariminf.as.process.Scorer;
 import kariminf.as.process.tcc.BayesScoreHandler;
-import kariminf.as.process.tcc.Cluster;
+import kariminf.as.process.tcc.Clusterer;
 import kariminf.as.process.tcc.Feature;
 import kariminf.as.process.tcc.NaiveCluster;
 import kariminf.as.process.tcc.PLeng;
@@ -456,16 +456,12 @@ public class AS {
 			
 			//loop over different thresholds
 			for(double th: ths){
-				//Clustering
-				{
-					Cluster cluster = new NaiveCluster(th, data);
-					cluster.createClasses();
-				}
+
 				
 				//Loop over feature combinations
 				for(ArrayList<Feature> fs: featuresSets){
 					
-					BayesScoreHandler bc = new BayesScoreHandler();
+					BayesScoreHandler bc = new BayesScoreHandler(new NaiveCluster(th));
 					//add the feature combination
 					String featused = "";
 					for (Feature f: fs){

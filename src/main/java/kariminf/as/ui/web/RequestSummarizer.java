@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import kariminf.as.preProcess.StaticPreProcessor;
 import kariminf.as.process.Scorer;
 import kariminf.as.process.tcc.BayesScoreHandler;
-import kariminf.as.process.tcc.Cluster;
+import kariminf.as.process.tcc.Clusterer;
 import kariminf.as.process.tcc.NaiveCluster;
 import kariminf.as.process.tcc.PLeng;
 import kariminf.as.process.tcc.Pos;
@@ -127,11 +127,6 @@ public class RequestSummarizer extends HttpServlet {
 			throw new IOException("The text" + data.getSentences());
 		*/
 		
-		// Processing: Clustering
-		{
-			Cluster cluster = new NaiveCluster(th, data);
-			cluster.createClasses();
-		}
 		
 		/*
 		 if (data != null)
@@ -140,7 +135,7 @@ public class RequestSummarizer extends HttpServlet {
 		
 		// Processing: Notation & Ordering
 		{
-			BayesScoreHandler bc = new BayesScoreHandler();
+			BayesScoreHandler bc = new BayesScoreHandler(new NaiveCluster(th));
 			Scorer scorer = Scorer.create(bc);
 			addfeatures(bc, featNames);
 			scorer.setData(data);

@@ -1,12 +1,10 @@
 package kariminf.as.process.ssfgc;
 
-import kariminf.as.tools.Data;
-
 public class GC0ScoreHandler extends SSFScoreHandler {
 	
 	
-	public GC0ScoreHandler(Data data, double thSimilarity) {
-		super(data, thSimilarity);
+	public GC0ScoreHandler(double thSimilarity) {
+		super(thSimilarity);
 	}
 
 	@Override

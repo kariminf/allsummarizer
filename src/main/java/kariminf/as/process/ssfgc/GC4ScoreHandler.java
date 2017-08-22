@@ -8,8 +8,8 @@ public class GC4ScoreHandler extends SSFScoreHandler {
 	
 	private int a;
 	
-	public GC4ScoreHandler(Data data, double thSimilarity, boolean keepMyScore){
-		super(data, thSimilarity);
+	public GC4ScoreHandler(double thSimilarity, boolean keepMyScore){
+		super(thSimilarity);
 		a = (keepMyScore)? 1: 0;
 	}
 

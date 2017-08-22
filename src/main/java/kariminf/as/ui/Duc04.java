@@ -27,7 +27,7 @@ import java.util.List;
 import kariminf.as.preProcess.DynamicPreProcessor;
 import kariminf.as.process.Scorer;
 import kariminf.as.process.tcc.BayesScoreHandler;
-import kariminf.as.process.tcc.Cluster;
+import kariminf.as.process.tcc.Clusterer;
 import kariminf.as.process.tcc.Feature;
 import kariminf.as.process.tcc.NaiveCluster;
 import kariminf.as.process.tcc.PLeng;
@@ -101,19 +101,20 @@ public class Duc04 {
 			
 			for(int th = 0; th <= 25; th++){
 				
-				{
-					double Threshold = (double) th / 100;
-					System.out.println("threshold: " + Threshold);
-					Cluster cluster = new NaiveCluster(Threshold, data);
-					cluster.createClasses();
-				}
+				
+				double Threshold = (double) th / 100;
+				System.out.println("threshold: " + Threshold);
+				Clusterer cluster = new NaiveCluster(Threshold);
+				cluster.setData(data);
+				cluster.createClasses();
+				
 				
 				for (int combNbr=1; combNbr <= features.length; combNbr++){
 					List<List<Integer>> comb = 
 							Calculus.getCombinations(features.length, combNbr);
 					
 					for (List<Integer> oneComb : comb){
-						BayesScoreHandler bc = new BayesScoreHandler();
+						BayesScoreHandler bc = new BayesScoreHandler(cluster);
 						String combStr = "";
 						for (int index: oneComb){
 							bc.addFeature(features[index]);

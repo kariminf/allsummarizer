@@ -40,17 +40,18 @@ import kariminf.as.tools.Data;
  * @author Abdelkrime Aries
  * 
  */
-public class NaiveCluster extends Cluster {
+public class NaiveCluster extends Clusterer {
 
 	private Double Threshold = -1.0;
 
-	public NaiveCluster(Double threshold, Data data) {
-		super(data);
+	public NaiveCluster(Double threshold) {
 		Threshold = threshold;
 	}
 
 	@Override
 	public void createClasses() {
+		
+		if(clustered) return;
 
 		List<List<String>> sentWords = data.getSentWords();
 
@@ -105,6 +106,8 @@ public class NaiveCluster extends Cluster {
 		}
 
 		data.setClasses(classes);
+		
+		clustered = true;
 
 	}
 

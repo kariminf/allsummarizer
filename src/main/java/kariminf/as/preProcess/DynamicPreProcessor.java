@@ -52,9 +52,6 @@ public class DynamicPreProcessor extends PreProcessor{
 
 	//The location of the preprocessing plugins
 	private String location = "preProcess/";
-	
-	// In multi-document summarization, we have many texts
-	private List<String> texts = new ArrayList<String>();
 
 
 	//Different preprocessing tasks
@@ -127,21 +124,6 @@ public class DynamicPreProcessor extends PreProcessor{
 
 	}
 
-	/**
-	 * Clears the texts in multi-document preprocessing
-	 */
-	public void clearText(){
-		texts.clear();
-	}
-
-	/**
-	 * Adds a text to the texts to be preprocessed
-	 * 
-	 * @param text the text to add
-	 */
-	public void addText(String text){
-		texts.add(text);	
-	}
 
 	/**
 	 * Preprocess all the entered texts using the method 

@@ -65,7 +65,8 @@ public class GCExample {
 		
 		//SSFScoreHandler ssh = new GC4ScoreHandler(data, Calculus.mean(sim), true);
 		double th = Calculus.mean(sim);
-		SSFScoreHandler ssh = new GC1ScoreHandler(data, th);
+		SSFScoreHandler ssh = new GC1ScoreHandler(th);
+		ssh.setData(data);
 		
 		//ssh.setNormalization(false, false);
 		ssh.calculateSSFScores();

@@ -6,8 +6,8 @@ import kariminf.as.tools.Data;
 
 public class GC3ScoreHandler extends SSFScoreHandler {
 	
-	public GC3ScoreHandler(Data data, double thSimilarity) {
-		super(data, thSimilarity);
+	public GC3ScoreHandler(double thSimilarity) {
+		super(thSimilarity);
 	}
 	
 

@@ -48,11 +48,23 @@ public class BayesScoreHandler implements ScoreHandler{
 	
 	private boolean normalized = false;
 	
+	private Clusterer clusterer;
+	
 	private Data data;
 	
+	public BayesScoreHandler (Clusterer clusterer){
+		this.clusterer = clusterer;
+	}
 	
-	public static BayesScoreHandler create(){
-		return new BayesScoreHandler();
+	public void setData(Data data){
+		this.data = data;
+		clusterer.setData(data);
+		clusterer.createClasses();
+	}
+	
+	
+	public static BayesScoreHandler create(Clusterer clusterer){
+		return new BayesScoreHandler(clusterer);
 	}
 	
 	/**
@@ -161,14 +173,12 @@ public class BayesScoreHandler implements ScoreHandler{
 	 * 
 	 * @param data data container
 	 */
-	public void train(Data data)
+	public void train()
 	{
 		for (Feature feature: features){
 			String trainParam = feature.getTrainParam();
 			feature.train(data.makeTrainParams(trainParam));
 		}
-		
-		this.data = data;
 	}
 
 }

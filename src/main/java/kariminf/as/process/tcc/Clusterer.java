@@ -29,17 +29,15 @@ import kariminf.as.tools.Data;
  * @author Abdelkrime Aries
  *
  */
-public abstract class Cluster {
+public abstract class Clusterer {
 	
 	protected Data data;
 	
-	/**
-	 * Constructor of the class. We have to afford preprocessed data 
-	 * (See {@link DynamicPreProcessor}).
-	 * 
-	 * @param data data container
-	 */
-	public Cluster(Data data){
+	protected boolean clustered = false;
+	
+	
+	public void setData(Data data){
+		if(this.data != data) clustered = false;
 		this.data = data;
 	}
 	

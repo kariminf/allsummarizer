@@ -8,8 +8,8 @@ import kariminf.as.tools.Data;
 public class GC2ScoreHandler extends SSFScoreHandler {
 	
 	
-	public GC2ScoreHandler(Data data, double thSimilarity) {
-		super(data, thSimilarity);
+	public GC2ScoreHandler(double thSimilarity) {
+		super(thSimilarity);
 	}
 
 	/*

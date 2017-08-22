@@ -57,6 +57,7 @@ public class Scorer {
 		orderNumSent = new ArrayList<Integer>();
 		scores = new HashMap<Integer,Double>();
 		this.data = data;
+		scoreHandler.setData(data);
 		return true;
 	}
 	

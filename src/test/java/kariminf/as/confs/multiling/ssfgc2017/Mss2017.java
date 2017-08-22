@@ -108,7 +108,8 @@ public class Mss2017 {
 
 	public void preprocess(File file){
 		String text = readFile(file);
-		preprocessor.preProcess(text);
+		preprocessor.addText(text);
+		preprocessor.preProcess();
 	}
 
 	public List<Double> getSimilarity(){
@@ -152,24 +153,25 @@ public class Mss2017 {
 		
 		switch (typenum) {
 		case 1:
-			ssh = new GC1ScoreHandler(data, thSimilarity);
+			ssh = new GC1ScoreHandler(thSimilarity);
 			break;
 		case 2:
-			ssh = new GC2ScoreHandler(data, thSimilarity);
+			ssh = new GC2ScoreHandler(thSimilarity);
 			break;
 		case 3:
-			ssh = new GC3ScoreHandler(data, thSimilarity);
+			ssh = new GC3ScoreHandler(thSimilarity);
 			break;
 		case 4:
-			ssh = new GC4ScoreHandler(data, thSimilarity, false);
+			ssh = new GC4ScoreHandler(thSimilarity, false);
 			break;
 		case 5:
-			ssh = new GC4ScoreHandler(data, thSimilarity, true);
+			ssh = new GC4ScoreHandler(thSimilarity, true);
 			break;
 		default:
-			ssh = new GC0ScoreHandler(data, thSimilarity);
+			ssh = new GC0ScoreHandler(thSimilarity);
 		}
 		
+		ssh.setData(data);
 		//ssh.setNormalization(true, true);
 		ssh.calculateSSFScores();
 		//ssh.converge();

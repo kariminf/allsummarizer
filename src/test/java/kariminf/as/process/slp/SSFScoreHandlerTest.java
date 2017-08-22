@@ -17,7 +17,8 @@ public class SSFScoreHandlerTest  {
 	
 	private static class TstSSF extends SSFScoreHandler {
 		public TstSSF(Data data, double thSimilarity) {
-			super(data, thSimilarity);
+			super(thSimilarity);
+			this.setData(data);
 		}
 		
 		@Override

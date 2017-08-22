@@ -26,7 +26,7 @@ import java.util.List;
 import kariminf.as.preProcess.DynamicPreProcessor;
 import kariminf.as.process.Scorer;
 import kariminf.as.process.tcc.BayesScoreHandler;
-import kariminf.as.process.tcc.Cluster;
+import kariminf.as.process.tcc.Clusterer;
 import kariminf.as.process.tcc.Feature;
 import kariminf.as.process.tcc.NaiveCluster;
 import kariminf.as.process.tcc.PLeng;
@@ -111,18 +111,19 @@ public class Cmplg {
 			String info = "";
 			for(int th = 0; th < 6; th++){
 
-				{
-					System.out.println(th_name[th] + ": " + th_value[th]);
-					Cluster cluster = new NaiveCluster(th_value[th], data);
-					cluster.createClasses();
-				}
+				
+				System.out.println(th_name[th] + ": " + th_value[th]);
+				Clusterer cluster = new NaiveCluster(th_value[th]);
+				cluster.setData(data);
+				cluster.createClasses();
+				
 
 				info += th_name[th] + ": " + th_value[th] + "\n";
 
 				for (List<Integer> oneComb : comb){
 					
 					combStr = peerfolder + filename + "/";
-					BayesScoreHandler bc = new BayesScoreHandler();
+					BayesScoreHandler bc = new BayesScoreHandler(cluster);
 					String featused = "";
 					for (int index: oneComb){
 						bc.addFeature(features[index]);

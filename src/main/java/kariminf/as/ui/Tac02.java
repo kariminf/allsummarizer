@@ -27,7 +27,7 @@ import java.util.List;
 import kariminf.as.preProcess.DynamicPreProcessor;
 import kariminf.as.process.Scorer;
 import kariminf.as.process.tcc.BayesScoreHandler;
-import kariminf.as.process.tcc.Cluster;
+import kariminf.as.process.tcc.Clusterer;
 import kariminf.as.process.tcc.NaiveCluster;
 import kariminf.as.process.tcc.Pos;
 import kariminf.as.process.tcc.RLeng;
@@ -168,12 +168,8 @@ public class Tac02 {
 			
 			
 			pre.preProcess(); //Here data is filled with sentences and their features
-
-			Cluster cluster = new NaiveCluster(Threshold, data);
 			
-			cluster.createClasses();
-			
-			BayesScoreHandler bc = new BayesScoreHandler();
+			BayesScoreHandler bc = new BayesScoreHandler(new NaiveCluster(Threshold));
 			bc.addFeature(new TFB());
 			bc.addFeature(new RLeng());
 			bc.addFeature(new Pos());

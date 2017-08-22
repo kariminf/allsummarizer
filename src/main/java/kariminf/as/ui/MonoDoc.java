@@ -24,7 +24,7 @@ import java.util.List;
 import kariminf.as.preProcess.DynamicPreProcessor;
 import kariminf.as.process.Scorer;
 import kariminf.as.process.tcc.BayesScoreHandler;
-import kariminf.as.process.tcc.Cluster;
+import kariminf.as.process.tcc.Clusterer;
 import kariminf.as.process.tcc.NaiveCluster;
 import kariminf.as.process.tcc.PLeng;
 import kariminf.as.process.tcc.Pos;
@@ -57,15 +57,9 @@ public class MonoDoc {
 			preprocess.preProcess(text);
 		}
 		
-		// Processing: Clustering
-		{
-			Cluster cluster = new NaiveCluster(Threshold, data);
-			cluster.createClasses();
-		}
-		
 		// Processing: Notation & Ordering
 		{
-			BayesScoreHandler bc = new BayesScoreHandler();
+			BayesScoreHandler bc = new BayesScoreHandler(new NaiveCluster(Threshold));
 			//bc.addFeature(new TFU());
 			bc.addFeature(new TFB());
 			//bc.addFeature(new RLeng());

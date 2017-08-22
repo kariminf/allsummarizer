@@ -47,9 +47,13 @@ public abstract class SSFScoreHandler implements ScoreHandler {
 	
 	//private int scoreRegulator = 1000;
 
-	public SSFScoreHandler(Data data, double thSimilarity){
-		this.data = data;
+	public SSFScoreHandler(double thSimilarity){
+		
 		setThresholdSimilarity(thSimilarity);
+	}
+	
+	public void setData(Data data){
+		this.data = data;
 	}
 
 	public SSFScoreHandler setThresholdSimilarity(double thSimilarity){

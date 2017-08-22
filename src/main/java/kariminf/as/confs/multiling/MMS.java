@@ -31,7 +31,7 @@ import kariminf.as.preProcess.DynamicPreProcessor;
 import kariminf.as.preProcess.StaticPreProcessor;
 import kariminf.as.process.Scorer;
 import kariminf.as.process.tcc.BayesScoreHandler;
-import kariminf.as.process.tcc.Cluster;
+import kariminf.as.process.tcc.Clusterer;
 import kariminf.as.process.tcc.Feature;
 import kariminf.as.process.tcc.NaiveCluster;
 import kariminf.as.process.tcc.PLeng;
@@ -49,7 +49,7 @@ public class MMS {
 	private String lang = "en";
 	
 	private Data data;
-	private boolean clustered = false;
+	private Clusterer clusterer;
 	private StaticPreProcessor preprocessor;
 	private final static int summarySize = 250; //words
 	private final static int zhSummarySize = 750; //bytes
@@ -57,7 +57,7 @@ public class MMS {
 	
 	public MMS (String lang){
 		this.lang = (lang.length()==2)?lang:"en";
-		clustered = false;
+		clusterer = null;
 		data = new Data();
 		preprocessor = new StaticPreProcessor(this.lang);
 		preprocessor.setData(data);
@@ -71,13 +71,11 @@ public class MMS {
 	
 	public void preprocess(){
 		preprocessor.preProcess();
-		clustered = false;
+		clusterer = null;
 	}
 	
 	public void cluster(double threshold){
-		Cluster cluster = new NaiveCluster(threshold, data);
-		cluster.createClasses();
-		clustered = true;
+		clusterer = new NaiveCluster(threshold);
 		//System.out.println("#sent=" + data.getSentNumber());
 	}
 	
@@ -94,9 +92,9 @@ public class MMS {
 	public String summarize (double simTH) throws Exception{
 		
 		if(features.size() <1 ) throw new Exception("add at least one feature");
-		if (! clustered ) throw new Exception("Use cluster before summarize");
+		if (clusterer == null ) throw new Exception("Use cluster before summarize");
 		
-		BayesScoreHandler bc = new BayesScoreHandler();
+		BayesScoreHandler bc = new BayesScoreHandler(clusterer);
 		Scorer scorer = Scorer.create(bc);
 		
 		for (Feature feature: features)
