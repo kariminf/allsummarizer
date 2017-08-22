@@ -400,7 +400,8 @@ public class AS {
 		ArrayList<ArrayList<Feature>> featuresSets = getFeatures();
 		
 		Data data = new Data();
-		DynamicPreProcessor preprocessor = new DynamicPreProcessor(language, data);
+		DynamicPreProcessor preprocessor = new DynamicPreProcessor(language);
+		preprocessor.setData(data);
 		
 		//The output is always a folder
 		FileManager.createFolder(new File(outputDocURL));

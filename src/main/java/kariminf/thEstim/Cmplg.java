@@ -75,7 +75,8 @@ public class Cmplg {
 
 			Data data = new Data();
 			{
-				DynamicPreProcessor preprocess = new DynamicPreProcessor("en", data);
+				DynamicPreProcessor preprocess = new DynamicPreProcessor("en");
+				preprocess.setData(data);
 				String text = FileManager.readFile(file);
 				preprocess.preProcess(text);
 			}

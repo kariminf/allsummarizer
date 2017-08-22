@@ -16,13 +16,15 @@
  * limitations under the License.
  */
 
-package kariminf.as.postProcess;
+package kariminf.as.postProcess.extraction;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import kariminf.as.postProcess.PostProcessor;
+import kariminf.as.process.Scorer;
 import kariminf.as.tools.Tools;
 
 
@@ -35,8 +37,29 @@ import kariminf.as.tools.Tools;
  * @author Abdelkrime Aries
  *
  */
-public class Extractor {
-
+public abstract class Extractor extends PostProcessor {
+	
+	protected Scorer scorer;
+	
+	protected List<Integer> order = new ArrayList<>();
+	
+	protected Extractor(Scorer scorer){
+		this.scorer = scorer;
+	}
+	
+	@Override
+	public void postProcess() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
+	public List<Integer> getOrder() {
+		return order;
+	}
+	
+	public abstract void reOrder();
+	
 	/**
 	 * Reorders sentences based on a certain relationship between them.
 	 * 

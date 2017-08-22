@@ -66,7 +66,8 @@ public class Duc04 {
 			
 			Data data = new Data();
 			{
-				DynamicPreProcessor preprocess = new DynamicPreProcessor("en", data);
+				DynamicPreProcessor preprocess = new DynamicPreProcessor("en");
+				preprocess.setData(data);
 				File [] files  = topic.listFiles();
 				for (File file: files){
 					String text = openFile(file.getAbsolutePath());

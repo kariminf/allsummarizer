@@ -4,21 +4,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import kariminf.as.postProcess.ReOrderer;
 import kariminf.as.process.Scorer;
 import kariminf.as.process.ssfgc.SSFScoreHandler;
 import kariminf.as.tools.Data;
 import kariminf.as.tools.Tools;
 
-public class ReOrderer3 implements ReOrderer {
-
-	private Scorer scorer;
-	private List<Integer> order = new ArrayList<>();
+public class SimNeighborReOrderer extends Extractor {
 	
 	HashMap<Integer, List<Integer>> relatives;
 	
-	public ReOrderer3(Scorer scorer){
-		this.scorer = scorer;
+	public SimNeighborReOrderer(Scorer scorer){
+		super(scorer);
 		if (scorer.getScoreHandler() instanceof SSFScoreHandler){
 			relatives = ((SSFScoreHandler)scorer.getScoreHandler()).getRelatives();
 		}
@@ -84,11 +80,6 @@ public class ReOrderer3 implements ReOrderer {
 			order.add(index);
 		}
 		
-	}
-
-	@Override
-	public List<Integer> getOrder() {
-		return order;
 	}
 
 }

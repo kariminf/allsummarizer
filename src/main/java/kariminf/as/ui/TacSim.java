@@ -88,7 +88,8 @@ public class TacSim {
 			result += lang + "\n";
 
 			Data data = new Data();
-			DynamicPreProcessor pre = new DynamicPreProcessor(accro, data);
+			DynamicPreProcessor pre = new DynamicPreProcessor(accro);
+			pre.setData(data);
 
 			result += ",,,with 0,,,,,,,, no 0\n";
 			result += "topic,#sent,,mean,median1,median2,Hmode,Lmode,var,skewness,,";

@@ -3,21 +3,17 @@ package kariminf.as.postProcess.extraction;
 import java.util.ArrayList;
 import java.util.List;
 
-import kariminf.as.postProcess.ReOrderer;
 import kariminf.as.process.Scorer;
 import kariminf.as.process.ssfgc.SSFScoreHandler;
 import kariminf.as.tools.Data;
 import kariminf.as.tools.Tools;
 
-public class ReOrderer1 implements ReOrderer {
-
-	private Scorer scorer;
-	private List<Integer> order = new ArrayList<>();
+public class ThresholdReOrderer extends Extractor {
 	
 	double simTH; 
 	
-	public ReOrderer1(Scorer scorer, double simTH){
-		this.scorer = scorer;
+	public ThresholdReOrderer(Scorer scorer, double simTH){
+		super(scorer);
 		this.simTH = simTH;
 	}
 
@@ -37,11 +33,6 @@ public class ReOrderer1 implements ReOrderer {
 			}
 		}
 		
-	}
-
-	@Override
-	public List<Integer> getOrder() {
-		return order;
 	}
 
 }

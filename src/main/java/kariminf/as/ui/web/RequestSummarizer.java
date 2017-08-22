@@ -117,7 +117,8 @@ public class RequestSummarizer extends HttpServlet {
 		
 		// Pre-Processing
 		{
-			StaticPreProcessor preprocess = new StaticPreProcessor(lang, data);
+			StaticPreProcessor preprocess = new StaticPreProcessor(lang);
+			preprocess.setData(data);
 			preprocess.preProcess(text);
 		}
 		

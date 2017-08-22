@@ -20,10 +20,8 @@ package kariminf.as.process.tcc;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import kariminf.as.preProcess.DynamicPreProcessor;
 import kariminf.as.process.ScoreHandler;
 import kariminf.as.tools.Data;
 

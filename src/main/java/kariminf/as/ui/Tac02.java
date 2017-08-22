@@ -151,7 +151,8 @@ public class Tac02 {
 		String accro = language[count][1];
 		
 		Data data= new Data();
-		DynamicPreProcessor pre = new DynamicPreProcessor(accro, data);
+		DynamicPreProcessor pre = new DynamicPreProcessor(accro);
+		pre.setData(data);
 		
 		for (int i =0; i< 10; i++){ //10 topics
 			

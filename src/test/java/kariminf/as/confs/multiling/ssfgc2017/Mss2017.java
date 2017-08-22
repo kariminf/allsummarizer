@@ -91,7 +91,8 @@ public class Mss2017 {
 	public Mss2017 (String lang){
 		//this.lang = (lang.length()==2)?lang:"en";
 		data = new Data();
-		preprocessor = new StaticPreProcessor(lang, data);
+		preprocessor = new StaticPreProcessor(lang);
+		preprocessor.setData(data);
 	}
 	
 	

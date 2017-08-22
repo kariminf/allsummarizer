@@ -52,7 +52,8 @@ public class MonoDoc {
 		
 		// Pre-Processing
 		{
-			DynamicPreProcessor preprocess = new DynamicPreProcessor("en", data);
+			DynamicPreProcessor preprocess = new DynamicPreProcessor("en");
+			preprocess.setData(data);
 			preprocess.preProcess(text);
 		}
 		

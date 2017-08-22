@@ -7,10 +7,12 @@ public abstract class PreProcessor {
 	protected String lang;
 	protected Data data;
 	
-	public PreProcessor(String lang, Data data){
+	public PreProcessor(String lang){
 		this.lang = lang;
+	}
+	
+	public void setData(Data data){
 		this.data = data;
-		
 	}
 	
 	public Data getData(){

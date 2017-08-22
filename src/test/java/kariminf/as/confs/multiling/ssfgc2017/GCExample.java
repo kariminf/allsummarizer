@@ -2,13 +2,13 @@ package kariminf.as.confs.multiling.ssfgc2017;
 
 import java.util.List;
 
-import kariminf.as.postProcess.ReOrderer;
-import kariminf.as.postProcess.extraction.ReOrderer0;
-import kariminf.as.postProcess.extraction.ReOrderer1;
-import kariminf.as.postProcess.extraction.ReOrderer2;
-import kariminf.as.postProcess.extraction.ReOrderer3;
-import kariminf.as.postProcess.extraction.ReOrderer4;
-import kariminf.as.postProcess.extraction.ReOrderer5;
+import kariminf.as.postProcess.extraction.SimpleReOrderer;
+import kariminf.as.postProcess.extraction.ThresholdReOrderer;
+import kariminf.as.postProcess.extraction.GraphReOrderer;
+import kariminf.as.postProcess.extraction.SimNeighborReOrderer;
+import kariminf.as.postProcess.extraction.DiffNeighborReOrderer;
+import kariminf.as.postProcess.extraction.Extractor;
+import kariminf.as.postProcess.extraction.Neighbors2ReOrderer;
 import kariminf.as.preProcess.StaticPreProcessor;
 import kariminf.as.process.Scorer;
 import kariminf.as.process.ssfgc.GC1ScoreHandler;
@@ -44,7 +44,8 @@ public class GCExample {
 
 		
 		Data data = new Data();
-		StaticPreProcessor preprocessor = new StaticPreProcessor("en", data);
+		StaticPreProcessor preprocessor = new StaticPreProcessor("en");
+		preprocessor.setData(data);
 		preprocessor.preProcess(text);
 		
 		
@@ -72,13 +73,13 @@ public class GCExample {
 		scorer.setData(data);
 		scorer.scoreUnits();
 		
-		ReOrderer reorder;
+		Extractor reorder;
 		//reorder = new ReOrderer0(scorer);
 		//reorder = new ReOrderer1(scorer, th);
 		//reorder = new ReOrderer2(scorer);
 		//reorder = new ReOrderer3(scorer);
 		//reorder = new ReOrderer4(scorer);
-		reorder = new ReOrderer5(scorer);
+		reorder = new Neighbors2ReOrderer(scorer);
 		
 		reorder.reOrder();
 		

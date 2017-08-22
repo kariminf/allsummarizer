@@ -104,7 +104,8 @@ public class PreProcess {
 	public static void main(String[] args) {
 		Data data = new Data();
 		String input = getStringLang(lang);
-		DynamicPreProcessor pp = new DynamicPreProcessor(lang, data);
+		DynamicPreProcessor pp = new DynamicPreProcessor(lang);
+		pp.setData(data);
 		pp.addText(input);
 		pp.preProcess();
 		List<List<String>> l = data.getSentWords();

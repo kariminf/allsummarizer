@@ -71,14 +71,14 @@ public class DynamicPreProcessor extends PreProcessor{
 	 * @param lang the language in ISO 639-1 code, eg. "en", "fr", "ar", etc.
 	 * @param data The data container
 	 */
-	public DynamicPreProcessor(String lang, Data data){
-		super(lang, data);
+	public DynamicPreProcessor(String lang){
+		super(lang);
 		setLanguage(lang);
 		
 	}
 	
-	public DynamicPreProcessor(String lang, Data data, String location){
-		super(lang, data);
+	public DynamicPreProcessor(String lang, String location){
+		super(lang);
 		this.location = location;
 		setLanguage(lang);
 	}

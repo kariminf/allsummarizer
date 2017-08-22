@@ -59,7 +59,8 @@ public class MMS {
 		this.lang = (lang.length()==2)?lang:"en";
 		clustered = false;
 		data = new Data();
-		preprocessor = new StaticPreProcessor(this.lang, this.data);
+		preprocessor = new StaticPreProcessor(this.lang);
+		preprocessor.setData(data);
 		
 	}
 	

@@ -58,6 +58,8 @@ public class Data {
 
 	private HashMap<String, Integer> trainType = new HashMap<String, Integer>();
 	private HashMap<String, Integer> scoreType = new HashMap<String, Integer>();
+	
+	private List<Integer> finalSentences = new ArrayList<>();
 
 	/**
 	 * Creates a new data container

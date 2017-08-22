@@ -1,24 +1,17 @@
 package kariminf.as.postProcess.extraction;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import kariminf.as.postProcess.ReOrderer;
 import kariminf.as.process.Scorer;
 import kariminf.as.process.ssfgc.SSFScoreHandler;
-import kariminf.as.tools.Data;
-import kariminf.as.tools.Tools;
 
-public class ReOrderer2 implements ReOrderer {
+public class Neighbors2ReOrderer extends Extractor {
 
-	private Scorer scorer;
-	private List<Integer> order = new ArrayList<>();
-	
 	HashMap<Integer, List<Integer>> relatives;
 	
-	public ReOrderer2(Scorer scorer){
-		this.scorer = scorer;
+	public Neighbors2ReOrderer(Scorer scorer){
+		super(scorer);
 		if (scorer.getScoreHandler() instanceof SSFScoreHandler){
 			relatives = ((SSFScoreHandler)scorer.getScoreHandler()).getRelatives();
 		}
@@ -35,22 +28,44 @@ public class ReOrderer2 implements ReOrderer {
 		order.add(index);
 		
 		while(true){
+			
 			List<Integer> relIDs = relatives.get(index);
+			
+			if(relIDs == null || relIDs.isEmpty()) break;
+			
+			
+			double max = Double.NEGATIVE_INFINITY;
+			int prevIndex = index;
 			index = -1;
-			int minOrder = Integer.MAX_VALUE;
-			if (relIDs == null) break;
+			
 			for(int relID: relIDs){
-				int thisOrder = order0.indexOf(relID)+1;
-				if (thisOrder >= 0 && minOrder > thisOrder)
-					if(! order.contains(relID)){
+				
+				if (order.contains(relID)) continue;
+				
+				int relNbr = 0;
+				List<Integer> relIDs2 = relatives.get(relID);
+				
+				for(int relID2: relIDs2)
+					if (!order.contains(relID2))
+						relNbr++;
+				
+				if(relNbr> 0){
+					double score = 
+							((double) relNbr) / ((double)(order0.indexOf(relID)+1));
+					System.out.println("E5_" + prevIndex + "(" + relID + ")= " + score);
+					if (score > max){
+						max = score;
 						index = relID;
-						minOrder = thisOrder;
 					}
+				}
+				
 			}
 			
+			//When all relatives are included into the summary
 			if (index < 0) break;
 			
 			order.add(index);
+
 		}
 		
 	}

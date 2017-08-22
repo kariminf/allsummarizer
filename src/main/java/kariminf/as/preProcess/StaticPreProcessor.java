@@ -93,8 +93,8 @@ public class StaticPreProcessor extends PreProcessor {
 	 * @param lang the language in ISO 639-1 code, eg. "en", "fr", "ar", etc.
 	 * @param data The data container
 	 */
-	public StaticPreProcessor(String lang, Data data){
-		super(lang, data);
+	public StaticPreProcessor(String lang){
+		super(lang);
 		setLanguage(lang);
 		
 	}
