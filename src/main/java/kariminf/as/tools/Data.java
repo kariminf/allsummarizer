@@ -369,6 +369,32 @@ public class Data {
 		return sentSim.get(realPos);
 	}
 	
+	/**
+	 * Returns a list of each sentence and its similarities with other sentences
+	 * @return A list of a list of similarities
+	 */
+	public List<List<Double>> getSentSimilarities() {
+		
+		List<List<Double>> result = new ArrayList<>();
+		
+		int docSize = sentWords.size();
+		
+		for (int xPos = 0; xPos < docSize; xPos++) {
+			
+			List<Double> sentSim = new ArrayList<>();
+			
+			for(int yPos =0; yPos < docSize; yPos++) {
+				sentSim.add(getSimilarity(xPos, yPos));
+			}
+			
+			result.add(sentSim);
+			
+		}
+
+		return result;
+	}
+	
+	
 	public int getMatrixPos(int xPos, int yPos){
 		
 		if (xPos >= sentWords.size() || yPos >= sentWords.size())

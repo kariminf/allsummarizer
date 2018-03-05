@@ -29,14 +29,18 @@ import kariminf.ktoolja.file.FileManager;
 public class MssStats {
 
 	private static final String mssFolder = 
-			"/home/kariminf/Data/ATS/Mss15Train/";
+			"/home/kariminf/Data/ATS/Mss15Test/";
 
 	private static final String outFolder =
 			"/home/kariminf/Data/ATS/Mss15Train/tests/Th2015/";
 
 	private static final String [] langs = 
-		{"af", "ar"};
+		//{"af", "ar"};
 	//"af", "eo", "hr", "ms", "sh", "sl", "sr", "vi"
+		{"af", "ar", "bg", "ca", "cs", "de", "el", "en", "eo", "es", "eu", 
+				"fa", "fi", "fr", "he", "hr", "hu", "id", "it", "ja", "ka", "ko", 
+				"ms", "nl", "no", "pl", "pt", "ro", "ru", "sh", "sk", "sl", "sr", 
+				"sv", "th", "tr", "vi", "zh"};
 
 
 	/**

@@ -89,12 +89,12 @@ public class MssROUGE {
 	private static List<String> features = new ArrayList<>();
 	
 	private static String[] methods = {
-			//"SSF-GC0", 
+			"SSF-GC0"/*, 
 			"SSF-GC1",
 			"SSF-GC2",
 			"SSF-GC3",
 			"SSF-GC4",
-			"SSF-GC5"
+			"SSF-GC5"*/
 	};
 	
 	private static String[] ths = {

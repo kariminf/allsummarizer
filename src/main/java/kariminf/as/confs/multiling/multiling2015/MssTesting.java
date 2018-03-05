@@ -50,12 +50,12 @@ public class MssTesting {
 
 	private static final String [] langs = 
 		{
-		//"af", "ar", "bg", "ca", "cs", "de", "el", "en", "eo", 
-		//"es", "eu", "fa", "fi", "fr", "he", "hr", "hu", "id", 
-		"it"//, 
-		//"ja", "ms", "nl", "no", "pt", "ro", "ru", "sh", 
-		//"sl", "sr", "sv", "th", "tr", "vi", "zh"
-		//"ka", "ko", "pl", "sk"
+		"af", "ar", "bg", "ca", "cs", "de", "el", "en", "eo", 
+		"es", "eu", "fa", "fi", "fr", "he", "hr", "hu", "id", 
+		"it", 
+		"ja", "ms", "nl", "no", "pt", "ro", "ru", "sh", 
+		"sl", "sr", "sv", "th", "tr", "vi", "zh",
+		"ka", "ko", "pl", "sk"
 		};
 	
 	private static double getThreshold(String thName, MSS mss){

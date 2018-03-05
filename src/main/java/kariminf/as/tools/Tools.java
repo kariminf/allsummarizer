@@ -126,6 +126,22 @@ public class Tools {
 		return getSentWordsFreq(allTerms);
 	}
 	
+	public static List<Integer> getSent2DocWordsFreq(
+			List<String> sentence,
+			HashMap<String, Integer> docWordsFreq) {
+		
+		List<Integer> result = new ArrayList<>();
+		
+		for (String word: sentence) {
+			Integer freq = (docWordsFreq.containsKey(word))?
+					docWordsFreq.get(word): 0;
+			result.add(freq);
+		}
+		
+		return result;
+		
+	}
+	
 	/**
 	 * Gives some statistics about the different  terms in a text.
 	 * 
