@@ -44,14 +44,14 @@ import kariminf.ktoolja.file.FileManager;
 public class MssTrainingData {
 
 	private static final String mssFolder = 
-			"/home/kariminf/Data/ATS/Mss15Train/";
+			"/home/kariminf/Data/ATS/Mss15Test/";
 
 	private static final String [] langs = 
 		//{"af", "ar", "bg", "ca", "cs", "de", "el", "eo", "es"};
 		//{"eu", "fa", "fi", "fr", "he", "hr", "hu", "id", "it", "ja"};
 		//{"ka", "ko", "ml", "ms", "nl", "nn", "no", "pl", "pt", "ro"};
-		{"ru", "sh", "sk", "sl", "sr", "sv", "th", "tr", "vi", "zh"};
-		//{"en"};
+		//{"ru", "sh", "sk", "sl", "sr", "sv", "th", "tr", "vi", "zh"};
+		{"en"};
 
 
 	public static String readFile(File file){
@@ -121,7 +121,10 @@ public class MssTrainingData {
 					Data data = new Data();
 					StaticPreProcessor preProcessor = new StaticPreProcessor(lang);
 					preProcessor.setData(data);
-					File model = new File(modelFolder + fileName + "_summary.txt");
+					//For MSS Train data
+					//File model = new File(modelFolder + fileName + "_summary.txt");
+					//For MSS Test Data
+					File model = new File(modelFolder + fileName + ".txt");
 					preProcessor.preProcess(readFile(model));
 					
 					rouge1.newModel();
