@@ -48,6 +48,10 @@ public class GCExample {
 		preprocessor.setData(data);
 		preprocessor.preProcess(text);
 		
+		System.out.println(data.getSentWords());
+		
+		System.exit(0);
+		
 		
 		/*for(int i = 0; i < 10; i++){
 			for(int j = i+1; j < 10; j++){

@@ -12,6 +12,7 @@ import kariminf.as.preProcess.PreProcessor;
 import kariminf.as.preProcess.StaticPreProcessor;
 import kariminf.as.process.Scorer;
 import kariminf.as.process.baseline.Firsts;
+import kariminf.as.process.baseline.Random;
 import kariminf.as.process.ssfgc.GC0ScoreHandler;
 import kariminf.as.process.ssfgc.GC1ScoreHandler;
 import kariminf.as.process.ssfgc.GC2ScoreHandler;
@@ -37,7 +38,7 @@ public class BaselinesMss2018 {
 			"/home/kariminf/Data/ATS/Mss15Test/src/";
 
 	private static final String outFolder =
-			"/home/kariminf/Data/ATS/Mss15Test/tests/baselines/firsts/";
+			"/home/kariminf/Data/ATS/Mss15Test/tests/baselines/random/";
 
 	private static final String [] langs = 
 		{		"af", 
@@ -116,7 +117,7 @@ public class BaselinesMss2018 {
 
 	public void summarize(){
 		
-		Firsts ssh = new Firsts();
+		Random ssh = new Random();
 		
 		ssh.setData(data);
 		scorer = Scorer.create(ssh);
