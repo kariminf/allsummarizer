@@ -49,6 +49,25 @@ Also, the participation of the system at [MultiLing 2015](http://multiling.iit.d
 }
 ```
 
+```TeX
+@inproceedings{18-aries-al,
+	author    = {Abdelkrime Aries and
+	Djamel Eddine Zegour and
+	Walid{-}Khaled Hidouci},
+	title     = {Exploring Graph Bushy Paths to Improve Statistical Multilingual Automatic Text Summarization},
+	booktitle = {Computational Intelligence and Its Applications - 6th {IFIP} {TC}
+	5 International Conference, {CIIA} 2018, Oran, Algeria, May 8-10,
+	2018, Proceedings},
+	pages     = {78--89},
+	year      = {2018},
+	url       = {https://doi.org/10.1007/978-3-319-89743-1\_8},
+	doi       = {10.1007/978-3-319-89743-1\_8},
+	timestamp = {Sat, 05 May 2018 23:05:32 +0200},
+	biburl    = {https://dblp.org/rec/bib/conf/ciia/AriesZH18},
+	bibsource = {dblp computer science bibliography, https://dblp.org}
+}
+```
+
 ## Dependencies:
 This project is dependent to other projects:
 * [KToolJa](https://github.com/kariminf/k-toolja): for file management and plugins

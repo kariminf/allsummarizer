@@ -20,8 +20,11 @@
 
 rootProject.name = 'allsummarizer'
 
+/*
 include ':k-toolja'
 project(':k-toolja').projectDir = new File(settingsDir, '../k-toolja')
 
 include ':langpi'
 project(':langpi').projectDir = new File(settingsDir, '../langpi')
+*/
+
