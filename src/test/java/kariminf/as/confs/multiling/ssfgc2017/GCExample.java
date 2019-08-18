@@ -48,9 +48,9 @@ public class GCExample {
 		preprocessor.setData(data);
 		preprocessor.preProcess(text);
 		
-		System.out.println(data.getSentWords());
+		//System.out.println(data.getSentWords());
 		
-		System.exit(0);
+		//System.exit(0);
 		
 		
 		/*for(int i = 0; i < 10; i++){
@@ -78,13 +78,15 @@ public class GCExample {
 		scorer.setData(data);
 		scorer.scoreUnits();
 		
+		System.out.println("scores: " + scorer.getOrdered());
+		
 		Extractor reorder;
 		//reorder = new ReOrderer0(scorer);
 		//reorder = new ReOrderer1(scorer, th);
 		//reorder = new ReOrderer2(scorer);
-		//reorder = new ReOrderer3(scorer);
-		//reorder = new ReOrderer4(scorer);
+		//reorder = new SimNeighborReOrderer(scorer);
 		reorder = new Neighbors2ReOrderer(scorer);
+		//reorder = new Neighbors2ReOrderer(scorer);
 		
 		reorder.reOrder();
 		
